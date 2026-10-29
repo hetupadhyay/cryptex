@@ -31,14 +31,14 @@
   --well: #e8ecea;
   --ink: #16212a;
   --ink-2: #4a5862;
-  --ink-3: #7d8a93;
+  --ink-3: #606c74;
   --rule: #d8dedb;
   --rule-strong: #b3bdb8;
   --carbon: #2b4c7e;
   --carbon-wash: rgba(43, 76, 126, 0.11);
   --pencil: #b4473a;
   --pencil-wash: rgba(180, 71, 58, 0.1);
-  --brass: #8a6a22;
+  --brass: #836520;
   --brass-wash: rgba(138, 106, 34, 0.14);
   --on-solid: #fbfcfb;
 
@@ -46,6 +46,7 @@
   --glass-strong: rgba(251, 252, 251, 0.78);
   --glass-line: rgba(255, 255, 255, 0.75);
   --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --frost: blur(22px) saturate(170%);
   --shadow-s: 0 1px 2px rgba(22, 33, 42, 0.05), 0 6px 16px -8px rgba(22, 33, 42, 0.18);
   --shadow-l: 0 2px 4px rgba(22, 33, 42, 0.04), 0 24px 48px -20px rgba(22, 33, 42, 0.28);
 
@@ -73,7 +74,7 @@
   --well: #1c2730;
   --ink: #e3e8e5;
   --ink-2: #a5afb4;
-  --ink-3: #6d7a82;
+  --ink-3: #828e96;
   --rule: #26323a;
   --rule-strong: #3a4852;
   --carbon: #93b3dc;
@@ -224,8 +225,8 @@ main,
 .secret-card,
 .round-btn {
   background: var(--glass);
-  -webkit-backdrop-filter: blur(22px) saturate(170%);
-  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: var(--frost);
+  backdrop-filter: var(--frost);
   border: 1px solid var(--glass-line);
   box-shadow: var(--glass-edge), var(--shadow-s);
 }
@@ -247,6 +248,20 @@ main,
 }
 
 /* ---------------- nav ---------------- */
+
+/* Widths of the fades at the ends of the scrolling link row on small
+   screens, registered so they can ease in and out. */
+@property --fade-start {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --fade-end {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
 
 .nav {
   position: sticky;
@@ -2225,19 +2240,58 @@ input[type='range']::-moz-range-thumb {
 
   .nav-bar {
     flex-wrap: wrap;
-    row-gap: 4px;
+    row-gap: 0;
   }
 
+  /* The links become a row that scrolls sideways. Whichever end has more
+     links past it fades out, so the row reads as carrying on (site.js
+     sets the classes). */
   .nav-links {
     order: 3;
     width: 100%;
     margin: 0 -4px;
+    padding: 4px 0;
     overflow-x: auto;
     scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
+    mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
+    transition: --fade-start 200ms ease, --fade-end 200ms ease;
+  }
+
+  .nav-links.more-start {
+    --fade-start: 36px;
+  }
+
+  .nav-links.more-end {
+    --fade-end: 36px;
   }
 
   .nav-links::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Room for a fingertip around the links, brand and switch, without
+     making any of them look bigger. */
+  .brand {
+    position: relative;
+  }
+
+  .nav-links a::before,
+  .brand::before,
+  .theme::before {
+    content: '';
+    position: absolute;
+    inset: -4px 0;
+  }
+
+  .brand::before {
+    inset: -7px 0;
+  }
+
+  .nav-links a {
+    flex: none;
+    min-width: 44px;
+    text-align: center;
   }
 
   .theme {
@@ -2250,6 +2304,13 @@ input[type='range']::-moz-range-thumb {
 }
 
 @media (max-width: 640px) {
+  /* The blur under the sticky nav and dock is redrawn on every scroll.
+     A smaller radius costs a phone far less and, on panels this size,
+     looks much the same. */
+  :root {
+    --frost: blur(14px) saturate(170%);
+  }
+
   .section {
     padding-top: 64px;
   }
@@ -2316,9 +2377,32 @@ input[type='range']::-moz-range-thumb {
     border-radius: 22px;
   }
 
+  /* Fingertip-sized transport. The speed labels and the scrubber reach
+     past their drawn size rather than growing. */
+  .dock {
+    row-gap: 10px;
+  }
+
+  .tb {
+    width: 44px;
+    height: 44px;
+  }
+
+  .dock .seg span {
+    min-width: 44px;
+  }
+
+  .dock .seg label::before {
+    content: '';
+    position: absolute;
+    inset: -8px 0;
+  }
+
   .dock .scrub {
     order: 5;
     flex-basis: 100%;
+    height: 44px;
+    margin: -6px 6px;
   }
 
   .dock .speed {

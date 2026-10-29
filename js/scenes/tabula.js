@@ -4,6 +4,7 @@
  * The key is written under the message, then each pair (message letter, key
  * letter) is looked up in the 26×26 table. The path through the table is
  * drawn as a trail of cells so you can see where the answer comes from.
+ * On a phone the table is magnified and the view follows each lookup.
  */
 (function () {
   'use strict';
@@ -100,15 +101,15 @@
       if (beaufort) {
         // Column of the input letter, down to the key letter; the row label is the answer.
         const r = mod(k - x, 26);
-        return { i, k, path: [...colPath(x, r), ...rowPathBack(r, x)], answer: rowHeads[r], heads: [colHeads[x]], out: outLetters[i] };
+        return { i, k, path: [...colPath(x, r), ...rowPathBack(r, x)], answer: rowHeads[r], heads: [colHeads[x]], at: [r, x], out: outLetters[i] };
       }
       if (enc) {
         // Column of the message letter, row of the key letter, meet in the middle.
-        return { i, k, path: [...colPath(x, k), ...rowPathTo(k, x)], answer: grid[k][x], heads: [colHeads[x], rowHeads[k]], out: outLetters[i] };
+        return { i, k, path: [...colPath(x, k), ...rowPathTo(k, x)], answer: grid[k][x], heads: [colHeads[x], rowHeads[k]], at: [k, x], out: outLetters[i] };
       }
       // Along the key's row to the cipher letter, then up to the column label.
       const c = y;
-      return { i, k, path: [...rowPathTo(k, c), ...colPathUp(c, k)], answer: colHeads[c], heads: [rowHeads[k]], out: outLetters[i] };
+      return { i, k, path: [...rowPathTo(k, c), ...colPathUp(c, k)], answer: colHeads[c], heads: [rowHeads[k]], at: [k, c], out: outLetters[i] };
     });
 
     function colPath(c, toRow) { return Array.from({ length: toRow + 1 }, (_, r) => grid[r][c]); }
@@ -163,9 +164,38 @@
       lit.push(node);
     }
 
+    // On a narrow stage the table is magnified and seen through a window
+    // (see scenes.css). The window pans so the cell where the lookup meets
+    // sits in the middle. It moves in whole cells, so the labels never sit
+    // over half a letter. On a wide stage the whole table fits and the
+    // offsets are unused.
+    let at = [0, 0];
+    function pan(target, ms) {
+      at = target;
+      const size = grid[0][0].offsetWidth;
+      const room = [tableWrap.clientHeight - size, tableWrap.clientWidth - size];
+      const offset = axis => {
+        const cells = Math.round(at[axis] + 0.5 - room[axis] / size / 2);
+        return Math.max(0, Math.min(cells, Math.ceil(26 - room[axis] / size))) * size;
+      };
+      table.style.setProperty('--pan', ms + 'ms');
+      table.style.setProperty('--py', offset(0) + 'px');
+      table.style.setProperty('--px', offset(1) + 'px');
+    }
+
+    // Turning the phone changes the window, so put the view back in place.
+    const resize = new ResizeObserver(() => {
+      if (!tableWrap.isConnected) resize.disconnect();
+      else pan(at, 0);
+    });
+    resize.observe(tableWrap);
+
     function show(i, animate) {
       const step = steps[i];
       clearTrail();
+
+      const focus = step.lookup || (step.outro && lookups[lookups.length - 1]);
+      pan(focus ? focus.at : [0, 0], animate ? Stage.ms(520 * (step.pace || 1)) : 0);
 
       keyCells.forEach((cell, j) => {
         const known = i >= keyKnownAt(j) && (i > keyKnownAt(j) || keyKnownAt(j) === 0 || !animate);
