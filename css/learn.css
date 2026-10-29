@@ -1,1 +1,564 @@
-/* Page styles for learn. */
+/* ------------------------------------------------------------------
+   Learn: one essay through two thousand years of secret writing.
+   Prose on paper in a reading column, figures on sheets inside it,
+   and the year rail beside it that marks the chapter being read with
+   the red pencil. What goes inside the figures is in story.css.
+------------------------------------------------------------------- */
+
+/* Anchors land below the masthead (and below the chapter bar on narrow
+   screens, further down). */
+html {
+  scroll-padding-top: calc(var(--mast-h) + env(safe-area-inset-top, 0px) + 28px);
+}
+
+.essay {
+  --measure: 640px;
+  --figure: 800px;
+  display: grid;
+  grid-template-columns: 196px minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  column-gap: 40px;
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 64px max(20px, env(safe-area-inset-right, 0px)) 0 var(--gutter);
+  box-sizing: content-box;
+}
+
+/* The reading column sits in the middle of everything right of the rail,
+   so figures have room to be a little wider than the text. */
+.essay-head,
+.chapter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, var(--measure)) minmax(0, 1fr);
+}
+
+.essay-head > *,
+.chapter > * {
+  grid-column: 2;
+}
+
+.essay-head {
+  grid-column: 2;
+  grid-row: 1;
+  padding-bottom: 72px;
+}
+
+.chapters {
+  grid-column: 2;
+  grid-row: 2;
+  display: grid;
+  gap: 104px;
+}
+
+/* ---------------- prose ---------------- */
+
+.essay-head h1 {
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.03;
+  letter-spacing: -0.032em;
+}
+
+.standfirst {
+  margin-top: 22px;
+  color: var(--ink-2);
+  font-size: 20px;
+  line-height: 1.55;
+}
+
+.chapter > h2 {
+  padding-top: 26px;
+  border-top: 1px solid var(--rule-strong);
+  font-size: clamp(30px, 3.4vw, 38px);
+  line-height: 1.08;
+  letter-spacing: -0.026em;
+}
+
+.chapter > p,
+.entry > p,
+.facts li {
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.chapter > * + *,
+.entry > * + * {
+  margin-top: 18px;
+}
+
+.chapter > h3 {
+  margin-top: 48px;
+  font-size: 22px;
+  letter-spacing: -0.015em;
+}
+
+.chapter > h3 + p {
+  margin-top: 10px;
+}
+
+.chapter p a {
+  color: var(--carbon);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.essay sup {
+  line-height: 0;
+}
+
+/* The year and the place, straight under a heading. */
+.chapter > .dateline,
+.entry > .dateline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-top: 8px;
+  color: var(--ink-2);
+  font-size: 15.5px;
+  line-height: 1.4;
+}
+
+.dateline .year {
+  color: var(--brass);
+  font: 700 15.5px/1.4 var(--type);
+}
+
+/* A paragraph the chapter leans on: the pad's verdict in carbon, the
+   last word of a chapter in red pencil. */
+.otp-verdict,
+.coda {
+  padding-left: 18px;
+  border-left: 2px solid var(--carbon);
+}
+
+.coda {
+  border-left-color: var(--pencil);
+}
+
+.chapter > .coda {
+  margin-top: 40px;
+}
+
+/* Lists in the prose get a red pencil tick instead of a bullet. */
+.facts {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.facts li {
+  position: relative;
+  padding-left: 26px;
+}
+
+.facts li::before {
+  content: '';
+  position: absolute;
+  top: 0.82em;
+  left: 2px;
+  width: 12px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--pencil);
+  transform: rotate(-10deg);
+}
+
+/* ---------------- the ciphers ---------------- */
+
+.chapter > .entries {
+  display: grid;
+  gap: 56px;
+  margin-top: 52px;
+}
+
+.entry h3 {
+  font-size: 26px;
+  letter-spacing: -0.02em;
+}
+
+/* ATTACK AT DAWN as the cipher writes it, typed on a slip. */
+.sample {
+  display: grid;
+  gap: 2px;
+  padding: 2px 0 2px 16px;
+  border-left: 2px solid var(--rule-strong);
+  color: var(--ink-2);
+  font: 700 15.5px/1.55 var(--type);
+  letter-spacing: 0.06em;
+}
+
+.chapter .sample {
+  font-size: 15.5px;
+  line-height: 1.55;
+}
+
+.sample b {
+  color: var(--pencil);
+  overflow-wrap: anywhere;
+}
+
+.entry .link,
+.sample-row .link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 15.5px;
+}
+
+.entry > .link {
+  margin-top: 6px;
+}
+
+.sample-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 28px;
+}
+
+/* ---------------- figures ---------------- */
+
+.chapter > .fig {
+  container-type: inline-size;
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: min(100%, var(--figure));
+  margin: 36px 0 0;
+}
+
+.chapter > .fig + * {
+  margin-top: 36px;
+}
+
+.sheet {
+  padding: 22px 24px 24px;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--sheet);
+  box-shadow: var(--shadow-s);
+}
+
+/* The caption lines up with the reading column, not the wider sheet. */
+.fig figcaption {
+  max-width: var(--measure);
+  margin: 12px auto 0;
+  color: var(--ink-2);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+/* Small controls in the figures: tight corners, like the rest of the room. */
+.essay .btn.small {
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .essay .btn.small:hover {
+    border-color: var(--ink-3);
+  }
+}
+
+.essay input[type='text'] {
+  border-radius: 4px;
+}
+
+/* The key strength chart, restyled from site.css as a figure. */
+.essay .strength {
+  padding: 4px 24px 6px;
+  border-radius: 10px;
+  box-shadow: var(--shadow-s);
+}
+
+.essay .st-bar,
+.essay .st-bar i {
+  border-radius: 2px;
+}
+
+/* ---------------- the year rail ---------------- */
+
+.rail-list,
+.rail-list ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rail-list {
+  display: grid;
+  gap: 1px;
+}
+
+.rail-list > li + li {
+  margin-top: 1px;
+}
+
+.rail-list > .rail-part,
+.rail-list > .rail-part + li {
+  margin-top: 14px;
+}
+
+.rail-list > .rail-part:first-child {
+  margin-top: 0;
+}
+
+.rail-part-name {
+  display: block;
+  padding: 3px 0;
+  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.rail-list li a:not(.rail-part-name) {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 8px;
+  padding: 3px 0;
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 1.45;
+  text-decoration: none;
+}
+
+.rail-year {
+  color: var(--ink-3);
+  font: 400 13px/1.45 var(--type);
+}
+
+.rail-name {
+  position: relative;
+  justify-self: start;
+}
+
+/* The chapter being read is marked the way the masthead marks the page. */
+.rail-list a[aria-current] {
+  color: var(--ink);
+}
+
+.rail-list a[aria-current] .rail-year {
+  color: var(--ink-2);
+  font-weight: 700;
+}
+
+.rail-list a[aria-current] .rail-name {
+  font-weight: 650;
+}
+
+.rail-list a[aria-current] .rail-name::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -3px;
+  bottom: -1px;
+  height: 2.5px;
+  border-radius: 2px;
+  background: var(--pencil);
+  transform: rotate(-1.2deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .rail-list a:hover,
+  .rail-list a:hover .rail-year {
+    color: var(--ink);
+  }
+}
+
+/* Beside the essay on wide screens, held in place as it scrolls. */
+@media (min-width: 1101px) {
+  .rail {
+    position: sticky;
+    top: calc(var(--mast-h) + env(safe-area-inset-top, 0px) + 32px);
+    grid-column: 1;
+    grid-row: 1 / 3;
+    align-self: start;
+    max-height: calc(100vh - var(--mast-h) - 56px);
+    padding-top: 8px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  .rail-now {
+    display: none;
+  }
+}
+
+/* Narrower, it folds into a bar under the masthead that names the
+   chapter being read and opens the full list. */
+@media (max-width: 1100px) {
+  html {
+    scroll-padding-top: calc(var(--mast-h) + env(safe-area-inset-top, 0px) + 46px + 22px);
+  }
+
+  .essay {
+    display: block;
+  }
+
+  .essay-head {
+    padding-bottom: 32px;
+  }
+
+  .rail {
+    position: sticky;
+    top: calc(var(--mast-h) + env(safe-area-inset-top, 0px));
+    z-index: 40;
+    margin: 0 calc(-1 * max(20px, env(safe-area-inset-right, 0px))) 56px calc(-1 * var(--gutter));
+    border-block: 1px solid var(--rule);
+    background: var(--paper);
+  }
+
+  .rail-now {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 46px;
+    padding: 0 max(20px, env(safe-area-inset-right, 0px)) 0 var(--gutter);
+    border: 0;
+    background: none;
+    text-align: left;
+  }
+
+  .rail-now-year {
+    flex: none;
+    color: var(--brass);
+    font: 700 14px/1 var(--type);
+  }
+
+  .rail-now-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .rail-now-all {
+    color: var(--ink-2);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .rail-now svg {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: var(--ink-2);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 200ms var(--ease-out);
+  }
+
+  .rail.open .rail-now svg {
+    transform: rotate(180deg);
+  }
+
+  .rail-list {
+    display: none;
+  }
+
+  .rail.open .rail-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    max-height: calc(100dvh - var(--mast-h) - env(safe-area-inset-top, 0px) - 64px);
+    padding: 14px max(20px, env(safe-area-inset-right, 0px)) 18px var(--gutter);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper);
+    box-shadow: 0 24px 40px -24px rgba(22, 33, 42, 0.35);
+  }
+
+  /* Finger-sized rows in the open list. */
+  .rail-list li a:not(.rail-part-name) {
+    min-height: 40px;
+    align-content: center;
+    font-size: 15px;
+  }
+
+  .rail-part-name {
+    padding-top: 6px;
+  }
+
+  .chapters {
+    gap: 88px;
+  }
+
+  /* The chapter bar already draws the line above the first chapter. */
+  .chapter:first-child > h2 {
+    padding-top: 0;
+    border-top: 0;
+  }
+}
+
+/* ---------------- phones ---------------- */
+
+@media (max-width: 640px) {
+  .essay {
+    padding-top: 36px;
+  }
+
+  .standfirst {
+    font-size: 18px;
+  }
+
+  .chapter > p,
+  .entry > p,
+  .facts li {
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  .entry h3 {
+    font-size: 24px;
+  }
+
+  .chapter > h3 {
+    font-size: 20px;
+  }
+
+  /* Figures run edge to edge, so the machine gets every pixel. */
+  .chapter > .fig {
+    justify-self: stretch;
+    width: auto;
+    margin-inline: calc(-1 * var(--gutter)) calc(-1 * max(20px, env(safe-area-inset-right, 0px)));
+  }
+
+  .sheet {
+    padding: 18px 14px 20px;
+    border-inline: 0;
+    border-radius: 0;
+  }
+
+  .fig figcaption {
+    padding-inline: var(--gutter) max(20px, env(safe-area-inset-right, 0px));
+  }
+
+  .essay .strength {
+    padding: 2px 16px 4px;
+    border-radius: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .rail-now svg {
+    transition: none;
+  }
+}
