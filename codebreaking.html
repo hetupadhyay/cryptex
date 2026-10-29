@@ -91,228 +91,224 @@
 
   <main id="top">
     <section class="section codebreaking-head" aria-labelledby="codebreaking-title">
-      <div class="section-head">
-        <h1 id="codebreaking-title">Codebreaking</h1>
-        <p>Crack today’s intercept, work through the missions, or bring any ciphertext to the desk.</p>
-      </div>
+      <h1 id="codebreaking-title">Codebreaking</h1>
+      <p>Crack today’s intercept, work through the missions, or bring any ciphertext to the desk.</p>
+    </section>
+
+    <!-- One file with three folders. The tabs sit on top of the open one. -->
+    <div class="case">
       <div class="file-tabs" role="tablist" aria-label="Codebreaking">
         <button class="file-tab" type="button" role="tab" id="tab-today" aria-controls="file-today" data-file="today" aria-selected="true"><b>Today</b><small class="today-no">No. —</small></button>
         <button class="file-tab" type="button" role="tab" id="tab-missions" aria-controls="file-missions" data-file="missions" aria-selected="false" tabindex="-1"><b>Missions</b><small class="missions-count">8 intercepts</small></button>
         <button class="file-tab" type="button" role="tab" id="tab-desk" aria-controls="file-desk" data-file="desk" aria-selected="false" tabindex="-1"><b>Desk</b><small>6 attacks</small></button>
       </div>
-    </section>
 
-    <div class="file-panel" data-file="today" id="file-today" role="tabpanel" aria-labelledby="tab-today">
-    <!-- Daily intercept -->
-    <section class="section" id="daily" aria-labelledby="daily-title">
-      <div class="section-head">
-        <h2 id="daily-title">The daily intercept</h2>
-        <p>A new message every day at midnight, the same one for everyone. Monday is gentle and it gets harder towards the weekend. Crack one a day to keep your streak going.</p>
+      <div class="file-panel folder" data-file="today" id="file-today" role="tabpanel" aria-labelledby="tab-today">
+        <!-- Daily intercept -->
+        <section class="daily" id="daily" aria-labelledby="daily-title">
+          <article class="daily-card">
+            <header class="file-head daily-head">
+              <p class="file-no daily-no"></p>
+              <h2 class="file-title daily-date" id="daily-title"></h2>
+              <p class="daily-level"><span class="pips" role="img"></span><span class="daily-level-name"></span></p>
+            </header>
+            <p class="mission-brief"><b class="daily-from"></b> <span class="daily-brief"></span></p>
+            <pre class="intercept"></pre>
+            <div class="mission-tools">
+              <button type="button" class="btn file-btn" data-act="to-desk">Send to the desk</button>
+              <button type="button" class="btn file-btn" data-act="to-lab">Open in the lab</button>
+            </div>
+            <form class="answer" autocomplete="off">
+              <label for="daily-input" class="answer-ask">What does the message say?</label>
+              <div class="answer-row">
+                <input id="daily-input" type="text" spellcheck="false" placeholder="Type the decrypted message">
+                <button class="btn primary" type="submit">Check</button>
+              </div>
+              <p class="answer-feedback" role="status"></p>
+            </form>
+            <div class="daily-done" hidden>
+              <p class="daily-result"></p>
+              <div class="daily-copy">
+                <button type="button" class="btn file-btn" data-act="copy">Copy my result</button>
+                <span class="daily-copied" role="status"></span>
+              </div>
+            </div>
+            <div class="hints">
+              <button type="button" class="link" data-act="hint">Show a hint</button>
+              <ol class="hint-list"></ol>
+            </div>
+          </article>
+          <aside class="daily-side" aria-labelledby="record-title">
+            <h3 id="record-title">Your record</h3>
+            <div class="daily-clock">
+              <span>Next intercept in</span>
+              <b class="daily-countdown" role="timer"></b>
+            </div>
+            <dl class="daily-stats">
+              <div><dt>Streak</dt><dd data-stat="streak">0</dd></div>
+              <div><dt>Best</dt><dd data-stat="best">0</dd></div>
+              <div><dt>Hints today</dt><dd data-stat="hints">0</dd></div>
+            </dl>
+            <ol class="daily-week" aria-label="This week"></ol>
+            <p class="daily-status"></p>
+            <p class="daily-rules">A new message arrives at midnight, the same one for everyone. Monday is gentle and it gets harder towards the weekend.</p>
+          </aside>
+        </section>
       </div>
-      <div class="daily">
-        <article class="daily-card">
-          <header class="mission-head daily-head">
-            <span class="mission-place daily-no"></span>
-            <h3 class="mission-title daily-date"></h3>
-            <p class="daily-level"><span class="pips" role="img"></span><span class="daily-level-name"></span></p>
-          </header>
-          <p class="mission-brief"><b class="daily-from"></b> <span class="daily-brief"></span></p>
-          <pre class="intercept"></pre>
-          <div class="mission-tools">
-            <button type="button" class="btn glass-btn small" data-act="to-desk">Send to the desk</button>
-            <button type="button" class="btn glass-btn small" data-act="to-lab">Open in the lab</button>
-          </div>
-          <form class="answer" autocomplete="off">
-            <label for="daily-input" class="answer-ask">What does the message say?</label>
-            <div class="answer-row">
-              <input id="daily-input" type="text" spellcheck="false" placeholder="Type the decrypted message">
-              <button class="btn primary" type="submit">Check</button>
+
+      <div class="file-panel folder" data-file="missions" id="file-missions" role="tabpanel" aria-labelledby="tab-missions" hidden>
+        <!-- Intercepts -->
+        <section class="missions" id="intercepts" aria-labelledby="intercepts-title">
+          <div class="mission-rail">
+            <div class="index-head">
+              <h2 id="intercepts-title">Eight intercepts</h2>
+              <p>Caught in transit from Rome to the Western Front, from easiest to hardest.</p>
             </div>
-            <p class="answer-feedback" role="status"></p>
-          </form>
-          <div class="daily-done" hidden>
-            <p class="daily-result"></p>
-            <div class="daily-copy">
-              <button type="button" class="btn glass-btn small" data-act="copy">Copy my result</button>
-              <span class="daily-copied" role="status"></span>
+            <ol class="mission-list"></ol>
+          </div>
+          <article class="mission">
+            <header class="file-head mission-head">
+              <p class="file-no"><span class="mission-no"></span><span class="mission-place"></span></p>
+              <h3 class="file-title mission-title"></h3>
+            </header>
+            <p class="mission-brief"></p>
+            <pre class="intercept"></pre>
+            <div class="mission-tools">
+              <button type="button" class="btn file-btn" data-act="to-desk">Send to the desk</button>
+              <button type="button" class="btn file-btn" data-act="to-lab">Open in the lab</button>
             </div>
-          </div>
-          <div class="hints">
-            <button type="button" class="link" data-act="hint">Show a hint</button>
-            <ol class="hint-list"></ol>
-          </div>
-        </article>
-        <aside class="daily-side" aria-label="Your record">
-          <div class="daily-clock">
-            <span>Next intercept in</span>
-            <b class="daily-countdown" role="timer"></b>
-          </div>
-          <dl class="daily-stats">
-            <div><dt>Streak</dt><dd data-stat="streak">0</dd></div>
-            <div><dt>Best</dt><dd data-stat="best">0</dd></div>
-            <div><dt>Hints today</dt><dd data-stat="hints">0</dd></div>
-          </dl>
-          <ol class="daily-week" aria-label="This week"></ol>
-          <p class="daily-status"></p>
-        </aside>
+            <form class="answer" autocomplete="off">
+              <label for="answer-input" class="answer-ask"></label>
+              <div class="answer-row">
+                <input id="answer-input" type="text" spellcheck="false">
+                <button class="btn primary" type="submit">Check</button>
+              </div>
+              <p class="answer-feedback" role="status"></p>
+            </form>
+            <div class="hints">
+              <button type="button" class="link" data-act="hint">Show a hint</button>
+              <ol class="hint-list"></ol>
+            </div>
+          </article>
+        </section>
       </div>
-    </section>
-    </div>
 
-    <div class="file-panel" data-file="missions" id="file-missions" role="tabpanel" aria-labelledby="tab-missions">
-    <!-- Intercepts -->
-    <section class="section" id="intercepts" aria-labelledby="intercepts-title">
-      <div class="section-head">
-        <h2 id="intercepts-title">Intercepts</h2>
-        <p>Eight messages caught in transit, from Rome to the Western Front. Crack them with the lab and the codebreaker’s desk.</p>
-      </div>
-      <div class="missions">
-        <div class="mission-rail">
-          <p class="mission-progress"></p>
-          <ol class="mission-list"></ol>
-        </div>
-        <article class="mission">
-          <header class="mission-head">
-            <span class="mission-place"></span>
-            <h3 class="mission-title"></h3>
-          </header>
-          <p class="mission-brief"></p>
-          <pre class="intercept"></pre>
-          <div class="mission-tools">
-            <button type="button" class="btn glass-btn small" data-act="to-desk">Send to the desk</button>
-            <button type="button" class="btn glass-btn small" data-act="to-lab">Open in the lab</button>
+      <div class="file-panel desk-sheet" data-file="desk" id="file-desk" role="tabpanel" aria-labelledby="tab-desk" hidden>
+        <!-- Codebreaker's desk -->
+        <section class="desk" id="breaker" aria-labelledby="desk-title">
+          <div class="desk-head">
+            <h2 id="desk-title">The codebreaker’s desk</h2>
+            <p>Paste any ciphertext. None of these attacks need the key.</p>
           </div>
-          <form class="answer" autocomplete="off">
-            <label for="answer-input" class="answer-ask"></label>
-            <div class="answer-row">
-              <input id="answer-input" type="text" spellcheck="false">
-              <button class="btn primary" type="submit">Check</button>
+          <div class="controls">
+            <div class="field">
+              <label for="attack-text">Ciphertext</label>
+              <textarea id="attack-text" rows="7" spellcheck="false"></textarea>
+              <p class="hint">Longer text gives better results. A few sentences is plenty.</p>
             </div>
-            <p class="answer-feedback" role="status"></p>
-          </form>
-          <div class="hints">
-            <button type="button" class="link" data-act="hint">Show a hint</button>
-            <ol class="hint-list"></ol>
+            <div class="samples">
+              <span>Load an intercepted message:</span>
+              <button type="button" class="sample" data-sample="caesar">Caesar</button>
+              <button type="button" class="sample" data-sample="vigenere">Vigenère</button>
+              <button type="button" class="sample" data-sample="railfence">Rail fence</button>
+              <button type="button" class="sample" data-sample="affine">Affine</button>
+            </div>
+            <div class="attack-index">
+              <p class="field-label" id="attack-index-title">Attacks</p>
+              <div class="attack-pick" role="tablist" aria-labelledby="attack-index-title" aria-orientation="vertical">
+                <button type="button" role="tab" class="attack-tab" id="attack-brute" aria-controls="work-brute" data-attack="brute" aria-selected="true">
+                  <b>Try every shift</b><span>Caesar has 25 keys. Score each one against English.</span>
+                </button>
+                <button type="button" role="tab" class="attack-tab" id="attack-affine" aria-controls="work-affine" data-attack="affine" aria-selected="false" tabindex="-1">
+                  <b>Try every affine key</b><span>All 312 keys, scored against English.</span>
+                </button>
+                <button type="button" role="tab" class="attack-tab" id="attack-freq" aria-controls="work-freq" data-attack="freq" aria-selected="false" tabindex="-1">
+                  <b>Count the letters</b><span>Compare the letter counts with English.</span>
+                </button>
+                <button type="button" role="tab" class="attack-tab" id="attack-vig" aria-controls="work-vig" data-attack="vig" aria-selected="false" tabindex="-1">
+                  <b>Find a Vigenère key</b><span>Work out the key length, then each key letter.</span>
+                </button>
+                <button type="button" role="tab" class="attack-tab" id="attack-rail" aria-controls="work-rail" data-attack="rail" aria-selected="false" tabindex="-1">
+                  <b>Try every rail count</b><span>Score letter pairs like TH and ER.</span>
+                </button>
+              </div>
+            </div>
           </div>
-        </article>
-      </div>
-    </section>
-    </div>
 
-    <div class="file-panel" data-file="desk" id="file-desk" role="tabpanel" aria-labelledby="tab-desk">
-    <!-- Codebreaker's desk -->
-    <section class="section" id="desk" aria-labelledby="desk-title">
-      <div class="section-head">
-        <h2 id="desk-title">The codebreaker’s desk</h2>
-        <p>Paste any ciphertext. None of these attacks need the key.</p>
-      </div>
-      <div class="desk">
-        <div class="controls">
-          <div class="field">
-            <label for="attack-text">Ciphertext</label>
-            <textarea id="attack-text" rows="7" spellcheck="false"></textarea>
-            <p class="hint">Longer text gives better results. A few sentences is plenty.</p>
-          </div>
-          <div class="samples">
-            <span>Load an intercepted message:</span>
-            <button type="button" class="chip" data-sample="caesar">Caesar</button>
-            <button type="button" class="chip" data-sample="vigenere">Vigenère</button>
-            <button type="button" class="chip" data-sample="railfence">Rail fence</button>
-            <button type="button" class="chip" data-sample="affine">Affine</button>
-          </div>
-          <div class="attack-pick" role="tablist" aria-label="Attack">
-            <button type="button" role="tab" class="attack-tab" data-attack="brute" aria-selected="true">
-              <b>Try every shift</b><span>Caesar has 25 keys. Score each one against English.</span>
-            </button>
-            <button type="button" role="tab" class="attack-tab" data-attack="affine" aria-selected="false">
-              <b>Try every affine key</b><span>All 312 keys, scored against English.</span>
-            </button>
-            <button type="button" role="tab" class="attack-tab" data-attack="freq" aria-selected="false">
-              <b>Count the letters</b><span>Compare the letter counts with English.</span>
-            </button>
-            <button type="button" role="tab" class="attack-tab" data-attack="vig" aria-selected="false">
-              <b>Find a Vigenère key</b><span>Work out the key length, then each key letter.</span>
-            </button>
-            <button type="button" role="tab" class="attack-tab" data-attack="rail" aria-selected="false">
-              <b>Try every rail count</b><span>Score letter pairs like TH and ER.</span>
-            </button>
-          </div>
-        </div>
+          <div class="work">
+            <section class="attack" data-attack="brute" id="work-brute" role="tabpanel" aria-labelledby="attack-brute">
+              <div class="attack-head">
+                <h3>Every Caesar shift</h3>
+                <p class="verdict"></p>
+              </div>
+              <div class="options" role="radiogroup" aria-label="Order">
+                <label><input type="radio" name="brute-order" value="shift" checked><span>By shift</span></label>
+                <label><input type="radio" name="brute-order" value="score"><span>Most English first</span></label>
+              </div>
+              <ol class="shifts"></ol>
+            </section>
 
-        <div class="work">
-          <section class="attack" data-attack="brute">
-            <div class="attack-head">
-              <h3>Every Caesar shift</h3>
-              <p class="verdict"></p>
-            </div>
-            <div class="seg sort-toggle" role="radiogroup" aria-label="Order">
-              <label><input type="radio" name="brute-order" value="shift" checked><span>By shift</span></label>
-              <label><input type="radio" name="brute-order" value="score"><span>Most English first</span></label>
-            </div>
-            <ol class="shifts"></ol>
-          </section>
+            <section class="attack" data-attack="affine" id="work-affine" role="tabpanel" aria-labelledby="attack-affine" hidden>
+              <div class="attack-head">
+                <h3>The best affine keys</h3>
+                <p class="verdict"></p>
+              </div>
+              <ol class="shifts affine-keys"></ol>
+            </section>
 
-          <section class="attack" data-attack="affine" hidden>
-            <div class="attack-head">
-              <h3>The best affine keys</h3>
-              <p class="verdict"></p>
-            </div>
-            <ol class="shifts affine-keys"></ol>
-          </section>
-
-          <section class="attack" data-attack="freq" hidden>
-            <div class="attack-head">
-              <h3>Letter frequency</h3>
-              <p class="verdict"></p>
-            </div>
-            <figure class="chart freq-chart">
-              <div class="bars" role="img" aria-label="Letter frequencies of the ciphertext compared with English"></div>
-              <figcaption class="legend">
-                <span class="key-cipher">Your text</span>
-                <span class="key-english">Typical English</span>
-              </figcaption>
-            </figure>
-            <div class="slide-shift">
-              <label for="freq-shift">Shift the text back by <output class="shift-out">0</output></label>
-              <input id="freq-shift" type="range" min="0" max="25" value="0">
-              <button type="button" class="link" data-act="best-shift">Line up the best match</button>
-            </div>
-            <p class="preview"></p>
-            <dl class="tops"></dl>
-          </section>
-
-          <section class="attack" data-attack="vig" hidden>
-            <div class="attack-head">
-              <h3>Vigenère key length</h3>
-              <p class="verdict"></p>
-            </div>
-            <div class="seg sort-toggle" role="radiogroup" aria-label="Cipher">
-              <label><input type="radio" name="vig-mode" value="vigenere" checked><span>Vigenère</span></label>
-              <label><input type="radio" name="vig-mode" value="beaufort"><span>Beaufort</span></label>
-            </div>
-            <figure class="chart ioc-chart">
-              <div class="bars" role="group" aria-label="Index of coincidence for each key length"></div>
-              <figcaption class="legend">
-                <span>Pick a length to try it. The dashed line is ordinary English; random letters sit near the bottom.</span>
-              </figcaption>
-            </figure>
-            <div class="recovered">
-              <h4>Recovered key</h4>
-              <div class="key-tiles"></div>
+            <section class="attack" data-attack="freq" id="work-freq" role="tabpanel" aria-labelledby="attack-freq" hidden>
+              <div class="attack-head">
+                <h3>Letter frequency</h3>
+                <p class="verdict"></p>
+              </div>
+              <figure class="chart freq-chart">
+                <div class="bars" role="img" aria-label="Letter frequencies of the ciphertext compared with English"></div>
+                <figcaption class="legend">
+                  <span class="key-cipher">Your text</span>
+                  <span class="key-english">Typical English</span>
+                </figcaption>
+              </figure>
+              <div class="slide-shift">
+                <label for="freq-shift">Shift the text back by <output class="shift-out">0</output></label>
+                <input id="freq-shift" type="range" min="0" max="25" value="0">
+                <button type="button" class="link" data-act="best-shift">Line up the best match</button>
+              </div>
               <p class="preview"></p>
-            </div>
-          </section>
+              <dl class="tops"></dl>
+            </section>
 
-          <section class="attack" data-attack="rail" hidden>
-            <div class="attack-head">
-              <h3>Every rail count</h3>
-              <p class="verdict"></p>
-            </div>
-            <ol class="shifts rail-counts"></ol>
-          </section>
-        </div>
+            <section class="attack" data-attack="vig" id="work-vig" role="tabpanel" aria-labelledby="attack-vig" hidden>
+              <div class="attack-head">
+                <h3>Vigenère key length</h3>
+                <p class="verdict"></p>
+              </div>
+              <div class="options" role="radiogroup" aria-label="Cipher">
+                <label><input type="radio" name="vig-mode" value="vigenere" checked><span>Vigenère</span></label>
+                <label><input type="radio" name="vig-mode" value="beaufort"><span>Beaufort</span></label>
+              </div>
+              <figure class="chart ioc-chart">
+                <div class="bars" role="group" aria-label="Index of coincidence for each key length"></div>
+                <figcaption class="legend">
+                  <span>Pick a length to try it. The dashed line is ordinary English; random letters sit near the bottom.</span>
+                </figcaption>
+              </figure>
+              <div class="recovered">
+                <h4>Recovered key</h4>
+                <div class="key-tiles"></div>
+                <p class="preview"></p>
+              </div>
+            </section>
+
+            <section class="attack" data-attack="rail" id="work-rail" role="tabpanel" aria-labelledby="attack-rail" hidden>
+              <div class="attack-head">
+                <h3>Every rail count</h3>
+                <p class="verdict"></p>
+              </div>
+              <ol class="shifts rail-counts"></ol>
+            </section>
+          </div>
+        </section>
       </div>
-    </section>
     </div>
   </main>
 
