@@ -10,7 +10,7 @@
     history: '/learn',
     unbreakable: '/learn#enigma',
     strength: '/learn#strength',
-    today: '/learn#today',
+    today: '/learn#why-it-matters',
     lab: '/lab',
     share: '/lab#share',
     desk: '/codebreaking#desk',

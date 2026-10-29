@@ -100,7 +100,7 @@ test('streaks count back from today, or from yesterday until today is solved', (
 
 test('the result line', () => {
   const p = D.puzzleFor(D.addDays(D.EPOCH, 127));
-  assert.equal(D.resultText(p, 1, 4), 'Cryptex daily No. 128: cracked with 1 hint. Streak: 4');
-  assert.equal(D.resultText(p, 0, 1), 'Cryptex daily No. 128: cracked with no hints. Streak: 1');
+  assert.equal(D.resultText(p, 1, 4), 'Cryptex intercept No. 128: cracked with 1 hint. Streak: 4');
+  assert.equal(D.resultText(p, 0, 1), 'Cryptex intercept No. 128: cracked with no hints. Streak: 1');
   assert.ok(!/\u2014/.test(D.resultText(p, 2, 9)));
 });

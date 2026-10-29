@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Learn · Cryptex</title>
-  <meta name="description" content="Two thousand years of secret writing, from Atbash to Enigma and the one-time pad, and why it matters for the padlock in your browser.">
+  <meta name="description" content="Twenty-six centuries of secret writing, from Atbash to Enigma and the one-time pad, and why it matters for the padlock in your browser.">
   <link rel="canonical" href="https://cryptex.vercel.app/learn">
   <meta name="author" content="Het Nimeshkumar Upadhyay">
   <meta name="color-scheme" content="light dark">
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Cryptex">
   <meta property="og:title" content="Learn · Cryptex">
-  <meta property="og:description" content="Two thousand years of secret writing, from Atbash to Enigma and the one-time pad, and why it matters for the padlock in your browser.">
+  <meta property="og:description" content="Twenty-six centuries of secret writing, from Atbash to Enigma and the one-time pad, and why it matters for the padlock in your browser.">
   <meta property="og:url" content="https://cryptex.vercel.app/learn">
   <meta property="og:image" content="https://cryptex.vercel.app/img/og.png">
   <meta property="og:image:type" content="image/png">
@@ -24,7 +24,7 @@
   <meta property="og:image:alt" content="The Cryptex key logo and the words Every secret has a weakness, next to the brass rings of a cryptex.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Learn · Cryptex">
-  <meta name="twitter:description" content="Two thousand years of secret writing, from Atbash to Enigma and the one-time pad, and why it matters for the padlock in your browser.">
+  <meta name="twitter:description" content="Twenty-six centuries of secret writing, from Atbash to Enigma and the one-time pad, and why it matters for the padlock in your browser.">
   <meta name="twitter:image" content="https://cryptex.vercel.app/img/og.png">
   <meta name="twitter:image:alt" content="The Cryptex key logo and the words Every secret has a weakness, next to the brass rings of a cryptex.">
 
@@ -62,8 +62,8 @@
       <div class="mast-right">
         <a class="today-link" href="/codebreaking#today">
           <span>Today’s intercept</span>
-          <b class="today-no">No. —</b>
-          <time class="today-left">—</time>
+          <b class="today-no"></b>
+          <time class="today-left" aria-hidden="true"></time>
         </a>
         <button class="lamp" type="button" aria-pressed="false" aria-label="Night lamp">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -79,7 +79,7 @@
     <nav class="menu-sheet" id="menu" aria-label="Main" hidden>
       <a href="/learn" data-page="learn">Learn <small>600 BC to today</small></a>
       <a href="/lab" data-page="lab">Lab <small>Ten ciphers, step by step</small></a>
-      <a href="/codebreaking" data-page="codebreaking">Codebreaking <small class="today-no">No. —</small></a>
+      <a href="/codebreaking" data-page="codebreaking">Codebreaking <small class="today-no"></small></a>
       <div class="sheet-grip" aria-hidden="true"><i></i></div>
     </nav>
   </header>
@@ -91,8 +91,8 @@
 
   <main id="top" class="essay">
     <header class="essay-head">
-      <h1>Two thousand years of secret writing</h1>
-      <p class="standfirst">Every cipher on this page was once trusted with something that mattered, and all but one were broken. This is how each of them worked, how it fell, and why the padlock in your browser is built differently. The machines in the figures work: press their keys.</p>
+      <h1>Twenty-six centuries of secret writing</h1>
+      <p class="standfirst">Most of the ciphers on this page were trusted with something that mattered, and every one of the old ones but the one-time pad was broken. This is how each of them worked, how it fell, and why the padlock in your browser is built differently. The machines in the figures work: press their keys.</p>
     </header>
 
     <!-- The year rail. js/history.js fills it from the chapters below. -->
@@ -107,23 +107,108 @@
     </nav>
 
     <div class="chapters">
-      <!-- The ciphers from the lab. js/history.js writes the entries. -->
+      <!-- The ciphers from the lab. -->
       <section class="chapter" id="ancient" aria-labelledby="ancient-title">
         <h2 id="ancient-title">The ancient world</h2>
         <p>The oldest ciphers kept their secret in the method. Anyone who learned the trick could read every message ever written with it, so what protected them was that few people could read at all, and fewer had seen the trick.</p>
-        <div class="entries" data-group="ancient"></div>
+        <p>Three words run through the whole story. The message is the <dfn>plaintext</dfn>, the scrambled version is the <dfn>ciphertext</dfn>, and the secret setting that turns one into the other is the <dfn>key</dfn>.</p>
+        <div class="entries">
+          <article class="entry" id="atbash" data-year="c. 600 BC" aria-labelledby="atbash-title">
+            <h3 id="atbash-title">Atbash</h3>
+            <p class="dateline"><span class="year">c. 600 BC</span> <span class="place">Jerusalem</span></p>
+            <p>The Book of Jeremiah writes Babel as Sheshach, swapping the first letter of the Hebrew alphabet for the last, the second for the second-to-last, and so on.</p>
+            <p><b>How it fell.</b> It has no key. Anyone who knows the trick can read every message ever written with it.</p>
+            <p class="sample"><span>ATTACK AT DAWN</span> <b>ZGGZXP ZG WZDM</b></p>
+            <a class="link" href="/lab" data-cipher="atbash">Try it in the lab</a>
+          </article>
+          <article class="entry" id="polybius" data-year="c. 150 BC" aria-labelledby="polybius-title">
+            <h3 id="polybius-title">Polybius</h3>
+            <p class="dateline"><span class="year">c. 150 BC</span> <span class="place">Greece</span></p>
+            <p>The historian Polybius described turning each letter into two numbers, so a message could be signalled across a valley with torches. It was a way to send letters, not to hide them.</p>
+            <p><b>How it fell.</b> Used as a cipher, each letter always becomes the same two digits, so it’s a simple substitution in disguise. Count the pairs and it opens like any other.</p>
+            <p class="sample"><span>ATTACK AT DAWN</span> <b>11 44 44 11 13 25 / 11 44 / 14 11 52 33</b></p>
+            <a class="link" href="/lab" data-cipher="polybius">Try it in the lab</a>
+          </article>
+          <article class="entry" id="caesar" data-year="c. 50 BC" aria-labelledby="caesar-title">
+            <h3 id="caesar-title">Caesar</h3>
+            <p class="dateline"><span class="year">c. 50 BC</span> <span class="place">Rome</span></p>
+            <p>Suetonius wrote that Julius Caesar moved every letter of his private letters three places along. Few people could read at all, so it was often enough.</p>
+            <p><b>How it fell.</b> There are only 25 shifts. Trying every one takes a few minutes by hand.</p>
+            <p class="sample"><span>ATTACK AT DAWN</span> <b>DWWDFN DW GDZQ</b></p>
+            <a class="link" href="/lab" data-cipher="caesar">Try it in the lab</a>
+          </article>
+        </div>
       </section>
 
       <section class="chapter" id="alphabets" aria-labelledby="alphabets-title">
         <h2 id="alphabets-title">Keys and alphabets</h2>
-        <p>In the Renaissance a cipher split into two parts: a method that could be written down and shared, and a short key that only the two sides knew. A new key changed every message without changing the method. The strongest of these used a different alphabet for each letter, so one letter of the message could come out as several different letters.</p>
-        <div class="entries" data-group="alphabets"></div>
+        <p>Around 850 the Arab scholar al-Kindi showed how to break any cipher that always swaps a letter for the same one: count the symbols. The most common one stands for the language’s most common letter, E in English, and the rest follow. That idea, frequency analysis, breaks every cipher in the last chapter.</p>
+        <p>In the Renaissance a cipher split into two parts: a method that could be written down and shared, and a short key that only the two sides knew. A new key changed every message without changing the method. The strongest of these answered al-Kindi by using a different alphabet for each letter, so one letter of the message could come out as several different letters.</p>
+        <div class="entries">
+          <article class="entry" id="vigenere" data-year="1553" aria-labelledby="vigenere-title">
+            <h3 id="vigenere-title">Vigenère</h3>
+            <p class="dateline"><span class="year">1553</span> <span class="place">Venice</span></p>
+            <p>Giovan Battista Bellaso keyed a cipher with a word, giving each letter its own shift. Later credited to Vigenère, it held out for three centuries.</p>
+            <p><b>How it fell.</b> The keyword repeats. Charles Babbage in the 1850s and Friedrich Kasiski in 1863 found the key length from stretches of ciphertext that repeat. After that it’s just several Caesar ciphers.</p>
+            <p class="sample"><span>ATTACK AT DAWN</span> <b>LXFOPV EF RNHR</b></p>
+            <a class="link" href="/lab" data-cipher="vigenere">Try it in the lab</a>
+          </article>
+          <article class="entry" id="autokey" data-year="1586" aria-labelledby="autokey-title">
+            <h3 id="autokey-title">Autokey</h3>
+            <p class="dateline"><span class="year">1586</span> <span class="place">Paris</span></p>
+            <p>Blaise de Vigenère’s own design let the message become its own key, so there was no repeating pattern for an attacker to find.</p>
+            <p><b>How it fell.</b> The key is the message, and the message is ordinary language. Guess a likely word such as THE in the right place and the letters around it come out one after another.</p>
+            <p class="sample"><span>ATTACK AT DAWN</span> <b>QNXEPK TM DCGN</b></p>
+            <a class="link" href="/lab" data-cipher="autokey">Try it in the lab</a>
+          </article>
+          <article class="entry" id="affine" data-year="1801" aria-labelledby="affine-title">
+            <h3 id="affine-title">Affine</h3>
+            <p class="dateline"><span class="year">1801</span> <span class="place">Brunswick</span></p>
+            <p>Gauss’s Disquisitiones Arithmeticae made modular arithmetic standard. Later teachers used it to turn Caesar’s shift into a family: multiply, add, and wrap around 26. Nobody relied on it for real secrets.</p>
+            <p><b>How it fell.</b> Only 312 keys, and it’s still one fixed alphabet, so the letter counts give it away just as they do for Caesar.</p>
+            <p class="sample"><span>ATTACK AT DAWN</span> <b>IZZISG IZ XIOV</b></p>
+            <a class="link" href="/lab" data-cipher="affine">Try it in the lab</a>
+          </article>
+          <article class="entry" id="playfair" data-year="1854" aria-labelledby="playfair-title">
+            <h3 id="playfair-title">Playfair</h3>
+            <p class="dateline"><span class="year">1854</span> <span class="place">London</span></p>
+            <p>Charles Wheatstone invented it and Lyon Playfair promoted it. It was quick enough for soldiers in the field and served into the First World War.</p>
+            <p><b>How it fell.</b> Pairs hide single-letter counts, but a pair always encrypts the same way, and common pairs like TH and HE still stand out. Counting pairs, a codebreaker with a pencil could read it.</p>
+            <p class="sample"><span>ATTACK AT DAWN</span> <b>RSSRDERSBRNY</b></p>
+            <a class="link" href="/lab" data-cipher="playfair">Try it in the lab</a>
+          </article>
+          <article class="entry" id="beaufort" data-year="1857" aria-labelledby="beaufort-title">
+            <h3 id="beaufort-title">Beaufort</h3>
+            <p class="dateline"><span class="year">1857</span> <span class="place">London</span></p>
+            <p>Francis Beaufort, of the wind scale, left a Vigenère variant that subtracts instead of adds. It later ran inside the Hagelin M-209 machine.</p>
+            <p><b>How it fell.</b> Its keyword repeats just like Vigenère’s, so the same attack works.</p>
+            <p class="sample"><span>ATTACK AT DAWN</span> <b>FVYTDE RA COVG</b></p>
+            <a class="link" href="/lab" data-cipher="beaufort">Try it in the lab</a>
+          </article>
+        </div>
       </section>
 
       <section class="chapter" id="transposition" aria-labelledby="transposition-title">
         <h2 id="transposition-title">Transposition</h2>
         <p>Everything so far swapped letters for other letters. Transposition keeps every letter of the message and only changes where it stands. That leaves the letter counts exactly as they were, which is the first thing a codebreaker checks: English letter counts in a scrambled order mean the letters were moved, not replaced.</p>
-        <div class="entries" data-group="transposition"></div>
+        <div class="entries">
+          <article class="entry" id="railfence" data-year="1860s" aria-labelledby="railfence-title">
+            <h3 id="railfence-title">Rail fence</h3>
+            <p class="dateline"><span class="year">1860s</span> <span class="place">American Civil War</span></p>
+            <p>Union telegraph operators hid orders with route transpositions: whole words written into a grid and read off along a set path. The rail fence is the simplest cipher of that kind, easy to do by hand and just as easy to undo.</p>
+            <p><b>How it fell.</b> The letter counts look exactly like English, which says the letters were moved, not replaced. After that there are only a handful of rail counts to try.</p>
+            <p class="sample"><span>ATTACK AT DAWN</span> <b>ACDTAKTANTAW</b></p>
+            <a class="link" href="/lab" data-cipher="railfence">Try it in the lab</a>
+          </article>
+          <article class="entry" id="columnar" data-year="1914" aria-labelledby="columnar-title">
+            <h3 id="columnar-title">Columnar</h3>
+            <p class="dateline"><span class="year">1914</span> <span class="place">Western Front</span></p>
+            <p>Columnar transposition, often done twice, sat at the heart of German army ciphers in the First World War, including the famous ADFGVX.</p>
+            <p><b>How it fell.</b> Done once, it can be undone by sliding columns side by side until common pairs like TH and ER line up. In 1918 the French codebreaker Georges Painvin broke ADFGVX by hand.</p>
+            <p class="sample"><span>ATTACK AT DAWN</span> <b>CWTDTTAAKNAA</b></p>
+            <a class="link" href="/lab" data-cipher="columnar">Try it in the lab</a>
+          </article>
+        </div>
       </section>
 
       <!-- Enigma -->
@@ -203,13 +288,13 @@
         </div>
 
         <h3>Why it’s harder than Caesar</h3>
-        <p>Caesar uses one alphabet for the whole message. Enigma’s right rotor turns before every letter and carries the others along like an odometer, so each key press uses a different alphabet, and the pattern only repeats after 16,900 letters. Press A five times and watch.</p>
-        <p>Add the choice of rotors and the plugboard and there were about 159 million million million settings. At a billion a second, trying them all would take some 5,000 years.</p>
+        <p>Caesar uses one alphabet for the whole message. Enigma’s right rotor turns before every letter and carries the others along like an odometer, so each key press uses a different alphabet, and the pattern only repeats after 16,900 letters. That’s a little under 26 × 26 × 26, because once a cycle the middle rotor steps twice in a row. Press A five times and watch.</p>
+        <p>Choose three rotors from five, as the army did, plug ten cables instead of six, and there were about 159 million million million settings. At a billion a second, trying them all would take some 5,000 years.</p>
 
         <h3>How Bletchley Park read it anyway</h3>
-        <p>Polish mathematicians led by Marian Rejewski broke the early version in 1932 and handed their methods to Britain in 1939. Nobody tried every setting. The weaknesses were elsewhere.</p>
+        <p>The Polish mathematicians Marian Rejewski, Jerzy Różycki and Henryk Zygalski broke the early version from 1932 and handed their methods to Britain and France in 1939. Nobody tried every setting. The weaknesses were elsewhere.</p>
         <ul class="facts">
-          <li><b>Cribs.</b> Weather reports went out at the same times in the same words, so codebreakers could guess a stretch of plaintext, like WETTERVORHERSAGE, weather forecast.</li>
+          <li><b>Cribs.</b> Weather reports went out at the same times in the same words, so codebreakers could guess a stretch of plaintext, like <span lang="de">WETTERVORHERSAGE</span>, weather forecast.</li>
           <li><b>A letter never encrypts to itself.</b> The reflector makes sure of it. A guessed word can only sit where none of its letters lines up with the same letter, which rules out most positions at once.</li>
           <li><b>Operator habits.</b> Lazy start positions like AAA, the same greetings, the same sign-offs, day after day.</li>
           <li><b>The bombe.</b> Alan Turing and Gordon Welchman built on the Polish bomba: a machine that ran through rotor positions against a crib and threw out every one that led to a contradiction.</li>
@@ -221,7 +306,7 @@
         <h2 id="pad-title">The one-time pad</h2>
         <p class="dateline"><span class="year">1882 to 1949</span> <span class="place">Sacramento, New York and Bell Labs</span></p>
         <p>Machines made ciphers far harder to crack, and the most famous of them fell anyway. One cipher never has. It’s the honest exception to every secret having a weakness, and it comes with conditions.</p>
-        <p>The banker Frank Miller described it for telegrams in 1882 and was forgotten. In 1917 Gilbert Vernam rebuilt it on teleprinter tape. The idea fits in a sentence: add a random letter to every letter of the message, wrapping round after Z. A counts as 0, B as 1, and so on. That’s the whole cipher.</p>
+        <p>The banker Frank Miller described it for telegrams in 1882 and was forgotten. In 1917 Gilbert Vernam built it into teleprinters, and Joseph Mauborgne saw that the key tape had to be random and never reused. The idea fits in a sentence: add a random letter to every letter of the message, wrapping round after Z. A counts as 0, B as 1, and so on. That’s the whole cipher.</p>
 
         <figure class="fig">
           <div class="sheet otp-step">
@@ -235,7 +320,7 @@
             <p class="otp-legend" aria-hidden="true"><span class="m">Message</span> + <span class="k">pad</span> = <span class="c">ciphertext</span></p>
             <div class="otp-tiles real" aria-label="Message, pad and ciphertext, letter by letter"></div>
           </div>
-          <figcaption>Each column is one sum. The pad comes from your browser’s cryptographic random number generator, so nobody, this page included, could have predicted it.</figcaption>
+          <figcaption>Each column is one sum. The pad comes from your browser’s cryptographic random number generator, so nobody, this page included, could have predicted it. Real pads came from dice, noise or hardware, but this is close enough to show the idea.</figcaption>
         </figure>
 
         <p>One pad turned ATTACK AT DAWN into the line below. Yours is different every time you draw one.</p>
@@ -278,10 +363,10 @@
             </dl>
             <button type="button" class="btn small" data-act="reuse-pad">Use a different pad</button>
           </div>
-          <figcaption>MEET AT THE BRIDGE and BRING THE MAPS NOW on one pad. Draw another and only the first two lines change.</figcaption>
+          <figcaption>MEET AT THE BRIDGE and BRING THE MAPS NOW on one pad. Use a different pad and only the first two lines change.</figcaption>
         </figure>
 
-        <p>A new pad changes both ciphertexts but never their difference. Subtracting one from the other cancels the pad and leaves message one minus message two, with no key at all. Guess that message one starts with MEET, take the difference away from it, and BRIN appears: the start of message two. American codebreakers read about 3,000 Soviet messages this way in the Venona project, after some pads had been printed twice.</p>
+        <p>A new pad changes both ciphertexts but never their difference. Subtracting one from the other cancels the pad and leaves message one minus message two, with no key at all. Guess that message one starts with MEET, take the difference away from it, and BRIN appears: the start of message two. American codebreakers read all or part of about 3,000 Soviet messages in the Venona project, after some pads had been printed twice.</p>
 
         <p class="coda">So the headline has one honest exception, and only while every rule holds, every time. The pad has to be made, carried to the other side in secret and destroyed after use, and you need as much of it as everything you’ll ever send. That’s why it was kept for spies and for the hotline between Washington and Moscow, and why almost nothing else uses it.</p>
       </section>
@@ -289,25 +374,25 @@
       <!-- Key strength -->
       <section class="chapter" id="strength" data-year="2001" data-rail="Key strength" aria-labelledby="strength-title">
         <h2 id="strength-title">How long would it take?</h2>
-        <p>Suppose a computer tries a billion keys a second. The chart shows how long it would need to try every key of each cipher in this essay, and what actually broke it. A huge number of keys only protects you if there is no shortcut, and every cipher here has one.</p>
+        <p>Suppose a computer tries a billion keys a second. The chart shows how long it would need to try every key of each cipher in the lab, and what actually broke it. A huge number of keys only protects you if there is no shortcut, and every classical cipher here has one.</p>
 
         <figure class="fig">
           <div class="sheet strength">
             <ol class="strength-list"></ol>
           </div>
-          <figcaption>Bars are on a log scale: each step along is ten times as many keys. AES-128, the cipher your browser uses, is at the bottom for comparison.</figcaption>
+          <figcaption>Bars are on a log scale: a bar twice as long means a key count with twice as many digits. AES-128, the cipher your browser uses, is at the bottom for comparison.</figcaption>
         </figure>
 
         <p>Playfair has more keys than there are grains of sand on Earth, and a codebreaker with a pencil could still read it by counting letter pairs.</p>
       </section>
 
       <!-- Why this matters today -->
-      <section class="chapter" id="today" data-year="today" data-rail="Why it matters" aria-labelledby="today-title">
+      <section class="chapter" id="why-it-matters" data-year="Today" data-rail="Why it matters" aria-labelledby="today-title">
         <h2 id="today-title">Why this matters today</h2>
         <p>The padlock in your browser runs on the same ideas as everything on this page, rebuilt so the shortcuts are gone.</p>
 
         <h3>Confusion and diffusion</h3>
-        <p>AES, the cipher behind almost every https connection, works in rounds. Each round swaps every byte through a fixed table, then shifts and mixes the bytes across the block. Shannon, the same mathematician who proved the one-time pad unbreakable, named the two ideas confusion and diffusion in 1949. One round on its own would fall like any cipher here. AES-128 runs ten.</p>
+        <p>AES, the cipher behind almost every https connection, works in rounds. Each round swaps every byte through a fixed table, shifts and mixes the bytes across the block, then mixes in a fresh piece of the key. Shannon, the same mathematician who proved the one-time pad unbreakable, named the two ideas confusion and diffusion in 1949. One round on its own would fall like any cipher here. AES-128 runs ten.</p>
 
         <h3>Too many keys to try</h3>
         <p>AES-128 has 2<sup>128</sup> keys, about 3.4 × 10<sup>38</sup>. At a billion a second, trying them all would take around 10<sup>22</sup> years, close to a trillion times the age of the universe. Every other cipher in <a href="#strength">the chart</a> had a shortcut. In more than twenty years of public attacks, nobody has found one for AES that matters.</p>
@@ -326,7 +411,7 @@
               <li class="hs-step">
                 <span class="hs-dir">Site <i aria-hidden="true">→</i> browser</span>
                 <h4>Proof</h4>
-                <p>The site sends its half, plus a certificate signed by an authority your browser already trusts, proving it really is the address in the bar.</p>
+                <p>The site sends its half and a certificate signed by an authority your browser already trusts. Then it signs the conversation so far with a private key only the real site holds, proving it really is the address in the bar.</p>
               </li>
               <li class="hs-step">
                 <span class="hs-dir">Each side alone</span>
@@ -344,7 +429,7 @@
         </figure>
 
         <h3>Check it yourself</h3>
-        <p>On any https site, click the padlock, or the icon in its place, next to the address. Open the connection or certificate details and you’ll see who vouched for the site. Your browser’s developer tools go further and often name the key exchange and the cipher, such as X25519 and AES_128_GCM.</p>
+        <p>On any https site, click the padlock, or the icon in its place, next to the address. Open the connection or certificate details and you’ll see who vouched for the site. Your browser’s developer tools go further and often name the key exchange and the cipher, such as X25519MLKEM768 and AES_128_GCM.</p>
 
         <p class="coda">The ciphers have stopped being the weak point. What breaks now is what broke Enigma: people. Reused passwords, convincing fake login pages, software nobody updated. Every secret still has a weakness. These days it’s usually us.</p>
       </section>
@@ -372,7 +457,7 @@
             <li><a href="/learn#enigma">Enigma</a></li>
             <li><a href="/learn#one-time-pad">One-time pad</a></li>
             <li><a href="/learn#strength">Key strength</a></li>
-            <li><a href="/learn#today">Why it matters</a></li>
+            <li><a href="/learn#why-it-matters">Why it matters</a></li>
           </ul>
         </div>
         <div>
