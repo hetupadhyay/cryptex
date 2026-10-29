@@ -421,12 +421,25 @@
     const week = $('.daily-week', section);
 
     // { days: { 'YYYY-MM-DD': hints used }, best, hints: { date, n } }
+    // Storage can hold anything, so keep only entries of the expected shape.
     function load() {
       const blank = { days: {}, best: 0, hints: { date: '', n: 0 } };
+      const count = n => Number.isInteger(n) && n >= 0 && n < 1e6;
       try {
         const saved = JSON.parse(localStorage.getItem(STORE));
-        if (!saved || typeof saved.days !== 'object') return blank;
-        return { ...blank, ...saved };
+        if (!saved || typeof saved !== 'object') return blank;
+        const days = {};
+        if (saved.days && typeof saved.days === 'object' && !Array.isArray(saved.days)) {
+          for (const [day, hints] of Object.entries(saved.days)) {
+            if (/^\d{4}-\d{2}-\d{2}$/.test(day) && count(hints)) days[day] = hints;
+          }
+        }
+        const h = saved.hints;
+        return {
+          days,
+          best: count(saved.best) ? saved.best : 0,
+          hints: h && typeof h.date === 'string' && count(h.n) ? { date: h.date, n: h.n } : blank.hints,
+        };
       } catch {
         return blank;
       }
