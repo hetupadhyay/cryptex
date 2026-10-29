@@ -69,17 +69,7 @@
     list.append(li);
   }
 
-  // Grow the bars the first time the chart comes into view.
-  const chart = document.querySelector('.strength');
-  if ('IntersectionObserver' in window && !Stage.reduced) {
-    const io = new IntersectionObserver(entries => {
-      if (entries.some(e => e.isIntersecting)) {
-        chart.classList.add('shown');
-        io.disconnect();
-      }
-    }, { threshold: 0.25 });
-    io.observe(chart);
-  } else {
-    chart.classList.add('shown');
-  }
+  // The bars are drawn at full length from the start: the chart is read,
+  // not played. (site.css still keeps them at zero until .shown is set.)
+  document.querySelector('.strength').classList.add('shown');
 })();
