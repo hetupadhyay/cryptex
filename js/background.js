@@ -81,9 +81,9 @@
     pen(g);
   }
 
-  // Only bare page shows the pad; panels, cards and text sit on top of it.
+  // Only bare page shows the pad; sheets, folders and text sit on top of it.
   const OPEN = new Set(['BODY', 'MAIN', 'HTML', 'CANVAS']);
-  const OPEN_CLASSES = ['bench', 'controls', 'work', 'panel', 'picker-groups', 'picker-group', 'keys', 'masthead'];
+  const OPEN_CLASSES = ['hero', 'hero-copy', 'cryptex-stage', 'today-strip', 'doors', 'door-learn'];
   function isOpen(x, y) {
     const hit = document.elementFromPoint(x, y);
     return !hit || OPEN.has(hit.tagName) || OPEN_CLASSES.some(c => hit.classList.contains(c));
