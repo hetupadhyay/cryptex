@@ -5,7 +5,7 @@
   'use strict';
 
   const Ciphers = root.Ciphers || require('./ciphers.js');
-  const { lettersOnly, toIndex, toLetter, mod } = Ciphers;
+  const { lettersOnly, toIndex, toLetter, modInverse } = Ciphers;
 
   // Percent of letters in typical English text.
   const ENGLISH = [
@@ -94,14 +94,17 @@
     return scores.find(s => s.ioc >= best * 0.9).length;
   }
 
-  function crackVigenere(text, length) {
+  // Try all 26 letters for each column of a repeating-key cipher and keep
+  // the one whose column reads most like English. undo(c, k) turns a
+  // ciphertext letter back into plaintext for key letter k.
+  function crackColumns(text, length, undo) {
     const letters = lettersOnly(text);
     const cols = columns(letters, length);
     const shifts = cols.map(col => {
       let bestShift = 0;
       let bestChi = Infinity;
       for (let s = 0; s < 26; s++) {
-        const chi = chiSquared([...col].map(ch => toLetter(toIndex(ch) - s)).join(''));
+        const chi = chiSquared([...col].map(ch => toLetter(undo(toIndex(ch), s))).join(''));
         if (chi < bestChi) {
           bestChi = chi;
           bestShift = s;
@@ -112,10 +115,70 @@
     const key = shifts.map(toLetter).join('');
     let n = 0;
     const plaintext = text.replace(/[a-z]/gi, ch => {
-      const c = toLetter(mod(toIndex(ch) - shifts[n++ % length], 26));
+      const c = toLetter(undo(toIndex(ch), shifts[n++ % length]));
       return ch === ch.toLowerCase() ? c.toLowerCase() : c;
     });
     return { key, plaintext };
+  }
+
+  const crackVigenere = (text, length) => crackColumns(text, length, (c, k) => c - k);
+
+  // Beaufort encrypts with c = k - p, so p = k - c. The key still repeats,
+  // so keyLengthScores finds its length the same way.
+  const crackBeaufort = (text, length) => crackColumns(text, length, (c, k) => k - c);
+
+  // ---- transposition and affine ---------------------------------------------
+
+  // Percent of letter pairs in typical English text, for the most common pairs.
+  const BIGRAMS = {
+    TH: 3.56, HE: 3.07, IN: 2.43, ER: 2.05, AN: 1.99, RE: 1.85, ON: 1.76, AT: 1.49,
+    EN: 1.45, ND: 1.35, TI: 1.34, ES: 1.34, OR: 1.28, TE: 1.20, OF: 1.17, ED: 1.17,
+    IS: 1.13, IT: 1.12, AL: 1.09, AR: 1.07, ST: 1.05, TO: 1.04, NT: 1.04, NG: 0.95,
+    SE: 0.93, HA: 0.93, AS: 0.87, OU: 0.87, IO: 0.83, LE: 0.83, VE: 0.83, CO: 0.79,
+    ME: 0.79, DE: 0.76, HI: 0.76, RI: 0.73, RO: 0.73, IC: 0.70, NE: 0.69, EA: 0.69,
+    RA: 0.69, CE: 0.65, LI: 0.62, CH: 0.60, LL: 0.58, BE: 0.58, MA: 0.57, SI: 0.55,
+    OM: 0.55, UR: 0.54,
+  };
+  // Any pair not in the table counts as this rare.
+  const RARE_PAIR = 0.02;
+
+  // Average log-probability of each letter pair. Higher means more English.
+  // A transposition keeps every letter, so single-letter counts can't tell
+  // the right order from a wrong one, but pairs like TH and ER can.
+  function bigramScore(letters) {
+    if (letters.length < 2) return -Infinity;
+    let sum = 0;
+    for (let i = 1; i < letters.length; i++) {
+      sum += Math.log10(BIGRAMS[letters[i - 1] + letters[i]] || RARE_PAIR);
+    }
+    return sum / (letters.length - 1);
+  }
+
+  // The text read back on every rail count from 2 to 8, each with its score.
+  function railCandidates(text) {
+    const railfence = Ciphers.byId('railfence');
+    const rows = [];
+    for (let rails = 2; rails <= 8; rails++) {
+      const plain = railfence.decrypt(text, { rails });
+      rows.push({ rails, text: plain, score: bigramScore(plain) });
+    }
+    return rows;
+  }
+
+  // All 312 affine keys, most English first.
+  function affineCandidates(text) {
+    const affine = Ciphers.byId('affine');
+    const letters = lettersOnly(text);
+    const rows = [];
+    for (let a = 1; a < 26; a += 2) {
+      if (a === 13) continue;
+      const inverse = modInverse(a, 26);
+      for (let b = 0; b < 26; b++) {
+        const plain = [...letters].map(ch => toLetter(inverse * (toIndex(ch) - b))).join('');
+        rows.push({ a, b, text: affine.decrypt(text, { a, b }), chi: chiSquared(plain) });
+      }
+    }
+    return rows.sort((x, y) => x.chi - y.chi);
   }
 
   const api = {
@@ -130,6 +193,10 @@
     keyLengthScores,
     guessKeyLength,
     crackVigenere,
+    crackBeaufort,
+    bigramScore,
+    railCandidates,
+    affineCandidates,
   };
 
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

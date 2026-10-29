@@ -29,7 +29,6 @@
   let inkStrong = '';
   let width = 0;
   let height = 0;
-  let frame = null;
   let nextDecode = 0;
 
   function readInk() {
@@ -61,14 +60,25 @@
     draw();
   }
 
+  function pen(g) {
+    ctx.fillStyle = g.state === 'rest' || g.state === 'serial' ? ink : inkStrong;
+    ctx.fillText(g.text, g.x, g.y);
+  }
+
+  // The whole pad. Only needed when the page is laid out, the theme
+  // changes or the font arrives; after that only changing groups repaint.
   function draw() {
     ctx.clearRect(0, 0, width, height);
     ctx.font = '13px "Courier Prime", ui-monospace, monospace';
     ctx.textBaseline = 'alphabetic';
-    for (const g of groups) {
-      ctx.fillStyle = g.state === 'rest' || g.state === 'serial' ? ink : inkStrong;
-      ctx.fillText(g.text, g.x, g.y);
-    }
+    for (const g of groups) pen(g);
+  }
+
+  // Groups sit well apart, so a group can be wiped and rewritten inside
+  // its own box without touching its neighbours.
+  function redraw(g) {
+    ctx.clearRect(g.x - 4, g.y - 15, GROUP_W - 8, ROW_H - 6);
+    pen(g);
   }
 
   // Only bare page shows the pad; panels, cards and text sit on top of it.
@@ -109,6 +119,7 @@
 
     for (const g of active) {
       const t = now - g.start;
+      const was = g.text + g.state;
       if (g.state === 'decoding') {
         if (t < SCRAMBLE_MS) {
           g.text = scramble(g.word, t / SCRAMBLE_MS);
@@ -129,29 +140,47 @@
           g.state = 'rest';
         }
       }
+      if (g.text + g.state !== was) redraw(g);
     }
     active = active.filter(g => g.state !== 'rest');
-    draw();
   }
 
+  // Frames only run while letters are scrambling. The rest of the time
+  // (words holding, or nothing happening) a timer waits for the next
+  // thing that is due, so an idle page does no work at all.
+  let frame = null;
+  let timer = null;
   let last = 0;
+
+  function schedule() {
+    cancelAnimationFrame(frame);
+    clearTimeout(timer);
+    frame = timer = null;
+    if (still.matches || document.hidden) return;
+    if (active.some(g => g.state !== 'holding')) {
+      frame = requestAnimationFrame(tick);
+      return;
+    }
+    let due = active.length < MAX_ACTIVE ? nextDecode : Infinity;
+    for (const g of active) due = Math.min(due, g.start + HOLD_MS + 1);
+    timer = setTimeout(() => {
+      step(performance.now());
+      schedule();
+    }, Math.max(0, due - performance.now()));
+  }
+
   function tick(now) {
     // Twenty frames a second is plenty for letters ticking over.
     if (now - last > 50) {
       step(now);
       last = now;
     }
-    frame = requestAnimationFrame(tick);
+    schedule();
   }
 
   function start() {
-    cancelAnimationFrame(frame);
-    if (still.matches || document.hidden) {
-      draw();
-      return;
-    }
-    nextDecode = performance.now() + 600;
-    frame = requestAnimationFrame(tick);
+    if (!still.matches && !document.hidden) nextDecode = performance.now() + 600;
+    schedule();
   }
 
   readInk();
@@ -162,7 +191,10 @@
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(layout, 150);
+    resizeTimer = setTimeout(() => {
+      layout();
+      schedule();
+    }, 150);
   });
   document.addEventListener('visibilitychange', start);
   still.addEventListener('change', start);

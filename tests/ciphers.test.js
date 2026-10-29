@@ -57,3 +57,36 @@ test('vigenere attack recovers the key', () => {
   assert.equal(length, 6);
   assert.equal(A.crackVigenere(secret, length).key, 'CIPHER');
 });
+
+test('beaufort attack recovers the key', () => {
+  const text = 'The harbour master keeps two sets of books. One goes to the customs office every Friday, and the other stays locked in the safe behind his desk. Find the second set and copy the pages for the last three months, then put everything back exactly as you found it.';
+  const secret = run('beaufort', 'encrypt', text, { key: 'ANCHOR' });
+  const length = A.guessKeyLength(A.keyLengthScores(secret));
+  assert.equal(length, 6);
+  const { key, plaintext } = A.crackBeaufort(secret, length);
+  assert.equal(key, 'ANCHOR');
+  assert.equal(plaintext, text);
+});
+
+test('rail fence attack picks the right rail count', () => {
+  const text = 'The convoy leaves at dawn from the southern harbour with six ships and two escorts. Tell the pilots to stay low over the water until they reach the coast.';
+  for (let rails = 2; rails <= 8; rails++) {
+    const secret = run('railfence', 'encrypt', text, { rails });
+    const rows = A.railCandidates(secret);
+    assert.deepEqual(rows.map(r => r.rails), [2, 3, 4, 5, 6, 7, 8]);
+    const best = rows.reduce((a, b) => (b.score > a.score ? b : a));
+    assert.equal(best.rails, rails);
+    assert.equal(best.text, C.lettersOnly(text));
+  }
+});
+
+test('affine attack tries all 312 keys and ranks the right one first', () => {
+  const text = 'The ledger is hidden behind the clock in the station master’s office. Collect it before the morning train and leave the key with the porter.';
+  for (const [a, b] of [[5, 8], [7, 3], [25, 0], [11, 19]]) {
+    const secret = run('affine', 'encrypt', text, { a, b });
+    const rows = A.affineCandidates(secret);
+    assert.equal(rows.length, 312);
+    assert.deepEqual([rows[0].a, rows[0].b], [a, b]);
+    assert.equal(rows[0].text, text);
+  }
+});

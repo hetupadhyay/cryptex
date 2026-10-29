@@ -1,0 +1,291 @@
+/* ---------------- daily intercept ----------------
+   One sheet a day, torn off like a desk calendar, with a small record
+   beside it. The card borrows the intercept classes from site.css; it
+   isn't a .mission itself because intercepts.js picks up the first
+   .mission on the page. */
+
+.daily {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+  gap: 24px;
+  align-items: start;
+}
+
+.daily-card {
+  position: relative;
+  display: grid;
+  gap: 18px;
+  padding: 28px 30px 26px;
+  border: 1px solid var(--rule);
+  border-radius: 28px;
+  background: var(--sheet);
+  box-shadow: var(--shadow-l);
+  overflow: hidden;
+}
+
+/* The dateline, with a perforation under it like a calendar page. */
+.daily-head {
+  gap: 6px;
+  padding-bottom: 18px;
+  border-bottom: 1px dashed var(--rule-strong);
+}
+
+.daily-no {
+  font-variant-numeric: tabular-nums;
+}
+
+.daily-level {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pips {
+  display: flex;
+  gap: 3px;
+}
+
+.pips i {
+  width: 14px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--rule-strong);
+}
+
+.pips i.on {
+  background: var(--brass);
+}
+
+.daily-from {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.daily-card.cracked .intercept {
+  color: var(--carbon);
+}
+
+#daily-input {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* The line to share once it's cracked. */
+.daily-done {
+  display: grid;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px dashed var(--rule-strong);
+  border-radius: 16px;
+  animation: row-in 360ms var(--ease-out) backwards;
+}
+
+.daily-done[hidden] {
+  display: none;
+}
+
+.daily-result {
+  font: 700 15.5px/1.5 var(--type);
+  overflow-wrap: anywhere;
+}
+
+.daily-copy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.daily-copied {
+  color: var(--carbon);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+/* ---- the record beside it ---- */
+
+.daily-side {
+  display: grid;
+  gap: 20px;
+  padding: 22px 22px 20px;
+  border: 1px solid var(--rule);
+  border-radius: 24px;
+  background: var(--sheet);
+  box-shadow: var(--shadow-s);
+}
+
+.daily-clock {
+  display: grid;
+  gap: 2px;
+}
+
+.daily-clock span,
+.daily-stats dt {
+  color: var(--ink-3);
+  font-size: 12.5px;
+  font-weight: 650;
+}
+
+.daily-countdown {
+  font: 700 32px/1.1 var(--type);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+}
+
+.daily-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+
+.daily-stats dd {
+  margin: 2px 0 0;
+  font: 700 24px/1.1 var(--type);
+  font-variant-numeric: tabular-nums;
+}
+
+.daily-stats dd.live {
+  color: var(--pencil);
+}
+
+/* Monday to Sunday. The brass tick under each day grows with its difficulty. */
+.daily-week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  margin: 0;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--rule);
+  list-style: none;
+}
+
+.daily-day {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 5px;
+}
+
+.dd-name {
+  color: var(--ink-3);
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.dd-mark {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 50%;
+  color: var(--ink-2);
+  font: 700 13px var(--type);
+  transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease;
+}
+
+.daily-day::after {
+  content: '';
+  width: 3px;
+  height: calc(var(--tier) * 3px);
+  border-radius: 2px;
+  background: var(--brass);
+  opacity: 0.55;
+}
+
+.daily-day.today .dd-name {
+  color: var(--ink);
+}
+
+.daily-day.today .dd-mark {
+  border: 2px solid var(--ink);
+  color: var(--ink);
+}
+
+.daily-day.cracked .dd-mark {
+  border-color: var(--pencil);
+  background: var(--pencil);
+  color: var(--on-solid);
+}
+
+.daily-day.ahead .dd-mark {
+  border-style: dashed;
+  color: var(--ink-3);
+}
+
+.daily-day.ahead::after {
+  opacity: 0.25;
+}
+
+.daily-status {
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+@media (max-width: 960px) {
+  .daily {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Side by side under the card while there's room. */
+  .daily-side {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 28px;
+    align-items: center;
+  }
+
+  .daily-stats {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .daily-week,
+  .daily-status {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .daily-card {
+    padding-left: 16px;
+    padding-right: 16px;
+    border-radius: 22px;
+  }
+
+  .daily-card .stamp {
+    top: 18px;
+    right: 14px;
+    font-size: 17px;
+  }
+
+  .daily-side {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 18px 16px;
+    border-radius: 22px;
+  }
+
+  .daily-stats {
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daily-done {
+    animation: none;
+  }
+
+  .dd-mark {
+    transition-duration: 1ms;
+  }
+}
