@@ -245,7 +245,7 @@ main {
   height: 48px;
   padding: 0 22px;
   border: 0;
-  border-radius: 14px;
+  border-radius: 6px;
   font-weight: 650;
   font-size: 15.5px;
   text-decoration: none;
@@ -270,7 +270,7 @@ main {
 .btn.small {
   height: 38px;
   padding: 0 14px;
-  border-radius: 11px;
+  border-radius: 5px;
   font-size: 14px;
 }
 
@@ -325,7 +325,7 @@ main {
 .chip {
   padding: 6px 12px;
   border: 1px solid var(--rule-strong);
-  border-radius: 999px;
+  border-radius: 4px;
   background: var(--sheet);
   color: var(--ink);
   font-size: 13.5px;
