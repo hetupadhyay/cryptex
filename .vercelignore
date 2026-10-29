@@ -1,0 +1,4 @@
+# Kept in the repository, left out of the deployed site.
+.github
+tests
+tools
