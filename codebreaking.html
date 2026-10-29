@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Codebreaking · Cryptex</title>
-  <meta name="description" content="Crack a new intercept every day, work through eight historical missions, and break any classical cipher without the key.">
+  <meta name="description" content="Crack a new intercept every day, work through eight historical missions, and break Caesar, affine, Vigenère and rail fence ciphers without the key.">
   <link rel="canonical" href="https://cryptex.vercel.app/codebreaking">
   <meta name="author" content="Het Nimeshkumar Upadhyay">
   <meta name="color-scheme" content="light dark">
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Cryptex">
   <meta property="og:title" content="Codebreaking · Cryptex">
-  <meta property="og:description" content="Crack a new intercept every day, work through eight historical missions, and break any classical cipher without the key.">
+  <meta property="og:description" content="Crack a new intercept every day, work through eight historical missions, and break Caesar, affine, Vigenère and rail fence ciphers without the key.">
   <meta property="og:url" content="https://cryptex.vercel.app/codebreaking">
   <meta property="og:image" content="https://cryptex.vercel.app/img/og.png">
   <meta property="og:image:type" content="image/png">
@@ -24,7 +24,7 @@
   <meta property="og:image:alt" content="The Cryptex key logo and the words Every secret has a weakness, next to the brass rings of a cryptex.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Codebreaking · Cryptex">
-  <meta name="twitter:description" content="Crack a new intercept every day, work through eight historical missions, and break any classical cipher without the key.">
+  <meta name="twitter:description" content="Crack a new intercept every day, work through eight historical missions, and break Caesar, affine, Vigenère and rail fence ciphers without the key.">
   <meta name="twitter:image" content="https://cryptex.vercel.app/img/og.png">
   <meta name="twitter:image:alt" content="The Cryptex key logo and the words Every secret has a weakness, next to the brass rings of a cryptex.">
 
@@ -100,8 +100,8 @@
     <div class="case">
       <div class="file-tabs" role="tablist" aria-label="Codebreaking">
         <button class="file-tab" type="button" role="tab" id="tab-today" aria-controls="file-today" data-file="today" aria-selected="true"><b>Today</b><small class="today-no">No. —</small></button>
-        <button class="file-tab" type="button" role="tab" id="tab-missions" aria-controls="file-missions" data-file="missions" aria-selected="false" tabindex="-1"><b>Missions</b><small class="missions-count">8 intercepts</small></button>
-        <button class="file-tab" type="button" role="tab" id="tab-desk" aria-controls="file-desk" data-file="desk" aria-selected="false" tabindex="-1"><b>Desk</b><small>6 attacks</small></button>
+        <button class="file-tab" type="button" role="tab" id="tab-missions" aria-controls="file-missions" data-file="missions" aria-selected="false" tabindex="-1"><b>Missions</b><small class="missions-count">8 missions</small></button>
+        <button class="file-tab" type="button" role="tab" id="tab-desk" aria-controls="file-desk" data-file="desk" aria-selected="false" tabindex="-1"><b>Desk</b><small>5 attacks</small></button>
       </div>
 
       <div class="file-panel folder" data-file="today" id="file-today" role="tabpanel" aria-labelledby="tab-today">
@@ -162,8 +162,8 @@
         <section class="missions" id="intercepts" aria-labelledby="intercepts-title">
           <div class="mission-rail">
             <div class="index-head">
-              <h2 id="intercepts-title">Eight intercepts</h2>
-              <p>Caught in transit from Rome to the Western Front, from easiest to hardest.</p>
+              <h2 id="intercepts-title">Eight missions</h2>
+              <p>Messages caught in transit, from a Roman courier to the Western Front, roughly from easiest to hardest.</p>
             </div>
             <ol class="mission-list"></ol>
           </div>
@@ -208,7 +208,7 @@
               <p class="hint">Longer text gives better results. A few sentences is plenty.</p>
             </div>
             <div class="samples">
-              <span>Load an intercepted message:</span>
+              <span>Load a sample:</span>
               <button type="button" class="sample" data-sample="caesar">Caesar</button>
               <button type="button" class="sample" data-sample="vigenere">Vigenère</button>
               <button type="button" class="sample" data-sample="railfence">Rail fence</button>

@@ -195,14 +195,14 @@
     const chiPlain = Analysis.chiSquared(letters);
 
     if (letters.length < 40) {
-      verdict.textContent = `Only ${letters.length} letters. Counts this small are mostly noise, so treat any pattern loosely.`;
+      verdict.textContent = `Only ${letters.length} ${letters.length === 1 ? 'letter' : 'letters'}. Counts this small are mostly noise, so treat any pattern loosely.`;
     } else if (chiPlain < 120 && ioc > 0.058) {
       verdict.textContent = 'These counts already match English. The letters haven’t been replaced, only moved around, so this is a transposition cipher. If it’s a rail fence, try every rail count.';
     } else if (ioc < 0.05) {
       verdict.textContent = 'The counts are unusually flat. That happens when several alphabets are mixed together. Try the Vigenère attack.';
     } else {
       const guess = Ciphers.mod(Ciphers.toIndex(common[0]) - 4, 26);
-      verdict.textContent = `The most common letter is ${common[0]}. In English it’s usually E, which suggests a shift of ${guess}. Slide the bars until the peaks line up.`;
+      verdict.textContent = `The most common letter is ${common[0]}. In English it’s usually E, so if this is a Caesar shift, it’s probably ${guess}. Slide the bars until the peaks line up. If no shift lines them up, the alphabet was scrambled some other way.`;
     }
 
     tops.innerHTML = '<div><dt>Most common here</dt><dd></dd></div><div><dt>Most common in English</dt><dd>E T A O I N</dd></div>';
@@ -298,6 +298,8 @@
   const attackTabs = $$('.attack-tab');
 
   function setAttack(name, focus) {
+    // A name from a hand-off or an old link might not be one of ours.
+    if (!attackTabs.some(t => t.dataset.attack === name)) name = attackTabs[0].dataset.attack;
     attack = name;
     attackTabs.forEach(t => {
       const on = t.dataset.attack === name;

@@ -65,9 +65,11 @@
     const c = Ciphers.byId(raw.c);
     const def = c.keys[0];
     // A key that is missing, malformed or invalid for the cipher is dropped,
-    // and the link opens as if it came without one.
-    let k = null;
-    if (def && typeof raw.k === 'string' && raw.k && raw.k.length <= MAX_KEY && !c.check({ [def.id]: raw.k })) k = raw.k;
+    // and the link opens as if it came without one. A cipher with no key at
+    // all needs none, so it counts as sent. An empty key can be real too:
+    // Polybius without a keyword.
+    let k = def ? null : '';
+    if (def && typeof raw.k === 'string' && raw.k.length <= MAX_KEY && !c.check({ [def.id]: raw.k })) k = raw.k;
     return { c, t: raw.t, k };
   }
 
@@ -80,8 +82,11 @@
     const keys = def ? { [def.id]: keyInput.value } : {};
     const problem = c.check(keys);
     const text = $('#share-text').value;
-    error.textContent = problem || (/[a-z]/i.test(text) ? '' : 'Write a message with at least one letter.');
-    if (error.textContent) return;
+    error.textContent = problem || (/[a-z]/i.test(text) ? '' : 'Type a message with at least one letter.');
+    if (error.textContent) {
+      out.hidden = true;
+      return;
+    }
 
     const payload = { c: c.id, t: c.encrypt(text, keys) };
     if (def && includeKey.checked) payload.k = keyInput.value;
@@ -107,7 +112,7 @@
       btn.textContent = 'Copied';
     } catch {
       linkInput.select();
-      btn.textContent = 'Press Ctrl+C to copy';
+      btn.textContent = 'Selected. Copy it from here';
     }
     setTimeout(() => { btn.textContent = 'Copy link'; }, 1800);
   });
@@ -146,12 +151,15 @@
     }
     const { c } = secret;
 
-    $('.secret-meta', dialog).textContent = secret.k
-      ? `It was encrypted with ${c.name}, and they included the key. Watch it decrypt, or try cracking it first.`
-      : `It was encrypted with ${c.name}. They didn’t send the key, so you’ll have to break it.`;
+    const known = secret.k !== null;
+    $('.secret-meta', dialog).textContent = !known
+      ? `It was encrypted with ${c.name}. They didn’t send the key, so you’ll have to break it.`
+      : secret.k
+        ? `It was encrypted with ${c.name}, and they included the key. Watch it decrypt, or try cracking it first.`
+        : `It was encrypted with ${c.name}, which needs no key to read. Watch it decrypt, or try cracking it first.`;
     $('.secret-text', dialog).textContent = secret.t;
     const labBtn = $('[data-act="secret-lab"]', dialog);
-    labBtn.hidden = !secret.k;
+    labBtn.hidden = !known;
 
     $('[data-act="secret-crack"]', dialog).onclick = () => {
       dialog.close();
