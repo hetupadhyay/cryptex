@@ -8,7 +8,7 @@
  */
 'use strict';
 
-const VERSION = 'v1';
+const VERSION = 'v3';
 const CACHE = `cryptex-${VERSION}`;
 const START = './';
 

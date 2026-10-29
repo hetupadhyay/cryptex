@@ -94,7 +94,8 @@
 
   const list = $('.mission-list');
   const card = $('.mission');
-  const progress = $('.mission-progress');
+  // The Missions tab keeps the count, the way a file is marked on its tab.
+  const progress = $('.missions-count');
   const form = $('.answer', card);
   const input = $('#answer-input');
   const feedback = $('.answer-feedback', card);
@@ -114,21 +115,25 @@
       b.className = 'mission-item' + (cracked.has(m.id) ? ' cracked' : '');
       b.setAttribute('aria-current', i === index);
       b.innerHTML = '<span class="mi-num"></span><span class="mi-text"><b></b><span></span></span><span class="mi-state"></span>';
-      $('.mi-num', b).textContent = i + 1;
+      $('.mi-num', b).textContent = fileNo(i);
       $('.mi-text b', b).textContent = m.title;
       $('.mi-text span', b).textContent = m.place;
       $('.mi-state', b).textContent = cracked.has(m.id) ? 'Cracked' : '';
-      b.addEventListener('click', () => show(i));
+      b.addEventListener('click', () => open(i));
       li.append(b);
       return li;
     }));
-    progress.innerHTML = `<b>${cracked.size}</b> of ${MISSIONS.length} cracked`;
+    // "cracked" can drop out on a phone, where the tabs are tight.
+    if (progress) progress.innerHTML = `${cracked.size} of ${MISSIONS.length}<span class="tab-more"> cracked</span>`;
   }
+
+  const fileNo = i => String(i + 1).padStart(2, '0');
 
   function show(i) {
     index = i;
     hintsShown = 0;
     const m = MISSIONS[i];
+    $('.mission-no', card).textContent = `File ${fileNo(i)}`;
     $('.mission-place', card).textContent = m.place;
     $('.mission-title', card).textContent = m.title;
     $('.mission-brief', card).textContent = m.brief;
@@ -145,6 +150,15 @@
     card.querySelector('.stamp')?.remove();
     if (cracked.has(m.id)) addStamp(false);
     renderList();
+  }
+
+  // Picked from the index. Where the file sits below the index (on a
+  // phone), bring it up so the choice visibly did something.
+  function open(i) {
+    show(i);
+    if (card.getBoundingClientRect().top > innerHeight * 0.7) {
+      card.scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
+    }
   }
 
   function addStamp(animate) {
@@ -232,8 +246,7 @@
 
   $('[data-act="to-desk"]', card).addEventListener('click', () => {
     const m = MISSIONS[index];
-    Breaker.load(m.text);
-    document.getElementById('desk').scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
+    Breaker.load(m.text, Breaker.attackFor(m.cipher));
   });
 
   $('[data-act="to-lab"]', card).addEventListener('click', () => {

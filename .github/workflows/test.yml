@@ -23,3 +23,7 @@ jobs:
       # The site promises no external requests.
       - name: No external scripts, stylesheets or fonts
         run: node tools/check-external.js
+
+      # Every page carries a copy of the masthead and footer.
+      - name: Masthead and footer in sync on every page
+        run: python3 tools/sync-shell.py --check

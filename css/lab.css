@@ -1,0 +1,714 @@
+/* ------------------------------------------------------------------
+   The lab: a codebook down the side, the bench of controls, the stage
+   and its player bar, the result and what the cipher costs to break.
+   Then Send a secret and the dialog a secret link opens.
+   Sheets for the tools, paper for the reading, glass only on the bar.
+------------------------------------------------------------------- */
+
+/* Read aloud, not shown. */
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------------- page head ---------------- */
+
+#lab {
+  padding-top: 52px;
+}
+
+.lab-head {
+  display: grid;
+  gap: 12px;
+  max-width: 640px;
+  margin-bottom: 36px;
+}
+
+.lab-head h1 {
+  font-size: clamp(42px, 5.4vw, 64px);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.lab-head p {
+  color: var(--ink-2);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.lab-grid {
+  display: grid;
+  grid-template-columns: 224px minmax(0, 1fr);
+  gap: 36px;
+  align-items: start;
+}
+
+.lab-work {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+
+/* Small controls get small corners on this page. */
+#lab .btn,
+#share .btn,
+.secret-dialog .btn,
+#lab :is(textarea, input[type='text'], input[type='number'], select),
+#share :is(textarea, input[type='text'], input[type='number'], select) {
+  border-radius: 4px;
+}
+
+/* ---------------- the codebook ---------------- */
+
+/* Stays in view beside the work, and scrolls on its own if the window is short. */
+.codebook {
+  position: sticky;
+  top: calc(var(--mast-h) + env(safe-area-inset-top, 0px) + 20px);
+  max-height: calc(100vh - var(--mast-h) - 40px);
+  margin: 0 -8px;
+  padding: 0 8px 12px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.codebook-title {
+  font-size: 17px;
+  letter-spacing: -0.01em;
+}
+
+.codebook-note {
+  margin: 4px 0 16px;
+  color: var(--ink-3);
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+.cb-group {
+  display: grid;
+  gap: 2px;
+}
+
+.cb-group + .cb-group {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--rule);
+}
+
+.cb-family {
+  padding: 0 0 4px 14px;
+  color: var(--ink-3);
+  font-size: 12.5px;
+  font-weight: 650;
+}
+
+.cb-entry {
+  position: relative;
+  display: grid;
+  gap: 1px;
+  width: 100%;
+  padding: 5px 10px 6px 14px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: none;
+  color: var(--ink);
+  text-align: left;
+  transition: background-color 160ms ease, border-color 160ms ease, transform 140ms var(--ease-out);
+}
+
+.cb-entry:active {
+  transform: scale(0.98);
+}
+
+.cb-name {
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.cb-spec {
+  color: var(--ink-3);
+  font: 400 12.5px/1.45 var(--type);
+  overflow-wrap: anywhere;
+}
+
+.cb-spec b {
+  color: var(--ink-2);
+  font-weight: 700;
+}
+
+/* The current cipher: lifted onto a sheet, with a red pencil mark in the margin. */
+.cb-entry[aria-checked='true'] {
+  border-color: var(--rule);
+  background: var(--sheet);
+  box-shadow: var(--shadow-s);
+}
+
+.cb-entry[aria-checked='true']::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 8px;
+  width: 2.5px;
+  height: 19px;
+  border-radius: 2px;
+  background: var(--pencil);
+  transform: rotate(3deg);
+}
+
+.cb-entry[aria-checked='true'] .cb-spec b {
+  color: var(--carbon);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cb-entry[aria-checked='false']:hover {
+    background: var(--well);
+  }
+}
+
+/* Phones: the codebook opens from a button, as a sheet from the bottom. */
+.cipher-btn {
+  display: none;
+  align-items: baseline;
+  gap: 6px;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  background: var(--sheet);
+  font-size: 16px;
+  text-align: left;
+}
+
+.cipher-btn span {
+  color: var(--ink-2);
+  font-weight: 600;
+}
+
+.cipher-btn .cipher-change {
+  margin-left: auto;
+  color: var(--carbon);
+  font-size: 14.5px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.codebook-sheet {
+  width: 100%;
+  max-width: 560px;
+  max-height: min(88vh, 760px);
+  margin: auto auto 0;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--rule);
+  border-bottom: 0;
+  border-radius: 10px 10px 0 0;
+  background: var(--sheet);
+  color: var(--ink);
+  box-shadow: var(--shadow-l);
+}
+
+.codebook-sheet::backdrop {
+  background: rgba(10, 15, 20, 0.42);
+}
+
+.codebook-sheet[open] {
+  animation: sheet-up 300ms var(--ease-out);
+}
+
+@keyframes sheet-up {
+  from { transform: translateY(32px); opacity: 0; }
+}
+
+.sheet-inner {
+  padding: 16px 16px calc(20px + env(safe-area-inset-bottom, 0px));
+}
+
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sheet-head h2 {
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+
+.sheet-head .link {
+  min-height: 44px;
+}
+
+.codebook-sheet .codebook-note {
+  margin-top: 0;
+}
+
+.codebook-sheet .cb-group {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.codebook-sheet .cb-family {
+  grid-column: 1 / -1;
+}
+
+/* ---------------- controls ---------------- */
+
+.toolbar {
+  gap: 14px;
+  padding: 16px 18px 18px;
+  border-radius: 10px;
+}
+
+.toolbar-row {
+  gap: 14px 22px;
+}
+
+.toolbar textarea {
+  min-height: 46px;
+}
+
+.run {
+  margin-left: auto;
+}
+
+/* The direction lever. The arrow turns to point the way the message goes;
+   the side it starts from is in ink. */
+.lever {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+}
+
+.lever-side {
+  color: var(--ink-3);
+  font-size: 14.5px;
+  font-weight: 650;
+  white-space: nowrap;
+  transition: color 200ms ease;
+}
+
+.lever[data-mode='encrypt'] .lever-plain,
+.lever[data-mode='decrypt'] .lever-cipher {
+  color: var(--ink);
+}
+
+.lever-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--rule-strong);
+  border-radius: 50%;
+  background: var(--sheet);
+  transition: transform 140ms var(--ease-out), border-color 160ms ease;
+}
+
+.lever-btn:active {
+  transform: scale(0.93);
+}
+
+.lever-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 380ms var(--ease-move);
+}
+
+.lever[data-mode='decrypt'] .lever-btn svg {
+  transform: rotate(180deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lever-btn:hover {
+    border-color: var(--ink);
+  }
+}
+
+/* ---------------- the stage ---------------- */
+
+.stage {
+  gap: 18px;
+  margin-top: 0;
+  padding: 22px 26px 16px;
+  border-radius: 10px;
+  box-shadow: var(--shadow-s);
+}
+
+.stage-title {
+  font-size: 22px;
+}
+
+.stage-body {
+  display: grid;
+  gap: 22px;
+}
+
+.placeholder {
+  border-radius: 6px;
+}
+
+/* The player bar: the caption on top, the transport under it. It is glass,
+   and it only sticks to the bottom of the window once lab.js marks the
+   stage as docked. */
+.dock {
+  position: relative;
+  bottom: auto;
+  gap: 2px 4px;
+  width: min(100%, 760px);
+  padding: 10px 12px 8px;
+  border-radius: 10px;
+}
+
+.docked .dock {
+  position: sticky;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+}
+
+.dock .caption {
+  flex: 1 1 100%;
+  min-height: 2.9em;
+  max-width: none;
+  margin: 2px 4px 8px;
+  padding-left: 12px;
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.tb {
+  border-radius: 4px;
+}
+
+.dock .scrub {
+  margin: 0 10px;
+}
+
+.step-count {
+  min-width: 64px;
+}
+
+/* One button steps through the speeds; the ticks fill as it goes faster. */
+.speed-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  margin-left: 4px;
+  padding: 0 10px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 650;
+  transition: border-color 160ms ease, transform 140ms var(--ease-out);
+}
+
+.speed-step:active {
+  transform: scale(0.96);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .speed-step:hover {
+    border-color: var(--ink);
+  }
+}
+
+.ticks {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.ticks i {
+  width: 2.5px;
+  border-radius: 1px;
+  background: var(--rule-strong);
+  transition: background-color 160ms ease;
+}
+
+.ticks i:nth-child(1) { height: 5px; }
+.ticks i:nth-child(2) { height: 7px; }
+.ticks i:nth-child(3) { height: 9.5px; }
+.ticks i:nth-child(4) { height: 12px; }
+
+.ticks i.on {
+  background: var(--ink);
+}
+
+.speed-value {
+  min-width: 2.4ch;
+  color: var(--ink);
+  font: 700 13px var(--type);
+  text-align: left;
+}
+
+/* ---------------- result and notes ---------------- */
+
+.lab-foot {
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 0;
+}
+
+.result {
+  padding: 16px 20px 18px;
+  border-radius: 10px;
+  box-shadow: var(--shadow-s);
+}
+
+.result-head h2 {
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.result-actions {
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+
+/* How it works, why it fails, and what trying every key would cost: paper,
+   not boxes, three columns under a rule. */
+.notes {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px;
+  padding: 6px 2px 0;
+}
+
+.note {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.note h3 {
+  font-size: 14.5px;
+  font-weight: 700;
+}
+
+.notes p {
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.weak h3 {
+  color: var(--pencil);
+}
+
+.keyspace dl {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.keyspace dt {
+  color: var(--ink-3);
+  font-size: 12.5px;
+  font-weight: 650;
+}
+
+.keyspace dd {
+  display: grid;
+  margin: 0;
+}
+
+.keyspace b {
+  color: var(--ink);
+  font: 700 17px/1.35 var(--type);
+}
+
+.keyspace sup {
+  font-size: 0.65em;
+  line-height: 0;
+}
+
+.keyspace small {
+  color: var(--ink-3);
+  font-size: 13.5px;
+}
+
+.keyspace .link {
+  justify-self: start;
+  margin-top: 2px;
+}
+
+/* ---------------- send a secret ---------------- */
+
+.share {
+  border-radius: 10px;
+}
+
+#share-title:focus {
+  outline: none;
+}
+
+.share-from {
+  padding-left: 12px;
+  border-left: 2.5px solid var(--pencil);
+  color: var(--ink-2);
+}
+
+.secret-dialog::backdrop {
+  background: rgba(10, 15, 20, 0.42);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.secret-card {
+  border-radius: 10px;
+  background: var(--sheet);
+  box-shadow: var(--shadow-l);
+}
+
+.secret-card h2 {
+  line-height: 1.15;
+}
+
+.secret-card .intercept {
+  border-radius: 6px;
+}
+
+/* .btn in site.css clears the border .glass-btn gives these; put it back. */
+#share .btn.glass-btn,
+.secret-dialog .btn.glass-btn {
+  border: 1px solid var(--rule-strong);
+}
+
+/* ---------------- small screens ---------------- */
+
+@media (max-width: 960px) {
+  .notes {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+}
+
+@media (max-width: 820px) {
+  .lab-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .codebook {
+    display: none;
+  }
+
+  .cipher-btn {
+    display: flex;
+  }
+}
+
+@media (max-width: 640px) {
+  #lab {
+    padding-top: 36px;
+  }
+
+  .lab-head {
+    margin-bottom: 26px;
+  }
+
+  .toolbar {
+    padding: 14px;
+  }
+
+  .run {
+    margin-left: 0;
+  }
+
+  .stage {
+    padding: 18px 14px 12px;
+    border-radius: 10px;
+  }
+
+  /* One compact bar: the scrubber across the top, then every button in a
+     single row. It reaches into the stage's padding to make the room. */
+  .dock {
+    width: calc(100% + 16px);
+    margin-inline: -8px;
+    padding: 8px 6px 4px;
+    column-gap: 0;
+    row-gap: 0;
+    justify-content: space-between;
+  }
+
+  .dock .caption {
+    margin: 2px 6px 4px;
+    font-size: 15px;
+  }
+
+  .dock .scrub {
+    order: 1;
+    flex-basis: 100%;
+    height: 36px;
+    margin: 0 8px;
+  }
+
+  .tb,
+  .step-count,
+  .speed-step {
+    order: 2;
+  }
+
+  .tb {
+    width: 40px;
+  }
+
+  .step-count {
+    min-width: 0;
+    margin-left: auto;
+    padding: 0 6px;
+  }
+
+  .speed-step {
+    height: 40px;
+    margin-left: 0;
+    padding: 0 8px;
+  }
+}
+
+/* On the narrowest phones the word Speed gives way so the bar stays one
+   row; the ticks and the value still show it, and its name still says it. */
+@media (max-width: 400px) {
+  .speed-word {
+    display: none;
+  }
+}
+
+@media (max-width: 350px) {
+  .dock {
+    width: calc(100% + 24px);
+    margin-inline: -12px;
+  }
+
+  .tb {
+    width: 32px;
+  }
+
+  .step-count {
+    padding: 0 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lever-btn svg,
+  .lever-side {
+    transition: none;
+  }
+
+  .codebook-sheet[open] {
+    animation: none;
+  }
+}
