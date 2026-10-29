@@ -46,6 +46,7 @@
   --glass-strong: rgba(251, 252, 251, 0.78);
   --glass-line: rgba(255, 255, 255, 0.75);
   --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --frost: blur(22px) saturate(170%);
   --shadow-s: 0 1px 2px rgba(22, 33, 42, 0.05), 0 6px 16px -8px rgba(22, 33, 42, 0.18);
   --shadow-l: 0 2px 4px rgba(22, 33, 42, 0.04), 0 24px 48px -20px rgba(22, 33, 42, 0.28);
 
@@ -224,8 +225,8 @@ main,
 .secret-card,
 .round-btn {
   background: var(--glass);
-  -webkit-backdrop-filter: blur(22px) saturate(170%);
-  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: var(--frost);
+  backdrop-filter: var(--frost);
   border: 1px solid var(--glass-line);
   box-shadow: var(--glass-edge), var(--shadow-s);
 }
@@ -2303,6 +2304,13 @@ input[type='range']::-moz-range-thumb {
 }
 
 @media (max-width: 640px) {
+  /* The blur under the sticky nav and dock is redrawn on every scroll.
+     A smaller radius costs a phone far less and, on panels this size,
+     looks much the same. */
+  :root {
+    --frost: blur(14px) saturate(170%);
+  }
+
   .section {
     padding-top: 64px;
   }
