@@ -1,3 +1,6 @@
+/*
+ * The lab: choose a cipher, run it on the stage.
+ */
 (function () {
   'use strict';
 
@@ -31,7 +34,7 @@
   // ---- cipher picker ------------------------------------------------------
 
   function buildPicker() {
-    const groups = $('.picker-groups');
+    const picker = $('.picker', form);
     const families = [...new Set(Ciphers.list.map(c => c.family))];
     for (const family of families) {
       const group = document.createElement('div');
@@ -43,18 +46,14 @@
       for (const c of Ciphers.list.filter(x => x.family === family)) {
         const label = document.createElement('label');
         label.className = 'pick';
-        const sample = c.encrypt('CIPHER', state.keys[c.id]);
-        label.innerHTML = `<input type="radio" name="cipher" value="${c.id}"><span class="pick-name"></span><span class="pick-sample"></span>`;
-        $('.pick-name', label).textContent = c.name;
-        $('.pick-sample', label).textContent = sample.length > 8 ? sample.slice(0, 8) + '…' : sample;
-        if (c === state.cipher) $('input', label).checked = true;
+        label.innerHTML = `<input type="radio" name="cipher" value="${c.id}"><span></span>`;
+        $('span', label).textContent = c.name;
         group.append(label);
       }
-      groups.append(group);
+      picker.append(group);
     }
-    groups.addEventListener('change', e => {
-      if (e.target.name !== 'cipher') return;
-      selectCipher(Ciphers.byId(e.target.value));
+    picker.addEventListener('change', e => {
+      if (e.target.name === 'cipher') selectCipher(Ciphers.byId(e.target.value));
     });
   }
 
@@ -64,14 +63,14 @@
     keysBox.replaceChildren();
     if (!c.keys.length) {
       const note = document.createElement('p');
-      note.className = 'hint';
+      note.className = 'note';
       note.textContent = 'Atbash has no key. The method is the whole secret.';
       keysBox.append(note);
       return;
     }
     for (const k of c.keys) {
       const field = document.createElement('div');
-      field.className = 'field field-key' + (k.type === 'number' || k.type === 'select' ? ' narrow' : '');
+      field.className = 'field' + (k.type === 'text' ? '' : ' narrow');
       const id = `key-${c.id}-${k.id}`;
       const label = document.createElement('label');
       label.htmlFor = id;
@@ -105,6 +104,7 @@
 
   function selectCipher(c) {
     state.cipher = c;
+    $(`input[name="cipher"][value="${c.id}"]`, form).checked = true;
     buildKeys();
     $('.stage-title').textContent = c.name;
     $('.stage-family').textContent = c.family;
@@ -117,9 +117,10 @@
 
   // ---- modes and hints --------------------------------------------------
 
-  function setMode(mode) {
+  function setMode(mode, { swap = true } = {}) {
     const prev = state.mode;
     state.mode = mode;
+    $(`input[name="mode"][value="${mode}"]`, form).checked = true;
     const label = mode === 'encrypt' ? 'Encrypt' : 'Decrypt';
     runBtn.textContent = label;
     $('.placeholder b').textContent = label;
@@ -128,7 +129,7 @@
 
     // Flipping direction right after a run: hand the output back as the new input.
     const last = state.last;
-    if (last && last.mode === prev && last.cipherId === state.cipher.id && message.value === last.input) {
+    if (swap && last && last.mode === prev && last.cipherId === state.cipher.id && message.value === last.input) {
       message.value = last.output;
     }
     clearStage();
@@ -148,7 +149,7 @@
         break;
       }
     }
-    return { text: text.slice(0, cut), cut: cut < text.length, limit };
+    return { text: text.slice(0, cut), cut: cut < text.length };
   }
 
   function updateHint() {
@@ -162,16 +163,20 @@
     hint.textContent = notes.join(' ');
   }
 
+  function fitMessage() {
+    message.style.height = 'auto';
+    message.style.height = Math.min(message.scrollHeight + 2, 180) + 'px';
+  }
+
   // ---- running --------------------------------------------------------------
 
   function clearStage() {
     player.reset();
-    const scene = $('.scene', stageEl);
-    scene.replaceChildren();
+    $('.scene', stageEl).replaceChildren();
     $('.caption', stageEl).textContent = '';
     resultText.textContent = '';
-    resultText.classList.remove('ready');
     $('.result').classList.remove('ready');
+    stageEl.classList.remove('stale');
   }
 
   function markStale() {
@@ -234,9 +239,12 @@
   form.addEventListener('change', e => {
     if (e.target.name === 'mode') setMode(e.target.value);
   });
-  message.addEventListener('input', markStale);
+  message.addEventListener('input', () => {
+    fitMessage();
+    markStale();
+  });
   message.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       run();
     }
@@ -244,8 +252,10 @@
 
   $$('input[name="speed"]').forEach(r => r.addEventListener('change', () => { Stage.speed = Number(r.value); }));
 
-  document.addEventListener('keydown', e => {
-    if ($('#panel-cipher').hidden || e.target.closest('input, textarea, select')) return;
+  // Arrow keys step through the scene when the stage has focus.
+  stageEl.tabIndex = -1;
+  stageEl.addEventListener('keydown', e => {
+    if (e.target.closest('input, textarea, select')) return;
     if (e.key === 'ArrowRight') player.next();
     else if (e.key === 'ArrowLeft') player.prev();
   });
@@ -259,7 +269,7 @@
       await navigator.clipboard.writeText(state.last.output);
       btn.textContent = 'Copied';
     } catch {
-      btn.textContent = 'Couldn’t copy';
+      btn.textContent = 'Select the text to copy';
     }
     setTimeout(() => { btn.textContent = 'Copy'; }, 1600);
   });
@@ -267,69 +277,8 @@
   $('[data-act="attack"]').addEventListener('click', () => {
     if (!state.last) return;
     const ciphertext = state.last.mode === 'encrypt' ? state.last.output : state.last.input;
-    const attack = { caesar: 'brute', vigenere: 'vig' }[state.last.cipherId] || 'freq';
-    showTab('break');
-    Breaker.load(ciphertext, attack);
-  });
-
-  // ---- tabs ---------------------------------------------------------------
-
-  const tabs = $$('.tabs .tab');
-  const ink = $('.tab-ink');
-
-  function placeInk(tab) {
-    ink.style.width = tab.offsetWidth + 'px';
-    ink.style.transform = `translateX(${tab.offsetLeft}px)`;
-  }
-
-  function showTab(name) {
-    tabs.forEach(tab => {
-      const on = tab.id === 'tab-' + name;
-      tab.setAttribute('aria-selected', on);
-      tab.tabIndex = on ? 0 : -1;
-      const panel = document.getElementById(tab.getAttribute('aria-controls'));
-      if (on && panel.hidden) {
-        panel.hidden = false;
-        if (!Stage.reduced) {
-          panel.animate([{ opacity: 0, filter: 'blur(2px)', transform: 'translateY(6px)' }, { opacity: 1, filter: 'blur(0)', transform: 'none' }], { duration: 280, easing: Stage.EASE_OUT });
-        }
-        placeInk(tab);
-      } else if (!on) {
-        panel.hidden = true;
-      }
-    });
-    if (name === 'break') {
-      player.pause();
-      Breaker.refresh();
-    }
-  }
-
-  tabs.forEach((tab, i) => {
-    tab.addEventListener('click', () => showTab(tab.id.slice(4)));
-    tab.addEventListener('keydown', e => {
-      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
-      next.focus();
-      showTab(next.id.slice(4));
-    });
-  });
-
-  // ---- theme ------------------------------------------------------------------
-
-  const themeBtn = $('.theme');
-  function applyTheme(theme, save) {
-    document.documentElement.dataset.theme = theme;
-    themeBtn.setAttribute('aria-checked', theme === 'night');
-    if (save) {
-      try { localStorage.setItem('cryptex-theme', theme); } catch {}
-    }
-    document.dispatchEvent(new CustomEvent('themechange'));
-  }
-  themeBtn.addEventListener('click', () => {
-    const next = document.documentElement.dataset.theme === 'night' ? 'day' : 'night';
-    document.documentElement.classList.add('theme-shift');
-    applyTheme(next, true);
-    setTimeout(() => document.documentElement.classList.remove('theme-shift'), 400);
+    Breaker.load(ciphertext, Breaker.attackFor(state.last.cipherId));
+    document.getElementById('desk').scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
   });
 
   // ---- start --------------------------------------------------------------------
@@ -337,9 +286,23 @@
   buildPicker();
   selectCipher(state.cipher);
   setMode('encrypt');
-  applyTheme(document.documentElement.dataset.theme, false);
-  Breaker.init();
-  // Fonts change tab widths, so place the underline once they're in.
-  document.fonts.ready.then(() => placeInk(tabs.find(t => t.getAttribute('aria-selected') === 'true')));
-  window.addEventListener('resize', () => placeInk(tabs.find(t => t.getAttribute('aria-selected') === 'true')));
+  fitMessage();
+
+  window.Lab = {
+    // Opens the lab, optionally on a cipher, with text, keys and a direction.
+    // Without an id it keeps whatever cipher is already picked.
+    open(id, { mode = 'encrypt', text, keys, run: autorun = false } = {}) {
+      const c = id ? Ciphers.byId(id) : state.cipher;
+      if (keys) Object.assign(state.keys[c.id], keys);
+      selectCipher(c);
+      setMode(mode, { swap: false });
+      if (text !== undefined) {
+        message.value = text;
+        fitMessage();
+        updateHint();
+      }
+      document.getElementById('lab').scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
+      if (autorun) setTimeout(run, Stage.reduced ? 0 : 500);
+    },
+  };
 })();
