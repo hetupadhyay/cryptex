@@ -1,7 +1,8 @@
 /*
  * The page sits on a faint cipher pad: rows of five-letter code groups,
- * the way enciphered telegrams were written out. Now and then a group
- * decodes into a word, holds for a moment, and scrambles back.
+ * the way enciphered telegrams were written out. For a few seconds after
+ * the page opens, and again whenever the cryptex turns, a group decodes
+ * into a word, holds for a moment, and scrambles back. Then it rests.
  */
 (function () {
   'use strict';
@@ -30,6 +31,8 @@
   let width = 0;
   let height = 0;
   let nextDecode = 0;
+  // New words only start before this moment, so the pad goes still.
+  let quietAt = 0;
 
   function readInk() {
     const css = getComputedStyle(document.documentElement);
@@ -112,7 +115,7 @@
   }
 
   function step(now) {
-    if (now >= nextDecode && active.length < MAX_ACTIVE) {
+    if (now >= nextDecode && now < quietAt && active.length < MAX_ACTIVE) {
       startDecode(now);
       nextDecode = now + 1400 + Math.random() * 1800;
     }
@@ -161,8 +164,9 @@
       frame = requestAnimationFrame(tick);
       return;
     }
-    let due = active.length < MAX_ACTIVE ? nextDecode : Infinity;
+    let due = active.length < MAX_ACTIVE && performance.now() < quietAt ? nextDecode : Infinity;
     for (const g of active) due = Math.min(due, g.start + HOLD_MS + 1);
+    if (due === Infinity) return;
     timer = setTimeout(() => {
       step(performance.now());
       schedule();
@@ -179,9 +183,20 @@
   }
 
   function start() {
-    if (!still.matches && !document.hidden) nextDecode = performance.now() + 600;
+    if (!still.matches && !document.hidden) {
+      nextDecode = performance.now() + 600;
+      quietAt = performance.now() + 5000;
+    }
     schedule();
   }
+
+  // Turning the cryptex stirs the pad for a moment.
+  document.addEventListener('cryptex:turn', () => {
+    const now = performance.now();
+    if (quietAt < now + 2500) quietAt = now + 2500;
+    if (nextDecode > now + 300) nextDecode = now + 300;
+    schedule();
+  });
 
   readInk();
   layout();

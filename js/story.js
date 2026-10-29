@@ -106,6 +106,7 @@
   const plugInput = $('#enigma-plugs');
   const plugError = $('#enigma-plug-error');
   const tape = $('.enigma-tape', panel);
+  const lampSays = $('.enigma-said', panel);
   const note = $('.enigma-note', panel);
   const strips = [...panel.querySelectorAll('.rotor-strip')];
   const lamps = {};
@@ -188,6 +189,9 @@
     setRotors(m.pos, turn);
     if (light) lightLamp(pressed, lit);
     else lightLamp(null, null);
+    // A screen reader hears the lamp, not the whole tape again. Not while
+    // the machine types a message itself: that would be a letter a beat.
+    lampSays.textContent = light && lit && !typing ? `${pressed} lights ${lit}` : '';
   }
 
   function press(letter) {
@@ -260,9 +264,23 @@
     update(false, true);
   }));
 
+  // A half-typed pair isn't a mistake yet, so the error waits for a pause
+  // in typing, or for the field to be left.
+  let plugTimer;
+  function showPlugError(error) {
+    plugError.textContent = error;
+    plugInput.setAttribute('aria-invalid', Boolean(error));
+  }
   plugInput.addEventListener('input', () => {
-    plugError.textContent = plugboard(plugInput.value).error;
     update(false);
+    clearTimeout(plugTimer);
+    const { error } = plugboard(plugInput.value);
+    if (!error) showPlugError('');
+    else plugTimer = setTimeout(() => showPlugError(error), 900);
+  });
+  plugInput.addEventListener('change', () => {
+    clearTimeout(plugTimer);
+    showPlugError(plugboard(plugInput.value).error);
   });
 
   $('[data-act="enigma-decrypt"]', panel).addEventListener('click', () => {

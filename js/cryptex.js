@@ -24,6 +24,7 @@
   rings.tabIndex = 0;
   rings.setAttribute('role', 'slider');
   rings.setAttribute('aria-label', 'Shift');
+  rings.setAttribute('aria-orientation', 'vertical');
   rings.setAttribute('aria-valuemin', '0');
   rings.setAttribute('aria-valuemax', '25');
 
@@ -92,6 +93,7 @@
   }
 
   function goTo(s, opts = { response: 0.45, damping: 1 }, velocity = 0, fromScroll = false) {
+    if (s !== shift) document.dispatchEvent(new Event('cryptex:turn'));
     shift = s;
     if (!fromScroll) anchor = { shift: s, steps: scrollSteps() };
     for (const p of parts) {
@@ -138,12 +140,19 @@
     paint();
   });
 
-  function release() {
+  // A tap that barely moves turns the rings one letter: tapping below the
+  // window brings the next letter up, tapping above brings the last one back.
+  function release(e) {
     if (!dragging) return;
     dragging = false;
     rings.classList.remove('dragging');
     const first = samples[0];
     const lastSample = samples[samples.length - 1];
+    if (e.type === 'pointerup' && Math.abs(lastSample.y - startY) < 5 && e.timeStamp - first.t < 400) {
+      const r = rings.getBoundingClientRect();
+      goTo(shift + (e.clientY > r.top + r.height / 2 ? 1 : -1));
+      return;
+    }
     const dt = (lastSample.t - first.t) / 1000;
     const velocity = dt > 0 ? (first.y - lastSample.y) / faceHeight() / dt : 0;
     // A flick throws the rings on; let them settle on the nearest letter past where they'd stop.
@@ -154,12 +163,18 @@
   rings.addEventListener('pointerup', release);
   rings.addEventListener('pointercancel', release);
 
+  // Steps from where the rings are heading, not where they are mid-turn,
+  // so quick presses all count.
   rings.addEventListener('keydown', e => {
-    const delta = { ArrowUp: 1, ArrowRight: 1, ArrowDown: -1, ArrowLeft: -1 }[e.key];
-    if (!delta) return;
+    const to = {
+      ArrowUp: shift + 1, ArrowRight: shift + 1, ArrowDown: shift - 1, ArrowLeft: shift - 1,
+      PageUp: shift + 5, PageDown: shift - 5,
+      Home: shift - mod(shift, 26), End: shift - mod(shift, 26) + 25,
+    }[e.key];
+    if (to === undefined) return;
     e.preventDefault();
     touched = true;
-    goTo(Math.round(current()) + delta);
+    goTo(to);
   });
 
   // ---- scrolling turns the rings on phones ------------------------------------
