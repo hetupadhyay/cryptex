@@ -8,6 +8,11 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const CHOICES = ['caesar', 'atbash', 'vigenere', 'autokey', 'beaufort', 'playfair', 'polybius', 'railfence', 'columnar'];
   const PREFIX = '#secret=';
+  // Limits for links, checked both ways: a link we make always opens, and a
+  // huge or hand-made one is refused before it can slow the page down.
+  const MAX_LINK = 8192; // characters after the #
+  const MAX_TEXT = 4000;
+  const MAX_KEY = 64;
 
   const form = $('#share-form');
   const select = $('#share-cipher');
@@ -42,6 +47,30 @@
   const encode = obj => btoa(unescape(encodeURIComponent(JSON.stringify(obj)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   const decode = s => JSON.parse(decodeURIComponent(escape(atob(s.replace(/-/g, '+').replace(/_/g, '/')))));
 
+  // Everything in a link is untrusted: check the cipher, and the type and
+  // length of every field. Returns null for anything that doesn't fit.
+  function parseSecret(fragment) {
+    if (fragment.length > MAX_LINK + PREFIX.length) return null;
+    const data = fragment.slice(PREFIX.length);
+    if (!/^[A-Za-z0-9_-]+$/.test(data)) return null;
+    let raw;
+    try {
+      raw = decode(data);
+    } catch {
+      return null;
+    }
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+    if (typeof raw.c !== 'string' || !CHOICES.includes(raw.c)) return null;
+    if (typeof raw.t !== 'string' || !raw.t || raw.t.length > MAX_TEXT) return null;
+    const c = Ciphers.byId(raw.c);
+    const def = c.keys[0];
+    // A key that is missing, malformed or invalid for the cipher is dropped,
+    // and the link opens as if it came without one.
+    let k = null;
+    if (def && typeof raw.k === 'string' && raw.k && raw.k.length <= MAX_KEY && !c.check({ [def.id]: raw.k })) k = raw.k;
+    return { c, t: raw.t, k };
+  }
+
   select.addEventListener('change', syncKey);
 
   form.addEventListener('submit', e => {
@@ -56,10 +85,17 @@
 
     const payload = { c: c.id, t: c.encrypt(text, keys) };
     if (def && includeKey.checked) payload.k = keyInput.value;
-    linkInput.value = location.href.split('#')[0] + PREFIX + encode(payload);
+    const data = encode(payload);
+    if (payload.t.length > MAX_TEXT || data.length > MAX_LINK || (payload.k && payload.k.length > MAX_KEY)) {
+      error.textContent = 'That’s too long to fit in a link. Try a shorter message or key.';
+      out.hidden = true;
+      return;
+    }
+    linkInput.value = location.href.split('#')[0] + PREFIX + data;
     const preview = payload.t.length > 60 ? payload.t.slice(0, 60) + '…' : payload.t;
-    $('.share-preview', out).innerHTML = 'They’ll see <code></code>, encrypted with ' + c.name + (payload.k ? ', with the key included.' : ', and no key.');
-    $('.share-preview code', out).textContent = preview;
+    const code = document.createElement('code');
+    code.textContent = preview;
+    $('.share-preview', out).replaceChildren('They’ll see ', code, `, encrypted with ${c.name}` + (payload.k ? ', with the key included.' : ', and no key.'));
     out.hidden = false;
   });
 
@@ -83,14 +119,12 @@
 
   function openSecret() {
     if (!location.hash.startsWith(PREFIX)) return;
-    let secret;
-    try {
-      secret = decode(location.hash.slice(PREFIX.length));
-    } catch {
+    const secret = parseSecret(location.hash);
+    if (!secret) {
+      history.replaceState(null, '', location.href.split('#')[0]);
       return;
     }
-    const c = Ciphers.byId(secret.c);
-    if (!c || typeof secret.t !== 'string') return;
+    const { c } = secret;
 
     $('.secret-meta', dialog).textContent = secret.k
       ? `It was encrypted with ${c.name}, and they included the key. Watch it decrypt, or try cracking it first.`
@@ -112,7 +146,7 @@
 
     // Clear the fragment so a reload doesn't reopen it.
     history.replaceState(null, '', location.href.split('#')[0]);
-    if (typeof dialog.showModal === 'function') dialog.showModal();
+    if (typeof dialog.showModal === 'function' && !dialog.open) dialog.showModal();
   }
 
   openSecret();

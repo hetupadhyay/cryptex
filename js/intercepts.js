@@ -71,9 +71,12 @@
 
   // ---- progress ---------------------------------------------------------------
 
+  // Only ids of real missions count, whatever else is in storage.
   function loadCracked() {
     try {
-      return new Set(JSON.parse(localStorage.getItem(STORE) || '[]'));
+      const saved = JSON.parse(localStorage.getItem(STORE) || '[]');
+      const ids = new Set(MISSIONS.map(m => m.id));
+      return new Set(Array.isArray(saved) ? saved.filter(id => ids.has(id)) : []);
     } catch {
       return new Set();
     }
