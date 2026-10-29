@@ -291,7 +291,59 @@
     </section>
 
     <!-- Daily intercept: filled by js/daily.js -->
-    <section class="section" id="daily" aria-labelledby="daily-title"></section>
+    <section class="section" id="daily" aria-labelledby="daily-title">
+      <div class="section-head">
+        <h2 id="daily-title">The daily intercept</h2>
+        <p>A new message every day at midnight, the same one for everyone. Monday is gentle and it gets harder towards the weekend. Crack one a day to keep your streak going.</p>
+      </div>
+      <div class="daily">
+        <article class="daily-card">
+          <header class="mission-head daily-head">
+            <span class="mission-place daily-no"></span>
+            <h3 class="mission-title daily-date"></h3>
+            <p class="daily-level"><span class="pips" role="img"></span><span class="daily-level-name"></span></p>
+          </header>
+          <p class="mission-brief"><b class="daily-from"></b> <span class="daily-brief"></span></p>
+          <pre class="intercept"></pre>
+          <div class="mission-tools">
+            <button type="button" class="btn glass-btn small" data-act="to-desk">Send to the desk</button>
+            <button type="button" class="btn glass-btn small" data-act="to-lab">Open in the lab</button>
+          </div>
+          <form class="answer" autocomplete="off">
+            <label for="daily-input" class="answer-ask">What does the message say?</label>
+            <div class="answer-row">
+              <input id="daily-input" type="text" spellcheck="false" placeholder="Type the decrypted message">
+              <button class="btn primary" type="submit">Check</button>
+            </div>
+            <p class="answer-feedback" role="status"></p>
+          </form>
+          <div class="daily-done" hidden>
+            <p class="daily-result"></p>
+            <div class="daily-copy">
+              <button type="button" class="btn glass-btn small" data-act="copy">Copy my result</button>
+              <span class="daily-copied" role="status"></span>
+            </div>
+          </div>
+          <div class="hints">
+            <button type="button" class="link" data-act="hint">Show a hint</button>
+            <ol class="hint-list"></ol>
+          </div>
+        </article>
+        <aside class="daily-side" aria-label="Your record">
+          <div class="daily-clock">
+            <span>Next intercept in</span>
+            <b class="daily-countdown" role="timer"></b>
+          </div>
+          <dl class="daily-stats">
+            <div><dt>Streak</dt><dd data-stat="streak">0</dd></div>
+            <div><dt>Best</dt><dd data-stat="best">0</dd></div>
+            <div><dt>Hints today</dt><dd data-stat="hints">0</dd></div>
+          </dl>
+          <ol class="daily-week" aria-label="This week"></ol>
+          <p class="daily-status"></p>
+        </aside>
+      </div>
+    </section>
 
     <!-- Intercepts -->
     <section class="section" id="intercepts" aria-labelledby="intercepts-title">
