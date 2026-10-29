@@ -31,10 +31,10 @@ The host, Vercel, keeps standard request logs under its own privacy policy.
 
 `vercel.json` sends these on every response:
 
-- `Content-Security-Policy`: `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'`. No inline or external scripts can run. Inline styles are allowed because the page sets `style` attributes from JavaScript for its animations.
+- `Content-Security-Policy`: `default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'`. No inline or external scripts or styles can run. Scripts set the few values they animate as style properties, which the policy allows.
 - `X-Content-Type-Options: nosniff`
 - `Referrer-Policy: strict-origin-when-cross-origin`
-- `Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()`
+- `Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()`
 - `Cross-Origin-Opener-Policy: same-origin`
 - `X-Frame-Options: DENY`
 

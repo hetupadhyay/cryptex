@@ -14,6 +14,7 @@
   --pencil: #9e3b2f;
   /* Dashed perforations and input edges on the folder. */
   --folder-rule: color-mix(in srgb, var(--manila-edge) 55%, var(--ink-3));
+  --control-edge: #7a7566;
 }
 
 :root[data-theme='night'] .file-tabs,
@@ -21,6 +22,7 @@
   --ink-3: #929da4;
   --brass: inherit;
   --pencil: inherit;
+  --control-edge: var(--folder-rule);
 }
 
 /* ---------------- head ---------------- */
@@ -213,8 +215,12 @@
 
 .folder input[type='text'] {
   min-height: 48px;
-  border-color: var(--folder-rule);
+  border-color: var(--control-edge);
   border-radius: 4px;
+}
+
+.folder input[type='text']:focus {
+  border-color: var(--carbon);
 }
 
 .answer-ask {

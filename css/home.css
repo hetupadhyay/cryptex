@@ -31,7 +31,7 @@
 }
 
 .readout {
-  grid-template-columns: 1.3fr 0.7fr 1.3fr;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr) minmax(0, 1.3fr);
   gap: 0;
   align-items: stretch;
   border-bottom: 1px solid var(--rule);
@@ -615,5 +615,22 @@
 @media (prefers-reduced-motion: reduce) {
   .step:active {
     transform: none;
+  }
+}
+
+/* The narrowest phones: smaller rings so all six fit, and the two keys
+   can stack. */
+@media (max-width: 360px) {
+  .cryptex {
+    --r: 78px;
+    --ring-w: 36px;
+  }
+
+  .cap {
+    width: 16px;
+  }
+
+  .hero-actions {
+    flex-wrap: wrap;
   }
 }
