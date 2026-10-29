@@ -22,14 +22,38 @@
   }
 
   // Closed from inside the page: take our entry back off. When the sheet
-  // closed because a link in it was followed, the page is already moving
-  // on, and stepping back would undo that.
+  // closed because a link in it was followed, follow() has dealt with it.
   function closed(id, { navigating = false } = {}) {
     if (!open.delete(id)) return;
     if (!navigating && history.state && history.state.sheet === id) history.back();
   }
 
+  // A link followed from a sheet has to take the sheet's place in history,
+  // or Back would land on the sheet's entry and seem to do nothing. So step
+  // off that entry first, then follow the link. Returns whether the click
+  // was on a link the sheet should close for; a click meant for a new tab
+  // leaves the sheet open.
+  let following = null;
+  function follow(id, e) {
+    const a = e.target.closest('a[href]');
+    if (!a || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return false;
+    if (open.delete(id) && history.state && history.state.sheet === id) {
+      e.preventDefault();
+      following = a.href;
+      history.back();
+    }
+    return true;
+  }
+
   window.addEventListener('popstate', () => {
+    if (following) {
+      // After the browser has finished restoring this entry's scroll
+      // position, or it would undo the jump to a chapter.
+      const href = following;
+      following = null;
+      setTimeout(() => { location.href = href; });
+      return;
+    }
     for (const [id, close] of open) {
       if (history.state && history.state.sheet === id) continue;
       open.delete(id);
@@ -85,5 +109,5 @@
     grip.addEventListener('pointercancel', release);
   }
 
-  window.Sheet = { opened, closed, swipe };
+  window.Sheet = { opened, closed, follow, swipe };
 })();

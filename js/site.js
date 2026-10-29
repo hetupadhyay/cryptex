@@ -66,7 +66,7 @@
         menuBtn.focus();
       }
     });
-    menu.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false, { navigating: true }); });
+    menu.addEventListener('click', e => { if (Sheet.follow('menu', e)) setMenu(false, { navigating: true }); });
     window.matchMedia('(min-width: 821px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
   }
 
@@ -77,8 +77,10 @@
   const EPOCH = Date.UTC(2026, 5, 24);
   function todayNumber(now) {
     const local = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-    return Math.floor((local - EPOCH) / 86400000) + 1;
+    return Math.max(1, Math.floor((local - EPOCH) / 86400000) + 1);
   }
+  // The masthead only needs hours and minutes; the seconds tick on the
+  // Today folder itself.
   const numbers = document.querySelectorAll('.today-no');
   const lefts = document.querySelectorAll('.today-left');
   function tick() {
@@ -86,15 +88,14 @@
     numbers.forEach(n => { n.textContent = `No. ${todayNumber(now)}`; });
     const midnight = new Date(now);
     midnight.setHours(24, 0, 0, 0);
-    const s = Math.max(0, Math.floor((midnight - now) / 1000));
-    const text = `${Math.floor(s / 3600)}:${String(Math.floor(s / 60) % 60).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+    const m = Math.max(1, Math.ceil((midnight - now) / 60000));
     lefts.forEach(t => {
-      t.textContent = text;
-      t.setAttribute('datetime', `PT${Math.floor(s / 3600)}H${Math.floor(s / 60) % 60}M`);
+      t.textContent = `${Math.floor(m / 60)}h ${m % 60}m`;
+      t.setAttribute('datetime', `PT${Math.floor(m / 60)}H${m % 60}M`);
     });
+    if (lefts.length) setTimeout(tick, 60000 - (Date.now() % 60000) + 50);
   }
   tick();
-  if (lefts.length) setInterval(tick, 1000);
 
   // ---- the coded signature ------------------------------------------------------
 
