@@ -2186,10 +2186,35 @@ input[type='range']::-moz-range-thumb {
 }
 
 @media (max-width: 960px) {
+  /* On narrow screens the cryptex moves up under the headline, so the
+     first screen has something to touch. */
   .hero {
     grid-template-columns: minmax(0, 1fr);
-    gap: 40px;
-    padding-top: 40px;
+    gap: 22px;
+    padding-top: 28px;
+  }
+
+  .hero-copy {
+    display: contents;
+  }
+
+  .hero h1 {
+    order: 1;
+  }
+
+  .cryptex-stage {
+    order: 2;
+    gap: 14px;
+    margin: 4px 0 6px;
+  }
+
+  .lede {
+    order: 3;
+  }
+
+  .hero-actions {
+    order: 4;
+    margin-top: 0;
   }
 
   .desk,
