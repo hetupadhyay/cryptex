@@ -493,8 +493,8 @@
 .today-card,
 .today-check {
   background: var(--glass);
-  -webkit-backdrop-filter: blur(22px) saturate(170%);
-  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: var(--frost);
+  backdrop-filter: var(--frost);
   border: 1px solid var(--glass-line);
   box-shadow: var(--glass-edge), var(--shadow-s);
 }
