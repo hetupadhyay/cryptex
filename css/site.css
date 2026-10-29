@@ -248,6 +248,20 @@ main,
 
 /* ---------------- nav ---------------- */
 
+/* Widths of the fades at the ends of the scrolling link row on small
+   screens, registered so they can ease in and out. */
+@property --fade-start {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --fade-end {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
 .nav {
   position: sticky;
   top: 0;
@@ -2225,19 +2239,58 @@ input[type='range']::-moz-range-thumb {
 
   .nav-bar {
     flex-wrap: wrap;
-    row-gap: 4px;
+    row-gap: 0;
   }
 
+  /* The links become a row that scrolls sideways. Whichever end has more
+     links past it fades out, so the row reads as carrying on (site.js
+     sets the classes). */
   .nav-links {
     order: 3;
     width: 100%;
     margin: 0 -4px;
+    padding: 4px 0;
     overflow-x: auto;
     scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
+    mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
+    transition: --fade-start 200ms ease, --fade-end 200ms ease;
+  }
+
+  .nav-links.more-start {
+    --fade-start: 36px;
+  }
+
+  .nav-links.more-end {
+    --fade-end: 36px;
   }
 
   .nav-links::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Room for a fingertip around the links, brand and switch, without
+     making any of them look bigger. */
+  .brand {
+    position: relative;
+  }
+
+  .nav-links a::before,
+  .brand::before,
+  .theme::before {
+    content: '';
+    position: absolute;
+    inset: -4px 0;
+  }
+
+  .brand::before {
+    inset: -7px 0;
+  }
+
+  .nav-links a {
+    flex: none;
+    min-width: 44px;
+    text-align: center;
   }
 
   .theme {
