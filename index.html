@@ -96,8 +96,8 @@
         <h1>Every secret has a weakness.</h1>
         <p class="lede">Watch ten classical ciphers work, one letter at a time. Then use the same tricks real codebreakers used to crack every one of them.</p>
         <div class="hero-actions">
-          <a class="btn primary" href="#lab">Open the lab</a>
-          <a class="btn glass-btn" href="#intercepts">Take on an intercept</a>
+          <a class="btn primary" href="/lab">Open the lab</a>
+          <a class="btn glass-btn" href="/codebreaking#today">Try today’s intercept</a>
         </div>
       </div>
 
@@ -126,6 +126,88 @@
           <p>A cryptex is a Caesar cipher you can hold. Drag or flick the rings: they turn together, so every letter shifts by the same amount.</p>
         </figcaption>
       </figure>
+    </section>
+
+    <!-- Today's intercept, filled in by home.js once the puzzle is built -->
+    <section class="today-strip" aria-labelledby="today-strip-title" hidden>
+      <h2 class="strip-tab" id="today-strip-title">Today’s intercept <b class="strip-no"></b></h2>
+      <div class="strip-file">
+        <div class="strip-case">
+          <p class="strip-place"></p>
+          <p class="strip-brief"></p>
+          <dl class="strip-facts">
+            <div><dt>Date</dt><dd class="strip-date"></dd></div>
+            <div><dt>Difficulty</dt><dd><span class="strip-pips"></span><span class="strip-level"></span></dd></div>
+            <div><dt>New one in</dt><dd><time class="today-left">0:00:00</time></dd></div>
+          </dl>
+        </div>
+        <div class="strip-slip">
+          <p class="strip-text" aria-label="The intercepted message"></p>
+        </div>
+        <div class="strip-go">
+          <a class="btn primary" href="/codebreaking#today">Start</a>
+          <p class="strip-solved" hidden>You cracked this one.</p>
+          <p class="strip-streak" hidden>Your streak <b></b></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- The three ways in -->
+    <section class="doors" aria-labelledby="doors-title">
+      <h2 id="doors-title">Three ways in</h2>
+
+      <article class="door door-learn" aria-labelledby="door-learn-title">
+        <div class="door-head">
+          <h3 id="door-learn-title">Learn</h3>
+          <p>Twelve ciphers in the order people trusted them, from scribes in Jerusalem to the Enigma machine, and how each one fell.</p>
+          <a class="link" href="/learn">Read the story</a>
+        </div>
+        <ol class="years">
+          <li><a href="/learn"><time>c. 600 BC</time><span>Atbash</span></a></li>
+          <li><a href="/learn"><time>c. 150 BC</time><span>Polybius</span></a></li>
+          <li><a href="/learn"><time>c. 50 BC</time><span>Caesar</span></a></li>
+          <li class="after-gap"><a href="/learn"><time>1553</time><span>Vigenère</span></a></li>
+          <li><a href="/learn"><time>1586</time><span>Autokey</span></a></li>
+          <li><a href="/learn"><time>1801</time><span>Affine</span></a></li>
+          <li><a href="/learn"><time>1854</time><span>Playfair</span></a></li>
+          <li><a href="/learn"><time>1857</time><span>Beaufort</span></a></li>
+          <li><a href="/learn"><time>1860s</time><span>Rail fence</span></a></li>
+          <li><a href="/learn#one-time-pad"><time>1882</time><span>One-time pad</span></a></li>
+          <li><a href="/learn"><time>1914</time><span>Columnar</span></a></li>
+          <li><a href="/learn#enigma"><time>1926</time><span>Enigma</span></a></li>
+        </ol>
+      </article>
+
+      <article class="door door-lab" aria-labelledby="door-lab-title">
+        <div class="door-head">
+          <h3 id="door-lab-title">Lab</h3>
+          <p>Ten ciphers, worked one letter at a time. Change the key and watch what moves.</p>
+        </div>
+        <div class="lab-line">
+          <div class="lab-line-key">
+            <span>Caesar, shift</span>
+            <button type="button" class="step" data-step="-1" aria-label="Shift one less">−</button>
+            <output class="lab-line-shift" id="lab-line-shift">3</output>
+            <button type="button" class="step" data-step="1" aria-label="Shift one more">+</button>
+          </div>
+          <label for="lab-line-in">Plain</label>
+          <input id="lab-line-in" type="text" value="Attack at dawn" maxlength="22" spellcheck="false" autocomplete="off">
+          <span class="lab-line-label" aria-hidden="true">Cipher</span>
+          <output class="lab-line-out" for="lab-line-in lab-line-shift">DWWDFN DW GDZQ</output>
+        </div>
+        <a class="btn primary lab-line-open" href="/lab">Watch it in the lab</a>
+      </article>
+
+      <article class="door door-break" aria-labelledby="door-break-title">
+        <h3 id="door-break-title">Codebreaking</h3>
+        <p class="break-count"><b class="break-n">0</b> <span>of 8 missions cracked</span></p>
+        <ol class="break-tally" aria-hidden="true">
+          <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+        </ol>
+        <p class="break-note">Eight intercepts are waiting, from a Roman courier to the Western Front. Each one needs a different attack.</p>
+        <p class="break-streak" hidden>Daily streak <b></b></p>
+        <a class="btn primary break-go" href="/codebreaking#missions">Start the first mission</a>
+      </article>
     </section>
   </main>
 
@@ -202,6 +284,7 @@
   <script src="js/cryptex.js"></script>
   <script src="js/background.js"></script>
   <script src="js/handoff.js"></script>
+  <script src="js/daily.js"></script>
   <script src="js/home.js"></script>
   <script src="js/site.js"></script>
   <script src="js/pwa.js"></script>
