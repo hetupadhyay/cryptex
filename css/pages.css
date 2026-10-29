@@ -19,165 +19,9 @@
   box-shadow: var(--shadow-s);
 }
 
-/* ---------------- about ---------------- */
-
-.about-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-  gap: 28px 48px;
-  align-items: start;
-}
-
-.about-copy {
-  display: grid;
-  gap: 16px;
-  max-width: 620px;
-}
-
-.about-copy > p {
-  color: var(--ink-2);
-  font-size: 17px;
-  line-height: 1.6;
-}
-
-.about-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 20px;
-  margin-top: 6px;
-}
-
-.about-facts {
-  display: grid;
-  margin: 0;
-  padding: 8px 22px;
-  border: 1px solid var(--rule);
-  border-radius: 22px;
-  background: var(--sheet);
-  box-shadow: var(--shadow-s);
-}
-
-.about-facts > div {
-  display: grid;
-  gap: 2px;
-  padding: 14px 0;
-}
-
-.about-facts > div + div {
-  border-top: 1px solid var(--rule);
-}
-
-.about-facts dt {
-  color: var(--ink-3);
-  font-size: 12.5px;
-  font-weight: 650;
-}
-
-.about-facts dd {
-  margin: 0;
-  color: var(--ink);
-  font-size: 16px;
-  font-weight: 600;
-}
-
-/* ---------------- footer ---------------- */
-
-.site-foot {
-  display: grid;
-  gap: 40px;
-  padding-block: 112px 40px;
-  color: var(--ink-2);
-}
-
-.site-foot p {
-  padding-top: 0;
-  border-top: 0;
-}
-
-.foot-top {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
-  gap: 32px 56px;
-  padding-top: 40px;
-  border-top: 1px solid var(--rule);
-}
-
-.foot-brand {
-  display: grid;
-  align-content: start;
-  gap: 14px;
-  max-width: 340px;
-}
-
-.foot-brand .brand {
-  justify-self: start;
-}
-
-.foot-brand p {
-  color: var(--ink-2);
-  font-size: 14.5px;
-  line-height: 1.55;
-}
-
-.foot-cols {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 28px 24px;
-}
-
-.foot-title {
-  margin-bottom: 12px;
-  color: var(--ink);
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.foot-col ul {
-  display: grid;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.foot-col a {
-  color: var(--ink-2);
-  font-size: 14.5px;
-  text-decoration: none;
-  text-underline-offset: 3px;
-  transition: color 160ms ease;
-}
-
-.foot-col a[aria-current='page'] {
-  color: var(--ink);
-  font-weight: 600;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .foot-col a:hover {
-    color: var(--ink);
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-  }
-}
-
-.foot-base {
-  display: grid;
-  gap: 4px;
-  padding-top: 18px;
-  border-top: 1px solid var(--rule);
-  color: var(--ink-3);
-  font-size: 13px;
-  line-height: 1.55;
-}
-
 /* ---------------- standalone pages ---------------- */
 
 /* No section links in the nav, so the switch sits on the right by itself. */
-.doc-page .theme {
-  margin-left: auto;
-}
 
 .doc {
   max-width: 760px;
@@ -348,30 +192,13 @@
 
 /* ---------------- small screens ---------------- */
 
-@media (max-width: 960px) {
-  .about-grid,
-  .foot-top {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .doc-page .nav-bar {
-    flex-wrap: nowrap;
-  }
-}
-
 @media (max-width: 640px) {
-  .site-foot {
-    padding-top: 88px;
-  }
+  
 
-  .foot-cols {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  
 
   /* Explore down the left, Project and Legal stacked beside it. */
-  .foot-col:first-child {
-    grid-row: span 2;
-  }
+  
 
   .doc {
     padding-top: 28px;

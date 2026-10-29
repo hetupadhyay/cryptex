@@ -233,7 +233,7 @@
   $('[data-act="to-desk"]', card).addEventListener('click', () => {
     const m = MISSIONS[index];
     Breaker.load(m.text);
-    document.getElementById('desk').scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
+    document.getElementById('desk')?.scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
   });
 
   $('[data-act="to-lab"]', card).addEventListener('click', () => {

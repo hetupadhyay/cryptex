@@ -278,7 +278,7 @@
     if (!state.last) return;
     const ciphertext = state.last.mode === 'encrypt' ? state.last.output : state.last.input;
     Breaker.load(ciphertext, Breaker.attackFor(state.last.cipherId));
-    document.getElementById('desk').scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
+    document.getElementById('desk')?.scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
   });
 
   // ---- start --------------------------------------------------------------------
@@ -305,4 +305,27 @@
       if (autorun) setTimeout(run, Stage.reduced ? 0 : 500);
     },
   };
+
+  // Work sent here from another page: a timeline card, an intercept, a secret.
+  // Session storage can hold anything, so take only what fits a cipher.
+  const sent = Handoff.take('lab');
+  if (sent) {
+    const c = sent.id ? Ciphers.byId(sent.id) : null;
+    const opts = sent.opts && typeof sent.opts === 'object' ? sent.opts : {};
+    const keys = {};
+    if (c && opts.keys && typeof opts.keys === 'object') {
+      for (const k of c.keys) {
+        const v = opts.keys[k.id];
+        if ((typeof v === 'string' && v.length <= 64) || Number.isFinite(v)) keys[k.id] = v;
+      }
+    }
+    if (!sent.id || c) {
+      window.Lab.open(c ? c.id : null, {
+        mode: opts.mode === 'decrypt' ? 'decrypt' : 'encrypt',
+        text: typeof opts.text === 'string' && opts.text.length <= 20000 ? opts.text : undefined,
+        keys,
+        run: opts.run === true,
+      });
+    }
+  }
 })();

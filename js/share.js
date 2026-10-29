@@ -136,7 +136,7 @@
     $('[data-act="secret-crack"]', dialog).onclick = () => {
       dialog.close();
       Breaker.load(secret.t, Breaker.attackFor(c.id));
-      document.getElementById('desk').scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
+      document.getElementById('desk')?.scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
     };
     labBtn.onclick = () => {
       dialog.close();

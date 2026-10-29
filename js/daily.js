@@ -407,6 +407,8 @@
     const STORE = 'cryptex-daily';
 
     const section = $('#daily');
+    // Other pages load this file only for the puzzle itself.
+    if (!section) return;
     const card = $('.daily-card', section);
     const form = $('.answer', card);
     const input = $('#daily-input');
@@ -604,7 +606,7 @@
 
     $('[data-act="to-desk"]', card).addEventListener('click', () => {
       Breaker.load(puzzle.text, Breaker.attackFor(puzzle.cipher));
-      document.getElementById('desk').scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
+      document.getElementById('desk')?.scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
     });
 
     $('[data-act="to-lab"]', card).addEventListener('click', () => {
