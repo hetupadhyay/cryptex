@@ -402,6 +402,49 @@
   box-shadow: 0 0 0 3px var(--sheet);
 }
 
+/* On a narrow stage the whole table is too small to read, so it is shown
+   magnified through a window that pans to each lookup (--px and --py come
+   from tabula.js). The header row and column move against the pan, so the
+   labels always stay along the top and left edges. */
+@container (max-width: 560px) {
+  .tabula-wrap {
+    --tz: 24px;
+    display: block;
+    height: calc(var(--tz) * 11 + 2px);
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+  }
+
+  .tabula {
+    --tt: var(--tz);
+    width: max-content;
+    transform: translate(calc(var(--px, 0px) * -1), calc(var(--py, 0px) * -1));
+    transition: transform var(--pan, 0ms) var(--ease-move);
+    will-change: transform;
+  }
+
+  .tt.head,
+  .tt.corner {
+    z-index: 2;
+    transition: transform var(--pan, 0ms) var(--ease-move), background-color 150ms ease, color 150ms ease;
+  }
+
+  .tt.head.col {
+    transform: translateY(var(--py, 0px));
+  }
+
+  .tt.head.row {
+    transform: translateX(var(--px, 0px));
+  }
+
+  .tt.corner {
+    z-index: 3;
+    background: var(--well);
+    transform: translate(var(--px, 0px), var(--py, 0px));
+  }
+}
+
 /* ---------------- 5×5 squares ---------------- */
 
 .square-wrap {
