@@ -103,7 +103,7 @@
       </div>
 
       <figure class="cryptex-stage">
-        <div class="cryptex" aria-label="A cryptex. Drag the rings up or down to shift every letter.">
+        <div class="cryptex">
           <span class="cap left" aria-hidden="true"></span>
           <div class="rings"></div>
           <span class="cap right" aria-hidden="true"></span>
@@ -117,11 +117,11 @@
             </div>
             <div class="readout-shift">
               <span class="readout-label">Shift</span>
-              <output class="readout-value" id="cryptex-shift">0</output>
+              <output class="readout-value" id="cryptex-shift" aria-live="off">0</output>
             </div>
             <div>
               <span class="readout-label">Reads as</span>
-              <output class="readout-value cipher" id="cryptex-out">CIPHER</output>
+              <output class="readout-value cipher" id="cryptex-out" aria-live="off">CIPHER</output>
             </div>
           </div>
           <p>A cryptex is a Caesar cipher you can hold. Drag or flick the rings: they turn together, so every letter shifts by the same amount.</p>

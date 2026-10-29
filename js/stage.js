@@ -156,6 +156,9 @@
       const step = scene.steps[index];
       if (animate && !Stage.reduced) scene.show(index, true);
       else instantly(mount, () => scene.show(index, false));
+      // Played faster than normal, the captions come quicker than they can
+      // be read out, so they're only announced when stepping by hand.
+      caption.setAttribute('aria-live', playing && Stage.speed > 1 ? 'off' : 'polite');
       setCaption(step.caption);
       counter.textContent = `${index + 1} / ${scene.steps.length}`;
       scrub.value = index;

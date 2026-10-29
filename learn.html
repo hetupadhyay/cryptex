@@ -263,7 +263,8 @@
               </div>
               <div class="enigma-out">
                 <span class="field-label">Lamps</span>
-                <output class="enigma-tape" for="enigma-text"></output>
+                <output class="enigma-tape" for="enigma-text" aria-live="off"></output>
+                <p class="enigma-said vh" role="status"></p>
               </div>
               <div class="enigma-tools">
                 <button type="button" class="btn small" data-act="enigma-decrypt">Decrypt it</button>
@@ -272,7 +273,7 @@
               <p class="hint enigma-note" aria-live="polite">The rotor letters are the start position. Set them, then type.</p>
               <div class="field enigma-plugs">
                 <label for="enigma-plugs">Plugboard</label>
-                <input id="enigma-plugs" class="enigma-input" type="text" spellcheck="false" autocomplete="off">
+                <input id="enigma-plugs" class="enigma-input" type="text" spellcheck="false" autocomplete="off" aria-describedby="enigma-plug-error">
                 <p class="hint">Each pair swaps two letters on the way in and on the way out. Wartime operators plugged ten pairs.</p>
                 <p class="error" id="enigma-plug-error" role="alert"></p>
               </div>
