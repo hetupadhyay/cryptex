@@ -186,7 +186,7 @@
     keysBox.replaceChildren();
     if (!c.keys.length) {
       const note = document.createElement('p');
-      note.className = 'note';
+      note.className = 'key-note';
       note.textContent = 'Atbash has no key. The method is the whole secret.';
       keysBox.append(note);
       return;
@@ -297,7 +297,12 @@
 
   // ---- running --------------------------------------------------------------
 
+  // Every run and every clear gets a number, so a scene that was waiting
+  // for the old one to fade out knows when it's no longer wanted.
+  let runs = 0;
+
   function clearStage() {
+    runs++;
     player.reset();
     $('.scene', stageEl).replaceChildren();
     $('.caption', stageEl).textContent = '';
@@ -339,8 +344,11 @@
     }
 
     const mount = $('.scene', stageEl);
+    const mode = state.mode;
+    const id = ++runs;
     const build = () => {
-      const scene = Scenes[c.scene]({ cipher: c, keys, mode: state.mode, input: sceneInput(text).text, mount, cue: player.cue });
+      if (id !== runs) return;
+      const scene = Scenes[c.scene]({ cipher: c, keys, mode, input: sceneInput(text).text, mount, cue: player.cue });
       player.load(scene);
     };
 
@@ -390,7 +398,7 @@
     Stage.speed = s.value;
     $('.speed-value', speedBtn).textContent = s.text;
     $$('.ticks i', speedBtn).forEach((t, i) => t.classList.toggle('on', i <= state.speed));
-    speedBtn.setAttribute('aria-label', `Speed: ${s.say}`);
+    speedBtn.setAttribute('aria-label', `Speed ${s.text}, ${s.say}`);
   }
   speedBtn.addEventListener('click', () => {
     state.speed = (state.speed + 1) % SPEEDS.length;
@@ -421,10 +429,17 @@
   // Arrow keys step through the scene when the stage has focus.
   stageEl.tabIndex = -1;
   // Space plays and pauses, the arrows step, anywhere on the page except
-  // while typing or inside a control that uses those keys itself.
+  // while typing or inside a control that uses those keys itself. Until
+  // something has run, or while the stage is scrolled away, Space scrolls
+  // the page as usual.
+  const stageInView = () => {
+    const r = stageEl.getBoundingClientRect();
+    return r.bottom > 0 && r.top < innerHeight;
+  };
   document.addEventListener('keydown', e => {
     if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.target.closest('input, textarea, select, dialog, [role="radiogroup"], [contenteditable]')) return;
+    if (stageEl.classList.contains('empty') || !stageInView()) return;
     if (e.key === ' ' && !e.target.closest('button, a')) {
       e.preventDefault();
       player.toggle();

@@ -53,7 +53,7 @@
   // cancelled when the user jumps somewhere else.
   function cueSheet() {
     let timers = [];
-    let ghosts = [];
+    let flights = [];
 
     return {
       at(delay, fn) {
@@ -81,7 +81,6 @@
             fontSize: getComputedStyle(from).fontSize,
           });
           document.body.append(ghost);
-          ghosts.push(ghost);
 
           const dx = b.left + b.width / 2 - (a.left + a.width / 2);
           const dy = b.top + b.height / 2 - (a.top + a.height / 2);
@@ -95,6 +94,7 @@
             ],
             { duration: Stage.ms(duration), easing: EASE_MOVE, fill: 'forwards' }
           );
+          flights.push(flight);
           flight.finished.then(() => {
             ghost.remove();
             land();
@@ -102,11 +102,12 @@
         });
       },
 
+      // Cancelling a flight also stops it landing its letter.
       clear() {
         timers.forEach(clearTimeout);
-        ghosts.forEach(g => g.remove());
+        flights.forEach(f => f.cancel());
         timers = [];
-        ghosts = [];
+        flights = [];
       },
     };
   }
@@ -130,6 +131,7 @@
     const counter = root.querySelector('.step-count');
     const scrub = root.querySelector('.scrub');
     const playBtn = root.querySelector('[data-act="play"]');
+    const dock = root.querySelector('.dock');
     const cue = cueSheet();
 
     let scene = null;
@@ -157,7 +159,7 @@
       setCaption(step.caption);
       counter.textContent = `${index + 1} / ${scene.steps.length}`;
       scrub.value = index;
-      root.classList.toggle('at-end', index === scene.steps.length - 1);
+      scrub.setAttribute('aria-valuetext', `Step ${index + 1} of ${scene.steps.length}`);
       if (index === scene.steps.length - 1) {
         setPlaying(false);
         if (onFinish) onFinish();
@@ -188,6 +190,8 @@
         scene = next;
         scrub.max = scene.steps.length - 1;
         root.classList.remove('empty');
+        // Until there's a scene the controls do nothing, so they're out of reach.
+        if (dock) dock.inert = false;
         render(0, true);
         if (autoplay) setPlaying(true);
       },
@@ -208,7 +212,7 @@
         scene = null;
         index = -1;
         root.classList.add('empty');
-        root.classList.remove('at-end');
+        if (dock) dock.inert = true;
       },
       get cue() { return cue; },
     };

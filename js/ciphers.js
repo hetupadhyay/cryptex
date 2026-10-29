@@ -14,7 +14,11 @@
   const isLetter = ch => /^[a-z]$/i.test(ch);
   const toIndex = ch => ch.toUpperCase().charCodeAt(0) - 65;
   const toLetter = i => ALPHABET[mod(i, 26)];
-  const lettersOnly = text => String(text).toUpperCase().replace(/[^A-Z]/g, '');
+  // Filtered before uppercasing: 'ß'.toUpperCase() is 'SS', which would add
+  // letters the letter-by-letter ciphers never see.
+  const lettersOnly = text => String(text).replace(/[^A-Za-z]/g, '').toUpperCase();
+  // Capitals for A to Z only, so every other character keeps its length.
+  const upper = text => String(text).replace(/[a-z]+/g, s => s.toUpperCase());
 
   // Calls fn(letterIndex, n) for every letter, where n counts letters only.
   function mapLetters(text, fn) {
@@ -274,9 +278,11 @@
   const needsLetters = (value, label) =>
     lettersOnly(value).length ? '' : `${label} needs at least one letter.`;
 
+  // Plain digits only: Number() would also take '', '0x3' and '1e1'.
   function wholeNumber(value, min, max, label) {
-    const n = Number(value);
-    if (!Number.isInteger(n) || n < min || n > max) return `${label} must be a whole number from ${min} to ${max}.`;
+    const text = String(value).trim();
+    const n = Number(text);
+    if (!/^-?\d+$/.test(text) || n < min || n > max) return `${label} must be a whole number from ${min} to ${max}.`;
     return '';
   }
 
@@ -441,6 +447,7 @@
     toIndex,
     toLetter,
     lettersOnly,
+    upper,
     modInverse,
     keyStream,
     autokeyStream,

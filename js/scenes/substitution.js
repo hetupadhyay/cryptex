@@ -57,12 +57,14 @@
     const enc = mode === 'encrypt';
     const row = cipher.row(keys);
     const shift = Number(keys.shift) || 0;
-    const source = input.toUpperCase();
-    const result = (enc ? cipher.encrypt : cipher.decrypt)(source, keys).toUpperCase();
+    const source = Ciphers.upper(input);
+    // An array, so a character outside the basic plane (an emoji) is one
+    // entry here, as it is in [...source].
+    const result = [...Ciphers.upper((enc ? cipher.encrypt : cipher.decrypt)(source, keys))];
 
     // --- layout
     const inTape = tape([...source], { label: enc ? 'Message' : 'Ciphertext', cls: 'tape-in' });
-    const outTape = tape([...result].map(ch => (isLetter(ch) ? '' : ch)), { label: enc ? 'Ciphertext' : 'Message', cls: 'tape-out' });
+    const outTape = tape(result.map(ch => (isLetter(ch) ? '' : ch)), { label: enc ? 'Ciphertext' : 'Message', cls: 'tape-out' });
 
     const board = el('div', 'alpha-board intro-' + cipher.intro);
     const top = el('div', 'alpha-row plain');
