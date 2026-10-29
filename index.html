@@ -221,16 +221,23 @@
             <button type="button" class="chip" data-sample="caesar">Caesar</button>
             <button type="button" class="chip" data-sample="vigenere">Vigenère</button>
             <button type="button" class="chip" data-sample="railfence">Rail fence</button>
+            <button type="button" class="chip" data-sample="affine">Affine</button>
           </div>
           <div class="attack-pick" role="tablist" aria-label="Attack">
             <button type="button" role="tab" class="attack-tab" data-attack="brute" aria-selected="true">
               <b>Try every shift</b><span>Caesar has 25 keys. Score each one against English.</span>
+            </button>
+            <button type="button" role="tab" class="attack-tab" data-attack="affine" aria-selected="false">
+              <b>Try every affine key</b><span>All 312 keys, scored against English.</span>
             </button>
             <button type="button" role="tab" class="attack-tab" data-attack="freq" aria-selected="false">
               <b>Count the letters</b><span>Compare the letter counts with English.</span>
             </button>
             <button type="button" role="tab" class="attack-tab" data-attack="vig" aria-selected="false">
               <b>Find a Vigenère key</b><span>Work out the key length, then each key letter.</span>
+            </button>
+            <button type="button" role="tab" class="attack-tab" data-attack="rail" aria-selected="false">
+              <b>Try every rail count</b><span>Score letter pairs like TH and ER.</span>
             </button>
           </div>
         </div>
@@ -246,6 +253,14 @@
               <label><input type="radio" name="brute-order" value="score"><span>Most English first</span></label>
             </div>
             <ol class="shifts"></ol>
+          </section>
+
+          <section class="attack" data-attack="affine" hidden>
+            <div class="attack-head">
+              <h3>The best affine keys</h3>
+              <p class="verdict"></p>
+            </div>
+            <ol class="shifts affine-keys"></ol>
           </section>
 
           <section class="attack" data-attack="freq" hidden>
@@ -274,6 +289,10 @@
               <h3>Vigenère key length</h3>
               <p class="verdict"></p>
             </div>
+            <div class="seg sort-toggle" role="radiogroup" aria-label="Cipher">
+              <label><input type="radio" name="vig-mode" value="vigenere" checked><span>Vigenère</span></label>
+              <label><input type="radio" name="vig-mode" value="beaufort"><span>Beaufort</span></label>
+            </div>
             <figure class="chart ioc-chart">
               <div class="bars" role="group" aria-label="Index of coincidence for each key length"></div>
               <figcaption class="legend">
@@ -285,6 +304,14 @@
               <div class="key-tiles"></div>
               <p class="preview"></p>
             </div>
+          </section>
+
+          <section class="attack" data-attack="rail" hidden>
+            <div class="attack-head">
+              <h3>Every rail count</h3>
+              <p class="verdict"></p>
+            </div>
+            <ol class="shifts rail-counts"></ol>
           </section>
         </div>
       </div>
