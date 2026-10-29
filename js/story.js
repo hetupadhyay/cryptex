@@ -1,7 +1,7 @@
 /*
- * The last two chapters: Enigma, the machine that was broken anyway, and
- * the one-time pad, the one cipher that can't be. Story.open() is how the
- * timeline jumps to either of them.
+ * The figures in two chapters: Enigma, the machine that was broken anyway,
+ * and the one-time pad, the one cipher that can't be. Story.open() brings
+ * either figure into view and sets it working.
  */
 (function () {
   'use strict';
@@ -110,14 +110,15 @@
   const strips = [...panel.querySelectorAll('.rotor-strip')];
   const lamps = {};
 
+  // The keys are "bulbs" in the markup: .lamp is the night lamp in the masthead.
   const board = $('.lampboard', panel);
   for (const row of KEYBOARD) {
     const div = document.createElement('div');
-    div.className = 'lamp-row';
+    div.className = 'bulb-row';
     for (const letter of row) {
       const b = document.createElement('button');
       b.type = 'button';
-      b.className = 'lamp';
+      b.className = 'bulb';
       b.textContent = letter;
       b.addEventListener('click', () => {
         stopTyping();
@@ -159,8 +160,8 @@
   }
 
   function lightLamp(pressed, lit) {
-    $('.lamp.lit', board)?.classList.remove('lit');
-    $('.lamp.pressed', board)?.classList.remove('pressed');
+    $('.bulb.lit', board)?.classList.remove('lit');
+    $('.bulb.pressed', board)?.classList.remove('pressed');
     if (!lit) return;
     lamps[pressed].classList.add('pressed');
     void lamps[lit].offsetWidth; // restart the glow if the same lamp lights twice
@@ -284,6 +285,10 @@
   plugInput.value = PLUGS;
   update(false);
 
+  // The chapter's ATTACK AT DAWN line, worked out on the same settings.
+  $('[data-sample="enigma"]').textContent = encrypt('ATTACK AT DAWN', { plugs: PLUGS });
+  $('[data-act="enigma-sample"]').addEventListener('click', () => open('enigma', { text: 'Attack at dawn' }));
+
   // ---- the one-time pad -----------------------------------------------------------
 
   // Uniform random letters from the browser's cryptographic generator.
@@ -397,15 +402,15 @@
   renderPad();
   renderReuse(false);
 
-  // ---- jumping in from the timeline -----------------------------------------
+  // ---- bringing a figure into view ---------------------------------------------
 
   function open(id, { text } = {}) {
-    const target = document.getElementById(id);
+    const target = { enigma: panel, 'one-time-pad': padTiles }[id]?.closest('figure');
     if (!target) return;
     target.scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
     if (text === undefined) return;
     if (id === 'enigma') {
-      // Back to the settings the timeline card used.
+      // Back to the settings the chapter's sample uses.
       start = [0, 0, 0];
       plugInput.value = PLUGS;
       plugError.textContent = '';
