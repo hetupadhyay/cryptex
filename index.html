@@ -5,19 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Cryptex</title>
   <meta name="description" content="Ten classical ciphers, animated one letter at a time, and the tricks codebreakers used to crack every one of them.">
-  <script>
-    // Pick the theme before first paint so the page doesn't flash.
-    (function () {
-      var theme = null;
-      try { theme = localStorage.getItem('cryptex-theme'); } catch (e) {}
-      if (theme !== 'day' && theme !== 'night') {
-        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day';
-      }
-      document.documentElement.dataset.theme = theme;
-    })();
-  </script>
+  <link rel="canonical" href="https://cryptex.vercel.app/">
+  <meta name="author" content="Het Nimeshkumar Upadhyay">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#edf0ef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e1418" media="(prefers-color-scheme: dark)">
+
+  <!-- Link previews -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Cryptex">
+  <meta property="og:title" content="Cryptex: every secret has a weakness">
+  <meta property="og:description" content="Watch ten classical ciphers work, one letter at a time. Then crack every one of them with the tricks real codebreakers used.">
+  <meta property="og:url" content="https://cryptex.vercel.app/">
+  <meta property="og:image" content="https://cryptex.vercel.app/img/og.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The Cryptex key logo and the words Every secret has a weakness, next to the brass rings of a cryptex.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cryptex: every secret has a weakness">
+  <meta name="twitter:description" content="Watch ten classical ciphers work, one letter at a time. Then crack every one of them with the tricks real codebreakers used.">
+  <meta name="twitter:image" content="https://cryptex.vercel.app/img/og.png">
+  <meta name="twitter:image:alt" content="The Cryptex key logo and the words Every secret has a weakness, next to the brass rings of a cryptex.">
+
+  <!-- Home screen -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Cryptex">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <script src="js/theme.js"></script>
   <link rel="stylesheet" href="css/site.css">
   <link rel="stylesheet" href="css/scenes.css">
+  <link rel="stylesheet" href="css/story.css">
+  <link rel="stylesheet" href="css/daily.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/desk.css">
   <link rel="icon" href="img/mark.svg" type="image/svg+xml">
 </head>
 <body>
@@ -38,8 +63,10 @@
         <a href="#lab">Lab</a>
         <a href="#strength">Key strength</a>
         <a href="#desk">Codebreaking</a>
+        <a href="#daily">Daily</a>
         <a href="#intercepts">Intercepts</a>
         <a href="#share">Send a secret</a>
+        <a href="#today">Today</a>
       </nav>
       <button class="theme" type="button" role="switch" aria-checked="false" aria-label="Night mode">
         <span class="theme-label day">Day</span>
@@ -48,6 +75,10 @@
       </button>
     </div>
   </header>
+
+  <noscript>
+    <p class="noscript">Cryptex needs JavaScript for the ciphers, the animations and the codebreaking tools. Turn it on and reload the page to use them.</p>
+  </noscript>
 
   <main id="top">
     <!-- Hero -->
@@ -215,16 +246,23 @@
             <button type="button" class="chip" data-sample="caesar">Caesar</button>
             <button type="button" class="chip" data-sample="vigenere">Vigenère</button>
             <button type="button" class="chip" data-sample="railfence">Rail fence</button>
+            <button type="button" class="chip" data-sample="affine">Affine</button>
           </div>
           <div class="attack-pick" role="tablist" aria-label="Attack">
             <button type="button" role="tab" class="attack-tab" data-attack="brute" aria-selected="true">
               <b>Try every shift</b><span>Caesar has 25 keys. Score each one against English.</span>
+            </button>
+            <button type="button" role="tab" class="attack-tab" data-attack="affine" aria-selected="false">
+              <b>Try every affine key</b><span>All 312 keys, scored against English.</span>
             </button>
             <button type="button" role="tab" class="attack-tab" data-attack="freq" aria-selected="false">
               <b>Count the letters</b><span>Compare the letter counts with English.</span>
             </button>
             <button type="button" role="tab" class="attack-tab" data-attack="vig" aria-selected="false">
               <b>Find a Vigenère key</b><span>Work out the key length, then each key letter.</span>
+            </button>
+            <button type="button" role="tab" class="attack-tab" data-attack="rail" aria-selected="false">
+              <b>Try every rail count</b><span>Score letter pairs like TH and ER.</span>
             </button>
           </div>
         </div>
@@ -240,6 +278,14 @@
               <label><input type="radio" name="brute-order" value="score"><span>Most English first</span></label>
             </div>
             <ol class="shifts"></ol>
+          </section>
+
+          <section class="attack" data-attack="affine" hidden>
+            <div class="attack-head">
+              <h3>The best affine keys</h3>
+              <p class="verdict"></p>
+            </div>
+            <ol class="shifts affine-keys"></ol>
           </section>
 
           <section class="attack" data-attack="freq" hidden>
@@ -268,6 +314,10 @@
               <h3>Vigenère key length</h3>
               <p class="verdict"></p>
             </div>
+            <div class="seg sort-toggle" role="radiogroup" aria-label="Cipher">
+              <label><input type="radio" name="vig-mode" value="vigenere" checked><span>Vigenère</span></label>
+              <label><input type="radio" name="vig-mode" value="beaufort"><span>Beaufort</span></label>
+            </div>
             <figure class="chart ioc-chart">
               <div class="bars" role="group" aria-label="Index of coincidence for each key length"></div>
               <figcaption class="legend">
@@ -280,7 +330,70 @@
               <p class="preview"></p>
             </div>
           </section>
+
+          <section class="attack" data-attack="rail" hidden>
+            <div class="attack-head">
+              <h3>Every rail count</h3>
+              <p class="verdict"></p>
+            </div>
+            <ol class="shifts rail-counts"></ol>
+          </section>
         </div>
+      </div>
+    </section>
+
+    <!-- Daily intercept -->
+    <section class="section" id="daily" aria-labelledby="daily-title">
+      <div class="section-head">
+        <h2 id="daily-title">The daily intercept</h2>
+        <p>A new message every day at midnight, the same one for everyone. Monday is gentle and it gets harder towards the weekend. Crack one a day to keep your streak going.</p>
+      </div>
+      <div class="daily">
+        <article class="daily-card">
+          <header class="mission-head daily-head">
+            <span class="mission-place daily-no"></span>
+            <h3 class="mission-title daily-date"></h3>
+            <p class="daily-level"><span class="pips" role="img"></span><span class="daily-level-name"></span></p>
+          </header>
+          <p class="mission-brief"><b class="daily-from"></b> <span class="daily-brief"></span></p>
+          <pre class="intercept"></pre>
+          <div class="mission-tools">
+            <button type="button" class="btn glass-btn small" data-act="to-desk">Send to the desk</button>
+            <button type="button" class="btn glass-btn small" data-act="to-lab">Open in the lab</button>
+          </div>
+          <form class="answer" autocomplete="off">
+            <label for="daily-input" class="answer-ask">What does the message say?</label>
+            <div class="answer-row">
+              <input id="daily-input" type="text" spellcheck="false" placeholder="Type the decrypted message">
+              <button class="btn primary" type="submit">Check</button>
+            </div>
+            <p class="answer-feedback" role="status"></p>
+          </form>
+          <div class="daily-done" hidden>
+            <p class="daily-result"></p>
+            <div class="daily-copy">
+              <button type="button" class="btn glass-btn small" data-act="copy">Copy my result</button>
+              <span class="daily-copied" role="status"></span>
+            </div>
+          </div>
+          <div class="hints">
+            <button type="button" class="link" data-act="hint">Show a hint</button>
+            <ol class="hint-list"></ol>
+          </div>
+        </article>
+        <aside class="daily-side" aria-label="Your record">
+          <div class="daily-clock">
+            <span>Next intercept in</span>
+            <b class="daily-countdown" role="timer"></b>
+          </div>
+          <dl class="daily-stats">
+            <div><dt>Streak</dt><dd data-stat="streak">0</dd></div>
+            <div><dt>Best</dt><dd data-stat="best">0</dd></div>
+            <div><dt>Hints today</dt><dd data-stat="hints">0</dd></div>
+          </dl>
+          <ol class="daily-week" aria-label="This week"></ol>
+          <p class="daily-status"></p>
+        </aside>
       </div>
     </section>
 
@@ -356,10 +469,296 @@
         </div>
       </form>
     </section>
+
+    <!-- The one that can't be broken -->
+    <section class="section" id="unbreakable" aria-labelledby="unbreakable-title">
+      <div class="section-head">
+        <h2 id="unbreakable-title">The one that can’t be broken</h2>
+        <p>Machines made ciphers far harder to crack, and the most famous of them fell anyway. One cipher never has. It’s the honest exception to every secret having a weakness, and it comes with conditions.</p>
+      </div>
+
+      <article class="story-sheet enigma" id="enigma" aria-labelledby="enigma-title">
+        <header class="story-head">
+          <span class="story-kicker">Germany, 1926 to 1945</span>
+          <h3 id="enigma-title">Enigma</h3>
+          <p>Three rotors scramble each letter, a reflector sends it back through them, and a lamp lights the result. Type a message or press the keys.</p>
+        </header>
+
+        <div class="enigma-body">
+          <div class="enigma-machine">
+            <div class="machine">
+              <div class="rotors" role="group" aria-label="Rotors I, II and III, left to right">
+                <div class="rotor">
+                  <button type="button" class="rotor-btn" data-rotor="0" data-dir="-1" aria-label="Turn rotor I back one letter">
+                    <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 12.5 10 7.5l5 5" /></svg>
+                  </button>
+                  <div class="rotor-window" role="img" data-name="I"><div class="rotor-strip" aria-hidden="true"></div></div>
+                  <button type="button" class="rotor-btn" data-rotor="0" data-dir="1" aria-label="Turn rotor I on one letter">
+                    <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 7.5 5 5 5-5" /></svg>
+                  </button>
+                  <span class="rotor-name" aria-hidden="true">I</span>
+                </div>
+                <div class="rotor">
+                  <button type="button" class="rotor-btn" data-rotor="1" data-dir="-1" aria-label="Turn rotor II back one letter">
+                    <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 12.5 10 7.5l5 5" /></svg>
+                  </button>
+                  <div class="rotor-window" role="img" data-name="II"><div class="rotor-strip" aria-hidden="true"></div></div>
+                  <button type="button" class="rotor-btn" data-rotor="1" data-dir="1" aria-label="Turn rotor II on one letter">
+                    <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 7.5 5 5 5-5" /></svg>
+                  </button>
+                  <span class="rotor-name" aria-hidden="true">II</span>
+                </div>
+                <div class="rotor">
+                  <button type="button" class="rotor-btn" data-rotor="2" data-dir="-1" aria-label="Turn rotor III back one letter">
+                    <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 12.5 10 7.5l5 5" /></svg>
+                  </button>
+                  <div class="rotor-window" role="img" data-name="III"><div class="rotor-strip" aria-hidden="true"></div></div>
+                  <button type="button" class="rotor-btn" data-rotor="2" data-dir="1" aria-label="Turn rotor III on one letter">
+                    <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 7.5 5 5 5-5" /></svg>
+                  </button>
+                  <span class="rotor-name" aria-hidden="true">III</span>
+                </div>
+              </div>
+              <div class="lampboard" role="group" aria-label="Keys. The lamp that lights is the ciphertext letter."></div>
+            </div>
+
+            <div class="field">
+              <label for="enigma-text">Message</label>
+              <input id="enigma-text" class="enigma-input" type="text" maxlength="120" spellcheck="false" autocomplete="off" placeholder="Type here">
+            </div>
+            <div class="enigma-out">
+              <span class="field-label">Lamps</span>
+              <output class="enigma-tape" for="enigma-text"></output>
+            </div>
+            <div class="enigma-tools">
+              <button type="button" class="btn glass-btn small" data-act="enigma-decrypt">Decrypt it</button>
+              <button type="button" class="link" data-act="enigma-clear">Clear</button>
+            </div>
+            <p class="hint enigma-note" aria-live="polite">The rotor letters are the start position. Set them, then type.</p>
+            <div class="field enigma-plugs">
+              <label for="enigma-plugs">Plugboard</label>
+              <input id="enigma-plugs" class="enigma-input" type="text" spellcheck="false" autocomplete="off">
+              <p class="hint">Each pair swaps two letters on the way in and on the way out. Wartime operators plugged ten pairs.</p>
+              <p class="error" id="enigma-plug-error" role="alert"></p>
+            </div>
+          </div>
+
+          <div class="story-notes">
+            <h4>Why it’s harder than Caesar</h4>
+            <p>Caesar uses one alphabet for the whole message. Enigma’s right rotor turns before every letter and carries the others along like an odometer, so each key press uses a different alphabet, and the pattern only repeats after 16,900 letters. Press A five times and watch.</p>
+            <p>Add the choice of rotors and the plugboard and there were about 159 million million million settings. At a billion a second, trying them all would take some 5,000 years.</p>
+
+            <h4>How Bletchley Park read it anyway</h4>
+            <p>Polish mathematicians led by Marian Rejewski broke the early version in 1932 and handed their methods to Britain in 1939. Nobody tried every setting. The weaknesses were elsewhere.</p>
+            <ul class="story-facts">
+              <li><b>Cribs.</b> Weather reports went out at the same times in the same words, so codebreakers could guess a stretch of plaintext, like WETTERVORHERSAGE, weather forecast.</li>
+              <li><b>A letter never encrypts to itself.</b> The reflector makes sure of it. A guessed word can only sit where none of its letters lines up with the same letter, which rules out most positions at once.</li>
+              <li><b>Operator habits.</b> Lazy start positions like AAA, the same greetings, the same sign-offs, day after day.</li>
+              <li><b>The bombe.</b> Alan Turing and Gordon Welchman built on the Polish bomba: a machine that ran through rotor positions against a crib and threw out every one that led to a contradiction.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="story-sheet otp" id="one-time-pad" aria-labelledby="pad-title">
+        <header class="story-head">
+          <span class="story-kicker">1882 and 1917</span>
+          <h3 id="pad-title">The one-time pad</h3>
+          <p>Add a random letter to every letter of the message, wrapping round after Z. A counts as 0, B as 1, and so on. That’s the whole cipher.</p>
+        </header>
+
+        <div class="otp-step">
+          <div class="otp-row">
+            <div class="field grow">
+              <label for="pad-text">Your message</label>
+              <input id="pad-text" class="otp-input" type="text" maxlength="40" spellcheck="false" autocomplete="off" value="Attack at dawn">
+            </div>
+            <button type="button" class="btn glass-btn small" data-act="new-pad">Draw a new pad</button>
+          </div>
+          <p class="otp-legend" aria-hidden="true"><span class="m">Message</span> + <span class="k">pad</span> = <span class="c">ciphertext</span></p>
+          <div class="otp-tiles real" aria-label="Message, pad and ciphertext, letter by letter"></div>
+          <p class="hint">The pad comes from your browser’s cryptographic random number generator. Nobody, this page included, could have predicted it.</p>
+        </div>
+
+        <div class="otp-step">
+          <h4>Now make it say something else</h4>
+          <p>Type any other message with the same number of letters. Here is the pad that turns the same ciphertext into it.</p>
+          <div class="field">
+            <label for="pad-alt">Another message</label>
+            <input id="pad-alt" class="otp-input" type="text" maxlength="40" spellcheck="false" autocomplete="off" value="Retreat at six">
+          </div>
+          <p class="otp-legend" aria-hidden="true"><span class="c">Ciphertext</span> − <span class="k">this pad</span> = <span class="m">your message</span></p>
+          <div class="otp-tiles other" aria-label="Ciphertext, another pad and your other message, letter by letter"></div>
+          <p class="hint" id="pad-alt-hint"></p>
+          <p class="otp-verdict">Both pads look just as random. Without the real one there’s no way to tell which message was sent, because every message of this length is equally possible. In 1949 the Bell Labs mathematician Shannon proved what that means: the ciphertext says nothing at all.</p>
+        </div>
+
+        <div class="otp-step">
+          <h4>Three rules, no exceptions</h4>
+          <ol class="otp-rules">
+            <li><b>Truly random.</b> From dice, noise or a hardware generator, never a phrase or a pattern someone chose. A pad taken from a book is just a long key full of English.</li>
+            <li><b>As long as the message.</b> One pad letter for every message letter. A shorter key has to repeat, and a repeating key is Vigenère, which the codebreaker’s desk takes apart.</li>
+            <li><b>Used once, then destroyed.</b> Use a pad twice and it stops being unbreakable.</li>
+          </ol>
+        </div>
+
+        <div class="otp-step reuse">
+          <h4>What a reused pad gives away</h4>
+          <p>Two messages, encrypted with the same pad. An eavesdropper sees only the two ciphertexts.</p>
+          <dl class="reuse-lines">
+            <div><dt>Ciphertext 1</dt><dd></dd></div>
+            <div><dt>Ciphertext 2</dt><dd></dd></div>
+            <div class="diff"><dt>1 minus 2</dt><dd></dd></div>
+          </dl>
+          <button type="button" class="btn glass-btn small" data-act="reuse-pad">Use a different pad</button>
+          <p>A new pad changes both ciphertexts but never their difference. Subtracting one from the other cancels the pad and leaves message one minus message two, with no key at all. Guess that message one starts with MEET, take the difference away from it, and BRIN appears: the start of message two. American codebreakers read about 3,000 Soviet messages this way in the Venona project, after some pads had been printed twice.</p>
+        </div>
+
+        <p class="story-coda">So the headline has one honest exception, and only while every rule holds, every time. The pad has to be made, carried to the other side in secret and destroyed after use, and you need as much of it as everything you’ll ever send. That’s why it was kept for spies and for the hotline between Washington and Moscow, and why almost nothing else uses it.</p>
+      </article>
+    </section>
+
+    <!-- Why this matters today -->
+    <section class="section" id="today" aria-labelledby="today-title">
+      <div class="section-head">
+        <h2 id="today-title">Why this matters today</h2>
+        <p>The padlock in your browser runs on the same ideas as everything on this page, rebuilt so the shortcuts are gone.</p>
+      </div>
+
+      <div class="today-grid">
+        <article class="today-card">
+          <span class="story-kicker">Substitution and transposition</span>
+          <h3>Confusion and diffusion</h3>
+          <p>AES, the cipher behind almost every https connection, works in rounds. Each round swaps every byte through a fixed table, then shifts and mixes the bytes across the block. Shannon, the same mathematician who proved the one-time pad unbreakable, named the two ideas confusion and diffusion in 1949. One round on its own would fall like any cipher here. AES-128 runs ten.</p>
+        </article>
+        <article class="today-card">
+          <span class="story-kicker">Key strength</span>
+          <h3>Too many keys to try</h3>
+          <p>AES-128 has 2<sup>128</sup> keys, about 3.4 × 10<sup>38</sup>. At a billion a second, trying them all would take around 10<sup>22</sup> years, close to a trillion times the age of the universe. Every other cipher in the chart had a shortcut. In more than twenty years of public attacks, nobody has found one for AES that matters.</p>
+          <a class="link" href="#strength">Compare it with the others</a>
+        </article>
+        <article class="today-card">
+          <span class="story-kicker">Key distribution</span>
+          <h3>Agreeing on a key in public</h3>
+          <p>The one-time pad sank on logistics: both sides needed the same secret before they could say anything. In 1976 Whitfield Diffie and Martin Hellman showed how two strangers can agree on a shared key over an open line, while an eavesdropper reads every message. Your browser does this on every connection.</p>
+          <a class="link" href="#one-time-pad">Back to the one-time pad</a>
+        </article>
+      </div>
+
+      <div class="story-sheet handshake">
+        <div class="handshake-head">
+          <h3>The first moment of an https visit</h3>
+          <p>All of this happens before the page appears, usually in a few hundredths of a second.</p>
+        </div>
+        <ol class="hs-steps">
+          <li class="hs-step">
+            <span class="hs-dir">Browser <i aria-hidden="true">→</i> site</span>
+            <h4>Hello</h4>
+            <p>Your browser lists the ciphers it supports and sends its half of a key exchange.</p>
+          </li>
+          <li class="hs-step">
+            <span class="hs-dir">Site <i aria-hidden="true">→</i> browser</span>
+            <h4>Proof</h4>
+            <p>The site sends its half, plus a certificate signed by an authority your browser already trusts, proving it really is the address in the bar.</p>
+          </li>
+          <li class="hs-step">
+            <span class="hs-dir">Each side alone</span>
+            <h4>Shared key</h4>
+            <p>Both sides combine the two halves into the same secret key. The key itself never crosses the network.</p>
+          </li>
+          <li class="hs-step">
+            <span class="hs-dir">Browser <i aria-hidden="true">↔</i> site</span>
+            <h4>Encrypted</h4>
+            <p>From then on every page, password and cookie is encrypted with AES or a cipher like it, and checked so nobody can change it on the way.</p>
+          </li>
+        </ol>
+      </div>
+
+      <div class="today-check">
+        <svg class="today-lock" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5" /><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" /></svg>
+        <div>
+          <h3>Check it yourself</h3>
+          <p>On any https site, click the padlock, or the icon in its place, next to the address. Open the connection or certificate details and you’ll see who vouched for the site. Your browser’s developer tools go further and often name the key exchange and the cipher, such as X25519 and AES_128_GCM.</p>
+        </div>
+      </div>
+
+      <p class="story-coda">The ciphers have stopped being the weak point. What breaks now is what broke Enigma: people. Reused passwords, convincing fake login pages, software nobody updated. Every secret still has a weakness. These days it’s usually us.</p>
+    </section>
+
+    <!-- About and credits -->
+    <section class="section" id="about" aria-labelledby="about-title">
+      <div class="section-head">
+        <h2 id="about-title">About Cryptex</h2>
+        <p>Made by Het Nimeshkumar Upadhyay as a cybersecurity course project.</p>
+      </div>
+      <div class="about-grid">
+        <div class="about-copy">
+          <p>Most people only meet encryption as a padlock in the address bar. Classical ciphers are small enough to watch working, letter by letter, and every one of them fails in a way you can see. Learning why they break is the quickest way to understand what modern encryption has to get right.</p>
+          <p>Cryptex is plain HTML, CSS and JavaScript, with no frameworks, no build step and no tracking. Every cipher, animation and attack runs in your browser, and nothing you type is sent anywhere.</p>
+          <div class="about-actions">
+            <a class="btn glass-btn small" href="https://github.com/hetupadhyay/Cryptex">Source on GitHub</a>
+            <a class="link" href="https://github.com/hetupadhyay">Het on GitHub</a>
+            <a class="link" href="https://github.com/hetupadhyay/Cryptex/issues">Report a problem</a>
+          </div>
+        </div>
+        <dl class="about-facts">
+          <div><dt>Made by</dt><dd>Het Nimeshkumar Upadhyay</dd></div>
+          <div><dt>Made for</dt><dd>A cybersecurity course</dd></div>
+          <div><dt>Runs on</dt><dd>Your browser, and nothing else</dd></div>
+          <div><dt>Tracking</dt><dd>None. No cookies, analytics or ads.</dd></div>
+        </dl>
+      </div>
+    </section>
   </main>
 
-  <footer class="foot">
-    <p>Cryptex runs entirely in your browser. Nothing you type leaves the page.</p>
+  <footer class="foot site-foot">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a class="brand" href="#top" aria-label="Cryptex, back to top">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path class="mark-bow" d="M14.6 10.6A7.4 7.4 0 1 0 14.6 21.4" />
+            <path class="mark-blade" d="M10.5 13.9h20.2a1.3 1.3 0 0 1 1.3 1.3v1.6a1.3 1.3 0 0 1-1.3 1.3h-1.4v4.5h-3.6v-4.5h-1.6v3.1h-3.6v-3.1h-10z" />
+          </svg>
+          <span class="wordmark">Cryptex</span>
+        </a>
+        <p>Classical ciphers, worked through one letter at a time, and the attacks that break them. It all runs in your browser.</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer">
+        <div class="foot-col">
+          <p class="foot-title">Explore</p>
+          <ul>
+            <li><a href="#history">History</a></li>
+            <li><a href="#lab">The lab</a></li>
+            <li><a href="#strength">Key strength</a></li>
+            <li><a href="#desk">Codebreaking</a></li>
+            <li><a href="#daily">Daily intercept</a></li>
+            <li><a href="#intercepts">Intercepts</a></li>
+            <li><a href="#share">Send a secret</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <p class="foot-title">Project</p>
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="https://github.com/hetupadhyay/Cryptex">Source on GitHub</a></li>
+            <li><a href="https://github.com/hetupadhyay/Cryptex/issues">Report a problem</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <p class="foot-title">Legal</p>
+          <ul>
+            <li><a href="terms.html">Terms</a></li>
+            <li><a href="privacy.html">Privacy</a></li>
+            <li><a href="https://github.com/hetupadhyay/Cryptex/security/policy">Security</a></li>
+            <li><a href="https://github.com/hetupadhyay/Cryptex/blob/main/LICENSE">License</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div class="foot-base">
+      <p>© 2026 Het Nimeshkumar Upadhyay. Cryptex™ and the key logo are trademarks of Het Nimeshkumar Upadhyay.</p>
+      <p>Code under the MIT License. Fonts under the SIL Open Font License.</p>
+    </div>
   </footer>
 
   <dialog class="secret-dialog" aria-labelledby="secret-title">
@@ -394,6 +793,9 @@
   <script src="js/strength.js"></script>
   <script src="js/intercepts.js"></script>
   <script src="js/share.js"></script>
+  <script src="js/story.js"></script>
+  <script src="js/daily.js"></script>
   <script src="js/site.js"></script>
+  <script src="js/pwa.js"></script>
 </body>
 </html>

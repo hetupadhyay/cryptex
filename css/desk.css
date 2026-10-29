@@ -1,0 +1,66 @@
+/* ---------------- codebreaker's desk: affine and rail fence ---------------- */
+
+/* Affine rows need room for two numbers, a and b. */
+.affine-keys .shift-row {
+  grid-template-columns: 76px minmax(0, 1fr) 110px;
+}
+
+.affine-key {
+  display: grid;
+  grid-template-columns: auto 2ch auto 2ch;
+  align-items: baseline;
+  justify-content: end;
+  gap: 0 5px;
+}
+
+.affine-key small {
+  color: var(--ink-3);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.affine-key span {
+  text-align: right;
+}
+
+.shift-row.best .affine-key small {
+  color: var(--pencil);
+}
+
+/* Once the desk is one column, five stacked tabs would push the work far
+   down the page, so they become a strip that scrolls sideways. */
+@media (max-width: 960px) {
+  .attack-pick {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(196px, 1fr);
+    margin: 0 calc(var(--gutter) * -1);
+    padding: 2px var(--gutter) 8px;
+    overflow-x: auto;
+    scroll-padding-inline: var(--gutter);
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .attack-pick::-webkit-scrollbar {
+    display: none;
+  }
+
+  .attack-tab {
+    align-content: start;
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .attack-pick {
+    grid-auto-columns: 184px;
+  }
+
+  .attack-tab {
+    padding: 11px 14px 12px;
+  }
+
+  .affine-keys .shift-row {
+    grid-template-columns: 62px minmax(0, 1fr) 50px;
+  }
+}

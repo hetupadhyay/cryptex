@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en" data-theme="day">
+<head>
+  <meta charset="utf-8">
+  <title>Cryptex link preview</title>
+  <!--
+    The 1200 × 630 link preview card. Not part of the site: render it with
+    `node tools/render-images.js`, which writes img/og.png.
+    It borrows the site's stylesheet, so the fonts, colours and the cryptex
+    rings are the real ones.
+  -->
+  <link rel="stylesheet" href="../css/site.css">
+  <style>
+    html, body {
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+    }
+
+    body {
+      position: relative;
+      min-height: 0;
+    }
+
+    .ambient i:nth-child(1) {
+      width: 980px;
+      height: 980px;
+      top: -420px;
+      right: -260px;
+    }
+
+    .ambient i:nth-child(2) {
+      width: 900px;
+      height: 900px;
+      top: 120px;
+      left: -460px;
+    }
+
+    .ambient i:nth-child(3) {
+      display: none;
+    }
+
+    /* A strip of the cipher pad, the way it sits behind the site. */
+    .pad-text {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      margin: 0;
+      padding: 14px 10px;
+      color: rgba(22, 33, 42, 0.06);
+      font: 400 17px/28px var(--type);
+      letter-spacing: 0.08em;
+      white-space: pre;
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(100deg, rgba(0, 0, 0, 0.35) 15%, rgba(0, 0, 0, 0.35) 48%, #000 72%);
+      mask-image: linear-gradient(100deg, rgba(0, 0, 0, 0.35) 15%, rgba(0, 0, 0, 0.35) 48%, #000 72%);
+    }
+
+    .pad-text b {
+      color: rgba(180, 71, 58, 0.42);
+      font-weight: 400;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      align-content: center;
+      gap: 34px;
+      width: 640px;
+      height: 100%;
+      padding-left: 84px;
+      box-sizing: content-box;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand-row img {
+      width: 72px;
+      height: 72px;
+      filter: drop-shadow(0 10px 18px rgba(22, 33, 42, 0.22));
+    }
+
+    .brand-row span {
+      font: 700 46px/1 var(--type);
+      letter-spacing: 0.02em;
+    }
+
+    h1 {
+      max-width: 9.2em;
+      font-size: 86px;
+      line-height: 0.98;
+      letter-spacing: -0.042em;
+      font-weight: 750;
+    }
+
+    .sub {
+      max-width: 30em;
+      color: var(--ink-2);
+      font-size: 25px;
+      line-height: 1.45;
+    }
+
+    /* The cryptex runs off the right edge: just a hint of it. */
+    .cryptex {
+      --r: 168px;
+      --ring-w: 84px;
+      position: absolute;
+      top: 50%;
+      left: 760px;
+      z-index: 1;
+      transform: translateY(-50%) rotate(-6deg);
+      transform-origin: left center;
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"><i></i><i></i><i></i></div>
+  <pre class="pad-text" aria-hidden="true"></pre>
+
+  <main class="card">
+    <div class="brand-row">
+      <img src="../img/mark.svg" alt="">
+      <span>Cryptex</span>
+    </div>
+    <h1>Every secret has a weakness.</h1>
+    <p class="sub">Ten classical ciphers, animated one letter at a time, and the attacks that break every one of them.</p>
+  </main>
+
+  <div class="cryptex" aria-hidden="true">
+    <span class="cap left"></span>
+    <div class="rings"></div>
+    <span class="cap right"></span>
+    <span class="lens"></span>
+  </div>
+
+  <script src="og.js"></script>
+</body>
+</html>

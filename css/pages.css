@@ -1,0 +1,406 @@
+/* ------------------------------------------------------------------
+   About, the site footer, and the standalone pages (terms, privacy,
+   404). Uses the tokens from site.css, so both themes come for free.
+------------------------------------------------------------------- */
+
+/* ---------------- no JavaScript ---------------- */
+
+.noscript {
+  position: relative;
+  z-index: 1;
+  width: min(var(--page), calc(100% - 40px));
+  margin: 16px auto 0;
+  padding: 14px 18px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 14px;
+  background: var(--sheet);
+  color: var(--ink);
+  font-size: 15px;
+  box-shadow: var(--shadow-s);
+}
+
+/* ---------------- about ---------------- */
+
+.about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 28px 48px;
+  align-items: start;
+}
+
+.about-copy {
+  display: grid;
+  gap: 16px;
+  max-width: 620px;
+}
+
+.about-copy > p {
+  color: var(--ink-2);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.about-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin-top: 6px;
+}
+
+.about-facts {
+  display: grid;
+  margin: 0;
+  padding: 8px 22px;
+  border: 1px solid var(--rule);
+  border-radius: 22px;
+  background: var(--sheet);
+  box-shadow: var(--shadow-s);
+}
+
+.about-facts > div {
+  display: grid;
+  gap: 2px;
+  padding: 14px 0;
+}
+
+.about-facts > div + div {
+  border-top: 1px solid var(--rule);
+}
+
+.about-facts dt {
+  color: var(--ink-3);
+  font-size: 12.5px;
+  font-weight: 650;
+}
+
+.about-facts dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* ---------------- footer ---------------- */
+
+.site-foot {
+  display: grid;
+  gap: 40px;
+  padding-block: 112px 40px;
+  color: var(--ink-2);
+}
+
+.site-foot p {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.foot-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+  gap: 32px 56px;
+  padding-top: 40px;
+  border-top: 1px solid var(--rule);
+}
+
+.foot-brand {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  max-width: 340px;
+}
+
+.foot-brand .brand {
+  justify-self: start;
+}
+
+.foot-brand p {
+  color: var(--ink-2);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+.foot-cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px 24px;
+}
+
+.foot-title {
+  margin-bottom: 12px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.foot-col ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.foot-col a {
+  color: var(--ink-2);
+  font-size: 14.5px;
+  text-decoration: none;
+  text-underline-offset: 3px;
+  transition: color 160ms ease;
+}
+
+.foot-col a[aria-current='page'] {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .foot-col a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+  }
+}
+
+.foot-base {
+  display: grid;
+  gap: 4px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-3);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+/* ---------------- standalone pages ---------------- */
+
+/* No section links in the nav, so the switch sits on the right by itself. */
+.doc-page .theme {
+  margin-left: auto;
+}
+
+.doc {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 56px var(--gutter) 0;
+  box-sizing: content-box;
+}
+
+.doc-sheet {
+  padding: 52px 60px 56px;
+  border: 1px solid var(--rule);
+  border-radius: 28px;
+  background: var(--sheet);
+  box-shadow: var(--shadow-l);
+}
+
+.doc-head {
+  display: grid;
+  gap: 12px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.doc-kicker {
+  color: var(--brass);
+  font: 700 13px/1 var(--type);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.doc-head h1 {
+  font-size: clamp(38px, 6vw, 58px);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-weight: 750;
+}
+
+.doc-meta {
+  color: var(--ink-3);
+  font-size: 14.5px;
+}
+
+.doc-summary {
+  margin-top: 28px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: var(--carbon-wash);
+  color: var(--ink);
+  font-size: 16.5px;
+  font-weight: 550;
+  line-height: 1.55;
+}
+
+.doc-sheet section {
+  margin-top: 34px;
+}
+
+.doc-sheet h2 {
+  font-size: 21px;
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+}
+
+.doc-sheet section p,
+.doc-sheet section ul {
+  margin-top: 10px;
+  color: var(--ink-2);
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+
+.doc-sheet ul {
+  padding-left: 1.25em;
+}
+
+.doc-sheet li + li {
+  margin-top: 4px;
+}
+
+.doc-sheet li::marker {
+  color: var(--ink-3);
+}
+
+.doc-sheet a {
+  color: var(--carbon);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* ---------------- 404 ---------------- */
+
+.lost {
+  display: grid;
+  place-items: center;
+  min-height: calc(100vh - 340px);
+}
+
+.lost-card {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  max-width: 600px;
+  text-align: center;
+}
+
+/* The brass of the cryptex caps. */
+.lost-code {
+  background: linear-gradient(to bottom, #7a5c1d 0%, #c9a65a 30%, #f0d895 48%, #c9a65a 64%, #7a5c1d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font: 700 clamp(104px, 20vw, 172px)/0.9 var(--type);
+  letter-spacing: 0.04em;
+}
+
+.lost-card h1 {
+  font-size: clamp(32px, 5vw, 48px);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+}
+
+.lost-lede {
+  color: var(--ink-2);
+  font-size: 17.5px;
+  line-height: 1.55;
+}
+
+.lost-cipher {
+  display: grid;
+  gap: 8px;
+  margin: 6px 0 0;
+}
+
+.lost-cipher p {
+  display: grid;
+  gap: 2px;
+  padding: 12px 20px;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: var(--well);
+  font: 700 19px/1.4 var(--type);
+  letter-spacing: 0.14em;
+}
+
+.lost-from {
+  color: var(--pencil);
+}
+
+.lost-to {
+  color: var(--ink);
+}
+
+.lost-cipher figcaption {
+  color: var(--ink-3);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.lost-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* ---------------- small screens ---------------- */
+
+@media (max-width: 960px) {
+  .about-grid,
+  .foot-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .doc-page .nav-bar {
+    flex-wrap: nowrap;
+  }
+}
+
+@media (max-width: 640px) {
+  .site-foot {
+    padding-top: 88px;
+  }
+
+  .foot-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Explore down the left, Project and Legal stacked beside it. */
+  .foot-col:first-child {
+    grid-row: span 2;
+  }
+
+  .doc {
+    padding-top: 28px;
+  }
+
+  .doc-sheet {
+    padding: 30px 20px 34px;
+    border-radius: 22px;
+  }
+
+  .doc-sheet section {
+    margin-top: 28px;
+  }
+
+  .doc-sheet h2 {
+    font-size: 19px;
+  }
+
+  .doc-sheet section p,
+  .doc-sheet section ul {
+    font-size: 16px;
+  }
+
+  .lost {
+    min-height: 0;
+    padding-top: 48px;
+  }
+
+  .lost-actions .btn {
+    flex: 1 1 100%;
+  }
+}
