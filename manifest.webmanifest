@@ -1,13 +1,14 @@
 {
+  "id": "/",
   "name": "Cryptex",
   "short_name": "Cryptex",
-  "description": "Ten classical ciphers, animated one letter at a time, and the tricks codebreakers used to crack every one of them.",
+  "description": "Ten classical ciphers, animated one letter at a time, and the tricks codebreakers used to crack them.",
   "lang": "en",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#edf0ef",
-  "theme_color": "#16212a",
+  "theme_color": "#edf0ef",
   "categories": ["education"],
   "icons": [
     { "src": "/img/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },

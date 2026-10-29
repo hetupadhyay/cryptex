@@ -5,7 +5,7 @@ Classical ciphers, worked through one letter at a time, and the attacks that bre
 Four pages:
 
 - **Home.** A brass cryptex you can drag and flick (its rings turn together, which is exactly a Caesar cipher), today's intercept, and the way into the rest.
-- **Learn.** Two thousand years of secret writing as one essay, with a year rail beside it: all ten ciphers in the order they entered history, a working Enigma, the one-time pad, how long a brute-force search would take, and why it matters for the padlock in your browser.
+- **Learn.** Twenty-six centuries of secret writing as one essay, with a year rail beside it: all ten ciphers in the order they entered history, a working Enigma, the one-time pad, how long a brute-force search would take, and why it matters for the padlock in your browser.
 - **Lab.** Pick a cipher from the codebook, type a message, and watch every step: the Caesar alphabet sliding into place, a path through the tabula recta, a Playfair rectangle, the rail fence zig-zag, columns sorting themselves under a keyword. Pause, step, scrub, change the speed, or send the result as a secret link.
 - **Codebreaking.** Three folders: today's intercept (a new message every day, with streaks), eight missions from Rome to 1917, and the desk, which breaks Caesar, affine, rail fence, Vigenère and Beaufort without the key.
 
