@@ -10,7 +10,7 @@
 
   // ---- the lamp ---------------------------------------------------------------
 
-  const lamps = [...document.querySelectorAll('.lamp')];
+  const lamps = [...document.querySelectorAll('.mast .lamp')];
 
   function applyTheme(theme, save) {
     root.dataset.theme = theme;
