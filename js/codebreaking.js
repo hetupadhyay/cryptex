@@ -57,6 +57,8 @@
   Breaker.init();
   show(location.hash.slice(1), { push: false });
 
-  const sent = Handoff.take('desk');
-  if (sent && sent.text) Breaker.load(sent.text, sent.attack);
+  Handoff.ready(() => {
+    const sent = Handoff.take('desk');
+    if (sent && sent.text) Breaker.load(sent.text, sent.attack);
+  });
 })();
