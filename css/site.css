@@ -275,21 +275,16 @@ main,
 }
 
 .mark {
-  width: 26px;
-  height: 26px;
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 1.6;
-  stroke-linecap: round;
+  width: 30px;
+  height: 30px;
+  filter: drop-shadow(0 1px 1.5px rgba(22, 33, 42, 0.3));
 }
 
-.mark .ticks {
-  stroke: var(--ink-3);
-}
-
-.mark .needle {
+/* The lens is the one part that follows the theme. */
+.mark-lens {
+  fill: rgba(255, 255, 255, 0.2);
   stroke: var(--pencil);
-  stroke-width: 2.2;
+  stroke-width: 1.8;
 }
 
 .wordmark {
