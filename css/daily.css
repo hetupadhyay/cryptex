@@ -1,33 +1,26 @@
 /* ---------------- daily intercept ----------------
-   One sheet a day, torn off like a desk calendar, with a small record
-   beside it. The card borrows the intercept classes from site.css; it
-   isn't a .mission itself because intercepts.js picks up the first
-   .mission on the page. */
+   Today's case file, laid open in its folder, with a small record card
+   beside it. The card borrows the intercept classes from site.css and
+   codebreaking.css; it isn't a .mission itself because intercepts.js
+   picks up the first .mission on the page. */
 
 .daily {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
-  gap: 24px;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 280px);
+  gap: 44px;
   align-items: start;
 }
 
 .daily-card {
   position: relative;
   display: grid;
-  gap: 18px;
-  padding: 28px 30px 26px;
-  border: 1px solid var(--rule);
-  border-radius: 28px;
-  background: var(--sheet);
-  box-shadow: var(--shadow-l);
-  overflow: hidden;
+  gap: 20px;
 }
 
 /* The dateline, with a perforation under it like a calendar page. */
 .daily-head {
-  gap: 6px;
   padding-bottom: 18px;
-  border-bottom: 1px dashed var(--rule-strong);
+  border-bottom: 1px dashed var(--folder-rule);
 }
 
 .daily-no {
@@ -38,12 +31,10 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 4px;
+  margin-top: 6px;
   color: var(--ink-2);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 650;
 }
 
 .pips {
@@ -54,8 +45,8 @@
 .pips i {
   width: 14px;
   height: 5px;
-  border-radius: 3px;
-  background: var(--rule-strong);
+  border-radius: 1px;
+  background: var(--folder-rule);
 }
 
 .pips i.on {
@@ -81,8 +72,8 @@
   display: grid;
   gap: 12px;
   padding: 14px 16px;
-  border: 1px dashed var(--rule-strong);
-  border-radius: 16px;
+  border: 1px dashed var(--folder-rule);
+  border-radius: 4px;
   animation: row-in 360ms var(--ease-out) backwards;
 }
 
@@ -108,16 +99,23 @@
   font-weight: 650;
 }
 
-/* ---- the record beside it ---- */
+/* ---- the record card beside it ----
+   Ruled like an index card: a red line under the heading. */
 
 .daily-side {
   display: grid;
-  gap: 20px;
-  padding: 22px 22px 20px;
+  gap: 18px;
+  padding: 18px 20px 20px;
   border: 1px solid var(--rule);
-  border-radius: 24px;
+  border-radius: 10px;
   background: var(--sheet);
   box-shadow: var(--shadow-s);
+}
+
+.daily-side h3 {
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--pencil);
+  font-size: 17px;
 }
 
 .daily-clock {
@@ -128,12 +126,12 @@
 .daily-clock span,
 .daily-stats dt {
   color: var(--ink-3);
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 650;
 }
 
 .daily-countdown {
-  font: 700 32px/1.1 var(--type);
+  font: 700 30px/1.1 var(--type);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.04em;
 }
@@ -177,7 +175,7 @@
 
 .dd-name {
   color: var(--ink-3);
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -197,7 +195,7 @@
   content: '';
   width: 3px;
   height: calc(var(--tier) * 3px);
-  border-radius: 2px;
+  border-radius: 1px;
   background: var(--brass);
   opacity: 0.55;
 }
@@ -232,15 +230,24 @@
   line-height: 1.45;
 }
 
+.daily-rules {
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-3);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
 @media (max-width: 960px) {
   .daily {
     grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
   }
 
-  /* Side by side under the card while there's room. */
+  /* Side by side under the case file while there's room. */
   .daily-side {
     grid-template-columns: auto minmax(0, 1fr);
-    column-gap: 28px;
+    column-gap: 32px;
     align-items: center;
   }
 
@@ -249,29 +256,18 @@
     border-top: 0;
   }
 
+  .daily-side h3,
   .daily-week,
-  .daily-status {
+  .daily-status,
+  .daily-rules {
     grid-column: 1 / -1;
   }
 }
 
 @media (max-width: 640px) {
-  .daily-card {
-    padding-left: 16px;
-    padding-right: 16px;
-    border-radius: 22px;
-  }
-
-  .daily-card .stamp {
-    top: 18px;
-    right: 14px;
-    font-size: 17px;
-  }
-
   .daily-side {
     grid-template-columns: minmax(0, 1fr);
-    padding: 18px 16px;
-    border-radius: 22px;
+    padding: 16px 16px 18px;
   }
 
   .daily-stats {

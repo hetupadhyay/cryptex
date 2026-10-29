@@ -108,7 +108,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 96px;
+  scroll-padding-top: 84px;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -121,11 +121,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   overflow-x: hidden;
-}
-
-.theme-shift,
-.theme-shift * {
-  transition: background-color 320ms ease, color 320ms ease, border-color 320ms ease, fill 320ms ease !important;
 }
 
 button,
@@ -159,43 +154,6 @@ p {
   margin: 0;
 }
 
-/* Soft lamplight behind everything, so the glass has something to catch. */
-.ambient {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.ambient i {
-  position: absolute;
-  border-radius: 50%;
-}
-
-.ambient i:nth-child(1) {
-  width: 70vmax;
-  height: 70vmax;
-  top: -30vmax;
-  right: -22vmax;
-  background: radial-gradient(closest-side, var(--glow-brass), transparent);
-}
-
-.ambient i:nth-child(2) {
-  width: 64vmax;
-  height: 64vmax;
-  top: 30vh;
-  left: -30vmax;
-  background: radial-gradient(closest-side, var(--glow-carbon), transparent);
-}
-
-.ambient i:nth-child(3) {
-  width: 50vmax;
-  height: 50vmax;
-  bottom: -26vmax;
-  right: 10vw;
-  background: radial-gradient(closest-side, var(--glow-pencil), transparent);
-}
-
 canvas.pad {
   position: fixed;
   inset: 0;
@@ -207,23 +165,16 @@ canvas.pad {
   mask-image: radial-gradient(ellipse 70% 75% at 50% 55%, rgba(0, 0, 0, 0.45), #000);
 }
 
-main,
-.foot {
+main {
   position: relative;
   z-index: 1;
 }
 
-/* ---------------- glass ---------------- */
+/* ---------------- surfaces ---------------- */
 
-.nav-bar,
-.toolbar,
-.dock,
-.timeline-card,
-.cryptex-panel,
-.glass-btn,
-.share,
-.secret-card,
-.round-btn {
+/* Glass only where content scrolls underneath it: the lab's player bar
+   here, and the masthead in shell.css. Everything else is a sheet. */
+.dock {
   background: var(--glass);
   -webkit-backdrop-filter: var(--frost);
   backdrop-filter: var(--frost);
@@ -232,53 +183,27 @@ main,
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .nav-bar,
-  .toolbar,
-  .dock,
-  .timeline-card,
-  .cryptex-panel,
-  .glass-btn,
-  .share,
-  .secret-card,
-  .round-btn {
+  .dock {
     background: var(--sheet);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
 }
 
-/* ---------------- nav ---------------- */
-
-/* Widths of the fades at the ends of the scrolling link row on small
-   screens, registered so they can ease in and out. */
-@property --fade-start {
-  syntax: '<length>';
-  inherits: false;
-  initial-value: 0px;
+.toolbar,
+.cryptex-panel,
+.share,
+.secret-card {
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  box-shadow: var(--shadow-s);
 }
 
-@property --fade-end {
-  syntax: '<length>';
-  inherits: false;
-  initial-value: 0px;
-}
-
-.nav {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  padding: calc(env(safe-area-inset-top, 0px) + 14px) var(--gutter) 0;
-}
-
-.nav-bar {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  max-width: var(--page);
-  margin: 0 auto;
-  padding: 8px 8px 8px 16px;
-  border-radius: 18px;
-  background: var(--glass-strong);
+.btn.glass-btn,
+.glass-btn,
+.round-btn {
+  background: var(--sheet);
+  border: 1px solid var(--rule-strong);
 }
 
 .brand {
@@ -310,76 +235,6 @@ main,
   letter-spacing: 0.02em;
 }
 
-.nav-links {
-  display: flex;
-  gap: 2px;
-  margin-left: auto;
-}
-
-.nav-links a {
-  position: relative;
-  padding: 7px 12px;
-  border-radius: 10px;
-  color: var(--ink-2);
-  font-size: 14.5px;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color 160ms ease, background-color 160ms ease;
-}
-
-.nav-links a.current {
-  color: var(--ink);
-  background: var(--carbon-wash);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .nav-links a:hover {
-    color: var(--ink);
-  }
-}
-
-.theme {
-  position: relative;
-  display: inline-grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 3px;
-  border: 1px solid var(--rule);
-  border-radius: 12px;
-  background: var(--well);
-  font-size: 13px;
-  font-weight: 650;
-}
-
-.theme-label {
-  position: relative;
-  z-index: 1;
-  padding: 4px 11px;
-  color: var(--ink-3);
-  transition: color 220ms ease;
-}
-
-.theme-thumb {
-  position: absolute;
-  top: 3px;
-  bottom: 3px;
-  left: 3px;
-  width: calc(50% - 3px);
-  border-radius: 9px;
-  background: var(--sheet);
-  box-shadow: var(--shadow-s);
-  transition: transform 340ms var(--ease-out);
-}
-
-.theme[aria-checked='false'] .day,
-.theme[aria-checked='true'] .night {
-  color: var(--ink);
-}
-
-.theme[aria-checked='true'] .theme-thumb {
-  transform: translateX(100%);
-}
-
 /* ---------------- buttons ---------------- */
 
 .btn {
@@ -390,7 +245,7 @@ main,
   height: 48px;
   padding: 0 22px;
   border: 0;
-  border-radius: 14px;
+  border-radius: 6px;
   font-weight: 650;
   font-size: 15.5px;
   text-decoration: none;
@@ -415,7 +270,7 @@ main,
 .btn.small {
   height: 38px;
   padding: 0 14px;
-  border-radius: 11px;
+  border-radius: 5px;
   font-size: 14px;
 }
 
@@ -470,7 +325,7 @@ main,
 .chip {
   padding: 6px 12px;
   border: 1px solid var(--rule-strong);
-  border-radius: 999px;
+  border-radius: 4px;
   background: var(--sheet);
   color: var(--ink);
   font-size: 13.5px;
@@ -556,47 +411,6 @@ select:focus {
 }
 
 /* Segmented controls: direction, speed, sort order. */
-.seg {
-  display: inline-flex;
-  padding: 3px;
-  border: 1px solid var(--rule);
-  border-radius: 12px;
-  background: var(--well);
-}
-
-.seg label {
-  position: relative;
-  cursor: pointer;
-}
-
-.seg input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.seg span {
-  display: block;
-  padding: 7px 14px;
-  border-radius: 9px;
-  color: var(--ink-2);
-  font-weight: 600;
-  font-size: 14px;
-  text-align: center;
-  white-space: nowrap;
-  transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
-}
-
-.seg input:checked + span {
-  background: var(--sheet);
-  color: var(--ink);
-  box-shadow: var(--shadow-s);
-}
-
-.seg input:focus-visible + span {
-  outline: 2px solid var(--carbon);
-  outline-offset: 1px;
-}
 
 .check {
   display: inline-flex;
@@ -660,8 +474,7 @@ input[type='range']::-moz-range-thumb {
 /* ---------------- sections ---------------- */
 
 .hero,
-.section,
-.foot {
+.section {
   max-width: var(--page);
   margin: 0 auto;
   padding-left: var(--gutter);
@@ -920,86 +733,6 @@ input[type='range']::-moz-range-thumb {
 
 /* ---------------- history ---------------- */
 
-.timeline-wrap {
-  position: relative;
-}
-
-.timeline {
-  display: flex;
-  gap: 16px;
-  margin: 0 calc(var(--gutter) * -1);
-  padding: 10px var(--gutter) 28px;
-  list-style: none;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: var(--gutter);
-  scrollbar-width: none;
-  overscroll-behavior-x: contain;
-}
-
-.timeline::-webkit-scrollbar {
-  display: none;
-}
-
-.timeline-card {
-  position: relative;
-  display: grid;
-  grid-template-rows: auto auto 1fr auto;
-  gap: 10px;
-  flex: none;
-  width: 300px;
-  padding: 22px 22px 20px;
-  border-radius: 22px;
-  scroll-snap-align: start;
-}
-
-.tl-year {
-  color: var(--brass);
-  font: 700 30px/1 var(--type);
-  letter-spacing: -0.01em;
-}
-
-.tl-name {
-  font-size: 22px;
-  letter-spacing: -0.015em;
-}
-
-.tl-place {
-  display: block;
-  margin-top: 2px;
-  color: var(--ink-3);
-  font-size: 13.5px;
-  font-weight: 600;
-}
-
-.tl-story {
-  color: var(--ink-2);
-  font-size: 15px;
-  line-height: 1.55;
-}
-
-.tl-sample {
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: var(--well);
-  font: 700 14px/1.4 var(--type);
-  letter-spacing: 0.06em;
-  overflow-wrap: anywhere;
-}
-
-.tl-sample b {
-  color: var(--pencil);
-}
-
-.tl-open {
-  justify-self: start;
-}
-
-.timeline-nav {
-  display: flex;
-  gap: 10px;
-}
-
 /* ---------------- lab ---------------- */
 
 .toolbar {
@@ -1009,69 +742,6 @@ input[type='range']::-moz-range-thumb {
   gap: 16px;
   padding: 16px 18px 18px;
   border-radius: 24px;
-}
-
-.picker {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 18px;
-}
-
-.picker-group {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-}
-
-.picker-family {
-  margin-right: 4px;
-  color: var(--ink-3);
-  font-size: 12.5px;
-  font-weight: 650;
-}
-
-.pick {
-  position: relative;
-  cursor: pointer;
-}
-
-.pick input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.pick span {
-  display: block;
-  padding: 7px 14px;
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  background: var(--sheet);
-  font-size: 14.5px;
-  font-weight: 650;
-  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease, transform 140ms var(--ease-out);
-}
-
-.pick:active span {
-  transform: scale(0.96);
-}
-
-.pick input:checked + span {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--on-solid);
-}
-
-.pick input:focus-visible + span {
-  outline: 2px solid var(--carbon);
-  outline-offset: 2px;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .pick:hover input:not(:checked) + span {
-    border-color: var(--rule-strong);
-  }
 }
 
 .toolbar-row {
@@ -1273,11 +943,6 @@ input[type='range']::-moz-range-thumb {
   color: var(--ink-3);
   font: 400 13px var(--type);
   text-align: right;
-}
-
-.dock .seg span {
-  padding: 4px 9px;
-  font-size: 12.5px;
 }
 
 .lab-foot {
@@ -2178,27 +1843,7 @@ input[type='range']::-moz-range-thumb {
   gap: 10px 14px;
 }
 
-/* ---------------- footer ---------------- */
-
-.foot {
-  padding-block: 96px 40px;
-  color: var(--ink-3);
-  font-size: 14px;
-}
-
-.foot p {
-  padding-top: 18px;
-  border-top: 1px solid var(--rule);
-}
-
 /* ---------------- small screens ---------------- */
-
-@media (max-width: 1080px) {
-  .nav-links a {
-    padding: 7px 9px;
-    font-size: 14px;
-  }
-}
 
 @media (max-width: 960px) {
   /* On narrow screens the cryptex moves up under the headline, so the
@@ -2238,37 +1883,18 @@ input[type='range']::-moz-range-thumb {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .nav-bar {
-    flex-wrap: wrap;
-    row-gap: 0;
-  }
+  
 
   /* The links become a row that scrolls sideways. Whichever end has more
      links past it fades out, so the row reads as carrying on (site.js
      sets the classes). */
-  .nav-links {
-    order: 3;
-    width: 100%;
-    margin: 0 -4px;
-    padding: 4px 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
-    mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
-    transition: --fade-start 200ms ease, --fade-end 200ms ease;
-  }
+  
 
-  .nav-links.more-start {
-    --fade-start: 36px;
-  }
+  
 
-  .nav-links.more-end {
-    --fade-end: 36px;
-  }
+  
 
-  .nav-links::-webkit-scrollbar {
-    display: none;
-  }
+  
 
   /* Room for a fingertip around the links, brand and switch, without
      making any of them look bigger. */
@@ -2276,9 +1902,8 @@ input[type='range']::-moz-range-thumb {
     position: relative;
   }
 
-  .nav-links a::before,
-  .brand::before,
-  .theme::before {
+  
+  .brand::before {
     content: '';
     position: absolute;
     inset: -4px 0;
@@ -2288,18 +1913,12 @@ input[type='range']::-moz-range-thumb {
     inset: -7px 0;
   }
 
-  .nav-links a {
-    flex: none;
-    min-width: 44px;
-    text-align: center;
-  }
+  
 
-  .theme {
-    margin-left: auto;
-  }
+  
 
   html {
-    scroll-padding-top: 128px;
+    scroll-padding-top: 76px;
   }
 }
 
@@ -2338,21 +1957,11 @@ input[type='range']::-moz-range-thumb {
     padding: 14px;
   }
 
-  .picker {
-    flex-wrap: nowrap;
-    margin: 0 -14px;
-    padding: 2px 14px 4px;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
+  
 
-  .picker::-webkit-scrollbar {
-    display: none;
-  }
+  
 
-  .picker-group {
-    flex-wrap: nowrap;
-  }
+  
 
   .keys {
     flex: 1 1 100%;
@@ -2388,15 +1997,9 @@ input[type='range']::-moz-range-thumb {
     height: 44px;
   }
 
-  .dock .seg span {
-    min-width: 44px;
-  }
+  
 
-  .dock .seg label::before {
-    content: '';
-    position: absolute;
-    inset: -8px 0;
-  }
+  
 
   .dock .scrub {
     order: 5;
@@ -2409,9 +2012,7 @@ input[type='range']::-moz-range-thumb {
     margin-left: auto;
   }
 
-  .timeline-card {
-    width: 82vw;
-  }
+  
 
   .strength-row {
     grid-template-columns: minmax(0, 1fr) auto;
@@ -2449,7 +2050,7 @@ input[type='range']::-moz-range-thumb {
     scroll-behavior: auto;
   }
 
-  .theme-thumb,
+  
   .st-bar i {
     transition-duration: 1ms !important;
   }

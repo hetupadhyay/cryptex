@@ -5,7 +5,7 @@
   "description": "Classical ciphers worked through one letter at a time, and the attacks that break them.",
   "scripts": {
     "test": "node --test tests/*.test.js",
-    "start": "python3 -m http.server 8000"
+    "start": "python3 tools/serve.py . 8000"
   },
   "license": "MIT"
 }
