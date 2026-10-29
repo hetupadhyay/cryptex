@@ -91,90 +91,143 @@
   <main id="top">
     <!-- Lab -->
     <section class="section" id="lab" aria-labelledby="lab-title">
-      <div class="section-head">
-        <h2 id="lab-title">The lab</h2>
-        <p>Pick a cipher, type a message, and watch every step. Pause, scrub back, or slow it down whenever you like.</p>
+      <header class="lab-head">
+        <h1 id="lab-title">The lab</h1>
+        <p>Pick a cipher, type a message and watch it worked through one step at a time.</p>
+      </header>
+
+      <div class="lab-grid">
+        <!-- The codebook: every cipher, with what it does to ATTACK (js/lab.js fills it). -->
+        <aside class="codebook" aria-labelledby="codebook-title">
+          <h2 class="codebook-title" id="codebook-title">Codebook</h2>
+          <p class="codebook-note">Each one shown on ATTACK with its usual key.</p>
+          <div class="cb-list" id="codebook-list" role="radiogroup" aria-labelledby="codebook-title"></div>
+        </aside>
+
+        <div class="lab-work">
+          <form class="toolbar" id="cipher-form" autocomplete="off" novalidate>
+            <button type="button" class="cipher-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="codebook-sheet">
+              <span>Cipher:</span> <b>Caesar</b>
+              <span class="cipher-change" aria-hidden="true">Change</span>
+            </button>
+            <div class="field message-field">
+              <label for="message">Message</label>
+              <textarea id="message" rows="1" spellcheck="false">Meet me at the old bridge</textarea>
+            </div>
+            <div class="toolbar-row">
+              <div class="keys"></div>
+              <div class="field">
+                <span class="field-label" id="mode-label">Direction</span>
+                <div class="lever" role="group" aria-labelledby="mode-label" data-mode="encrypt">
+                  <span class="lever-side lever-plain">Plain text</span>
+                  <button type="button" class="lever-btn" aria-label="Switch to decrypting">
+                    <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 10h12.5M11.5 5.5 16 10l-4.5 4.5" /></svg>
+                  </button>
+                  <span class="lever-side lever-cipher">Ciphertext</span>
+                </div>
+              </div>
+              <button class="btn primary run" type="submit">Encrypt</button>
+            </div>
+            <p class="hint" id="message-hint"></p>
+            <p class="error" role="alert"></p>
+          </form>
+
+          <section class="stage empty" aria-label="Step by step">
+            <div class="stage-head">
+              <h2 class="stage-title">Caesar</h2>
+              <span class="stage-family">Substitution</span>
+            </div>
+            <div class="stage-body">
+              <div class="scene"></div>
+              <p class="placeholder"><span>Press <b>Encrypt</b> to watch it happen, one letter at a time.</span></p>
+              <!-- The player bar carries the caption, so the two never cover each other. -->
+              <div class="dock">
+                <p class="caption" aria-live="polite"></p>
+                <button type="button" class="tb" data-act="prev" aria-label="Previous step">
+                  <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 5 7.5 10l5 5" /></svg>
+                </button>
+                <button type="button" class="tb play" data-act="play" aria-label="Play" data-state="paused">
+                  <svg class="i-play" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5.2v9.6L14.6 10z" /></svg>
+                  <svg class="i-pause" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5v10M13 5v10" /></svg>
+                </button>
+                <button type="button" class="tb" data-act="next" aria-label="Next step">
+                  <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 5 5 5-5 5" /></svg>
+                </button>
+                <button type="button" class="tb" data-act="end" aria-label="Skip to the end">
+                  <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5.5 5 5 5-5 5M14.5 5v10" /></svg>
+                </button>
+                <input class="scrub" type="range" min="0" max="0" value="0" aria-label="Step">
+                <span class="step-count">0 / 0</span>
+                <button type="button" class="speed-step" aria-label="Speed: normal">
+                  <span class="speed-word">Speed</span>
+                  <span class="ticks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                  <span class="speed-value">1×</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <div class="lab-foot">
+            <section class="result" aria-labelledby="result-title">
+              <div class="result-head">
+                <h2 id="result-title">Ciphertext</h2>
+                <div class="result-actions">
+                  <button type="button" class="link" data-act="copy">Copy</button>
+                  <button type="button" class="link" data-act="attack">Try to break it</button>
+                  <button type="button" class="link" data-act="send">Send this as a secret</button>
+                </div>
+              </div>
+              <output class="result-text" for="message"></output>
+            </section>
+            <section class="notes" aria-label="About this cipher">
+              <div class="note">
+                <h3>How it works</h3>
+                <p class="about"></p>
+              </div>
+              <div class="note weak">
+                <h3>Why it fails</h3>
+                <p class="weak-text"></p>
+              </div>
+              <div class="note keyspace">
+                <h3>Trying every key</h3>
+                <dl>
+                  <div>
+                    <dt>Keys</dt>
+                    <dd><b class="ks-keys"></b> <small class="ks-note"></small></dd>
+                  </div>
+                  <div>
+                    <dt>All of them</dt>
+                    <dd><b class="ks-time"></b> <small>at a billion keys a second</small></dd>
+                  </div>
+                </dl>
+                <a class="link" href="/learn#strength">How the ten compare</a>
+              </div>
+            </section>
+          </div>
+        </div>
       </div>
 
-      <form class="toolbar" id="cipher-form" autocomplete="off" novalidate>
-        <div class="picker" role="radiogroup" aria-label="Cipher"></div>
-        <div class="toolbar-row">
-          <div class="field grow">
-            <label for="message">Message</label>
-            <textarea id="message" rows="1" spellcheck="false">Meet me at the old bridge</textarea>
+      <!-- On phones the codebook opens from the Cipher button as a sheet. -->
+      <dialog class="codebook-sheet" id="codebook-sheet" aria-labelledby="codebook-sheet-title">
+        <div class="sheet-inner">
+          <div class="sheet-head">
+            <h2 id="codebook-sheet-title">Codebook</h2>
+            <form method="dialog"><button type="submit" class="link">Close</button></form>
           </div>
-          <div class="keys"></div>
-          <div class="field">
-            <span class="field-label" id="mode-label">Direction</span>
-            <div class="seg mode" role="radiogroup" aria-labelledby="mode-label">
-              <label><input type="radio" name="mode" value="encrypt" checked><span>Encrypt</span></label>
-              <label><input type="radio" name="mode" value="decrypt"><span>Decrypt</span></label>
-            </div>
-          </div>
-          <button class="btn primary run" type="submit">Encrypt</button>
+          <p class="codebook-note">Each one shown on ATTACK with its usual key.</p>
+          <div class="cb-list" id="codebook-sheet-list" role="radiogroup" aria-labelledby="codebook-sheet-title"></div>
         </div>
-        <p class="hint" id="message-hint"></p>
-        <p class="error" role="alert"></p>
-      </form>
-
-      <section class="stage empty" aria-label="Step by step">
-        <div class="stage-head">
-          <h3 class="stage-title">Caesar</h3>
-          <span class="stage-family">Substitution</span>
-        </div>
-        <div class="scene"></div>
-        <p class="placeholder"><span>Press <b>Encrypt</b> to watch it happen, one letter at a time.</span></p>
-        <p class="caption" aria-live="polite"></p>
-        <div class="dock">
-          <button type="button" class="tb" data-act="prev" aria-label="Previous step">
-            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 5 7.5 10l5 5" /></svg>
-          </button>
-          <button type="button" class="tb play" data-act="play" aria-label="Play" data-state="paused">
-            <svg class="i-play" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5.2v9.6L14.6 10z" /></svg>
-            <svg class="i-pause" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5v10M13 5v10" /></svg>
-          </button>
-          <button type="button" class="tb" data-act="next" aria-label="Next step">
-            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 5 5 5-5 5" /></svg>
-          </button>
-          <button type="button" class="tb" data-act="end" aria-label="Skip to the end">
-            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5.5 5 5 5-5 5M14.5 5v10" /></svg>
-          </button>
-          <input class="scrub" type="range" min="0" max="0" value="0" aria-label="Step">
-          <span class="step-count">0 / 0</span>
-          <div class="seg speed" role="radiogroup" aria-label="Speed">
-            <label><input type="radio" name="speed" value="0.5"><span>½×</span></label>
-            <label><input type="radio" name="speed" value="1" checked><span>1×</span></label>
-            <label><input type="radio" name="speed" value="2"><span>2×</span></label>
-            <label><input type="radio" name="speed" value="4"><span>4×</span></label>
-          </div>
-        </div>
-      </section>
-
-      <div class="lab-foot">
-        <section class="result" aria-labelledby="result-title">
-          <div class="result-head">
-            <h3 id="result-title">Ciphertext</h3>
-            <div class="result-actions">
-              <button type="button" class="link" data-act="copy">Copy</button>
-              <button type="button" class="link" data-act="attack">Try to break it</button>
-            </div>
-          </div>
-          <output class="result-text" for="message"></output>
-        </section>
-        <section class="notes">
-          <p class="about"></p>
-          <p class="weak"><span>Why it fails</span> <span class="weak-text"></span></p>
-        </section>
-      </div>
+      </dialog>
     </section>
 
     <!-- Share -->
     <section class="section" id="share" aria-labelledby="share-title">
       <div class="section-head">
-        <h2 id="share-title">Send a secret</h2>
+        <h2 id="share-title" tabindex="-1">Send a secret</h2>
         <p>Encrypt a message and get a link. Whoever opens it gets the ciphertext and has to crack it, unless you hand them the key.</p>
       </div>
       <form class="share" id="share-form" autocomplete="off" novalidate>
+        <p class="hint share-from" hidden>Filled in from your last run in the lab. Check it over, then create the link.</p>
         <div class="field">
           <label for="share-text">Your message</label>
           <textarea id="share-text" rows="3" spellcheck="false">Lunch is on me if you can read this</textarea>
