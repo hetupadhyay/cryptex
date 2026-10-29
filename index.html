@@ -5,17 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Cryptex</title>
   <meta name="description" content="Ten classical ciphers, animated one letter at a time, and the tricks codebreakers used to crack every one of them.">
-  <script>
-    // Pick the theme before first paint so the page doesn't flash.
-    (function () {
-      var theme = null;
-      try { theme = localStorage.getItem('cryptex-theme'); } catch (e) {}
-      if (theme !== 'day' && theme !== 'night') {
-        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day';
-      }
-      document.documentElement.dataset.theme = theme;
-    })();
-  </script>
+  <link rel="canonical" href="https://cryptex.vercel.app/">
+  <meta name="author" content="Het Nimeshkumar Upadhyay">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#edf0ef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e1418" media="(prefers-color-scheme: dark)">
+
+  <!-- Link previews -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Cryptex">
+  <meta property="og:title" content="Cryptex: every secret has a weakness">
+  <meta property="og:description" content="Watch ten classical ciphers work, one letter at a time. Then crack every one of them with the tricks real codebreakers used.">
+  <meta property="og:url" content="https://cryptex.vercel.app/">
+  <meta property="og:image" content="https://cryptex.vercel.app/img/og.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The Cryptex key logo and the words Every secret has a weakness, next to the brass rings of a cryptex.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cryptex: every secret has a weakness">
+  <meta name="twitter:description" content="Watch ten classical ciphers work, one letter at a time. Then crack every one of them with the tricks real codebreakers used.">
+  <meta name="twitter:image" content="https://cryptex.vercel.app/img/og.png">
+  <meta name="twitter:image:alt" content="The Cryptex key logo and the words Every secret has a weakness, next to the brass rings of a cryptex.">
+
+  <!-- Home screen -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Cryptex">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <script src="js/theme.js"></script>
   <link rel="stylesheet" href="css/site.css">
   <link rel="stylesheet" href="css/scenes.css">
   <link rel="stylesheet" href="css/story.css">
@@ -54,6 +75,10 @@
       </button>
     </div>
   </header>
+
+  <noscript>
+    <p class="noscript">Cryptex needs JavaScript for the ciphers, the animations and the codebreaking tools. Turn it on and reload the page to use them.</p>
+  </noscript>
 
   <main id="top">
     <!-- Hero -->
@@ -452,11 +477,79 @@
     <section class="section" id="today" aria-labelledby="today-title"></section>
 
     <!-- About and credits -->
-    <section class="section" id="about" aria-labelledby="about-title"></section>
+    <section class="section" id="about" aria-labelledby="about-title">
+      <div class="section-head">
+        <h2 id="about-title">About Cryptex</h2>
+        <p>Made by Het Nimeshkumar Upadhyay as a cybersecurity course project.</p>
+      </div>
+      <div class="about-grid">
+        <div class="about-copy">
+          <p>Most people only meet encryption as a padlock in the address bar. Classical ciphers are small enough to watch working, letter by letter, and every one of them fails in a way you can see. Learning why they break is the quickest way to understand what modern encryption has to get right.</p>
+          <p>Cryptex is plain HTML, CSS and JavaScript, with no frameworks, no build step and no tracking. Every cipher, animation and attack runs in your browser, and nothing you type is sent anywhere.</p>
+          <div class="about-actions">
+            <a class="btn glass-btn small" href="https://github.com/hetupadhyay/Cryptex">Source on GitHub</a>
+            <a class="link" href="https://github.com/hetupadhyay">Het on GitHub</a>
+            <a class="link" href="https://github.com/hetupadhyay/Cryptex/issues">Report a problem</a>
+          </div>
+        </div>
+        <dl class="about-facts">
+          <div><dt>Made by</dt><dd>Het Nimeshkumar Upadhyay</dd></div>
+          <div><dt>Made for</dt><dd>A cybersecurity course</dd></div>
+          <div><dt>Runs on</dt><dd>Your browser, and nothing else</dd></div>
+          <div><dt>Tracking</dt><dd>None. No cookies, analytics or ads.</dd></div>
+        </dl>
+      </div>
+    </section>
   </main>
 
-  <footer class="foot">
-    <p>Cryptex runs entirely in your browser. Nothing you type leaves the page.</p>
+  <footer class="foot site-foot">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a class="brand" href="#top" aria-label="Cryptex, back to top">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path class="mark-bow" d="M14.6 10.6A7.4 7.4 0 1 0 14.6 21.4" />
+            <path class="mark-blade" d="M10.5 13.9h20.2a1.3 1.3 0 0 1 1.3 1.3v1.6a1.3 1.3 0 0 1-1.3 1.3h-1.4v4.5h-3.6v-4.5h-1.6v3.1h-3.6v-3.1h-10z" />
+          </svg>
+          <span class="wordmark">Cryptex</span>
+        </a>
+        <p>Classical ciphers, worked through one letter at a time, and the attacks that break them. It all runs in your browser.</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer">
+        <div class="foot-col">
+          <p class="foot-title">Explore</p>
+          <ul>
+            <li><a href="#history">History</a></li>
+            <li><a href="#lab">The lab</a></li>
+            <li><a href="#strength">Key strength</a></li>
+            <li><a href="#desk">Codebreaking</a></li>
+            <li><a href="#daily">Daily intercept</a></li>
+            <li><a href="#intercepts">Intercepts</a></li>
+            <li><a href="#share">Send a secret</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <p class="foot-title">Project</p>
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="https://github.com/hetupadhyay/Cryptex">Source on GitHub</a></li>
+            <li><a href="https://github.com/hetupadhyay/Cryptex/issues">Report a problem</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <p class="foot-title">Legal</p>
+          <ul>
+            <li><a href="terms.html">Terms</a></li>
+            <li><a href="privacy.html">Privacy</a></li>
+            <li><a href="https://github.com/hetupadhyay/Cryptex/security/policy">Security</a></li>
+            <li><a href="https://github.com/hetupadhyay/Cryptex/blob/main/LICENSE">License</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div class="foot-base">
+      <p>© 2026 Het Nimeshkumar Upadhyay. Cryptex™ and the key logo are trademarks of Het Nimeshkumar Upadhyay.</p>
+      <p>Code under the MIT License. Fonts under the SIL Open Font License.</p>
+    </div>
   </footer>
 
   <dialog class="secret-dialog" aria-labelledby="secret-title">
@@ -494,5 +587,6 @@
   <script src="js/story.js"></script>
   <script src="js/daily.js"></script>
   <script src="js/site.js"></script>
+  <script src="js/pwa.js"></script>
 </body>
 </html>
