@@ -712,3 +712,30 @@
     animation: none;
   }
 }
+
+/* Keyboard hints, only where there's a keyboard to speak of. */
+.lab-keys {
+  display: none;
+  margin: 10px 2px 0;
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+.lab-keys kbd {
+  display: inline-block;
+  min-width: 22px;
+  padding: 1px 6px;
+  border: 1px solid var(--rule-strong);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--sheet);
+  color: var(--ink-2);
+  font: 700 12px/1.5 var(--type);
+  text-align: center;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lab-keys {
+    display: block;
+  }
+}

@@ -48,22 +48,25 @@
 
   const menuBtn = document.querySelector('.menu-btn');
   const menu = document.getElementById('menu');
-  function setMenu(open) {
-    if (!menu) return;
+  function setMenu(open, { navigating = false } = {}) {
+    if (!menu || open === !menu.hidden) return;
     menu.hidden = !open;
     menuBtn.setAttribute('aria-expanded', open);
     menuBtn.textContent = open ? 'Close' : 'Menu';
     document.body.classList.toggle('menu-open', open);
+    if (open) Sheet.opened('menu', () => setMenu(false));
+    else Sheet.closed('menu', { navigating });
   }
   if (menuBtn && menu) {
     menuBtn.addEventListener('click', () => setMenu(menu.hidden));
+    Sheet.swipe(menu, { grip: menu.querySelector('.sheet-grip'), edge: 'top', close: () => setMenu(false) });
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape' && !menu.hidden) {
         setMenu(false);
         menuBtn.focus();
       }
     });
-    menu.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
+    menu.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false, { navigating: true }); });
     window.matchMedia('(min-width: 821px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
   }
 

@@ -138,12 +138,15 @@
 
   // On narrow screens the rail folds into a bar that names the current
   // chapter and opens the full list.
-  function setOpen(open) {
+  function setOpen(open, { navigating = false } = {}) {
+    if (open === rail.classList.contains('open')) return;
     nowBtn.setAttribute('aria-expanded', open);
     rail.classList.toggle('open', open);
+    if (open) Sheet.opened('chapters', () => setOpen(false));
+    else Sheet.closed('chapters', { navigating });
   }
   nowBtn.addEventListener('click', () => setOpen(!rail.classList.contains('open')));
-  railList.addEventListener('click', e => { if (e.target.closest('a')) setOpen(false); });
+  railList.addEventListener('click', e => { if (e.target.closest('a')) setOpen(false, { navigating: true }); });
   document.addEventListener('click', e => { if (!rail.contains(e.target)) setOpen(false); });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && rail.classList.contains('open')) {

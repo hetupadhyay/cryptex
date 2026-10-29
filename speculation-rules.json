@@ -1,0 +1,29 @@
+{
+  "prerender": [
+    {
+      "where": {
+        "or": [
+          {
+            "href_matches": "/"
+          },
+          {
+            "href_matches": "/learn"
+          },
+          {
+            "href_matches": "/lab"
+          },
+          {
+            "href_matches": "/codebreaking"
+          },
+          {
+            "href_matches": "/terms"
+          },
+          {
+            "href_matches": "/privacy"
+          }
+        ]
+      },
+      "eagerness": "moderate"
+    }
+  ]
+}

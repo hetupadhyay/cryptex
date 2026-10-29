@@ -39,5 +39,12 @@
     load: (text, attack) => go('desk', { text, attack }),
     attackFor: id => ATTACKS[id] || 'freq',
   };
-  window.Handoff = { take };
+  // A page the browser rendered ahead of time runs its scripts before the
+  // reader clicks; anything sent to it is only there once they arrive.
+  function ready(fn) {
+    if (document.prerendering) document.addEventListener('prerenderingchange', fn, { once: true });
+    else fn();
+  }
+
+  window.Handoff = { take, ready };
 })();

@@ -135,11 +135,14 @@
     sheet.showModal();
     cipherBtn.setAttribute('aria-expanded', 'true');
     $('.cb-entry[aria-checked="true"]', sheet).focus();
+    Sheet.opened('codebook', () => sheet.close());
   });
   sheet.addEventListener('close', () => {
     cipherBtn.setAttribute('aria-expanded', 'false');
     cipherBtn.focus();
+    Sheet.closed('codebook');
   });
+  Sheet.swipe(sheet, { grip: $('.sheet-grip', sheet), edge: 'bottom', close: () => sheet.close() });
   // A tap on the dimmed page around the sheet closes it.
   sheet.addEventListener('click', e => { if (e.target === sheet) sheet.close(); });
   window.matchMedia('(min-width: 821px)').addEventListener('change', e => { if (e.matches && sheet.open) sheet.close(); });
@@ -417,10 +420,21 @@
 
   // Arrow keys step through the scene when the stage has focus.
   stageEl.tabIndex = -1;
-  stageEl.addEventListener('keydown', e => {
-    if (e.target.closest('input, textarea, select')) return;
-    if (e.key === 'ArrowRight') player.next();
-    else if (e.key === 'ArrowLeft') player.prev();
+  // Space plays and pauses, the arrows step, anywhere on the page except
+  // while typing or inside a control that uses those keys itself.
+  document.addEventListener('keydown', e => {
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.target.closest('input, textarea, select, dialog, [role="radiogroup"], [contenteditable]')) return;
+    if (e.key === ' ' && !e.target.closest('button, a')) {
+      e.preventDefault();
+      player.toggle();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      player.next();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      player.prev();
+    }
   });
 
   // ---- result actions ---------------------------------------------------------
@@ -483,24 +497,26 @@
 
   // Work sent here from another page: a timeline card, an intercept, a secret.
   // Session storage can hold anything, so take only what fits a cipher.
-  const sent = Handoff.take('lab');
-  if (sent) {
-    const c = sent.id ? Ciphers.byId(sent.id) : null;
-    const opts = sent.opts && typeof sent.opts === 'object' ? sent.opts : {};
-    const keys = {};
-    if (c && opts.keys && typeof opts.keys === 'object') {
-      for (const k of c.keys) {
-        const v = opts.keys[k.id];
-        if ((typeof v === 'string' && v.length <= 64) || Number.isFinite(v)) keys[k.id] = v;
+  Handoff.ready(() => {
+    const sent = Handoff.take('lab');
+    if (sent) {
+      const c = sent.id ? Ciphers.byId(sent.id) : null;
+      const opts = sent.opts && typeof sent.opts === 'object' ? sent.opts : {};
+      const keys = {};
+      if (c && opts.keys && typeof opts.keys === 'object') {
+        for (const k of c.keys) {
+          const v = opts.keys[k.id];
+          if ((typeof v === 'string' && v.length <= 64) || Number.isFinite(v)) keys[k.id] = v;
+        }
+      }
+      if (!sent.id || c) {
+        window.Lab.open(c ? c.id : null, {
+          mode: opts.mode === 'decrypt' ? 'decrypt' : 'encrypt',
+          text: typeof opts.text === 'string' && opts.text.length <= 20000 ? opts.text : undefined,
+          keys,
+          run: opts.run === true,
+        });
       }
     }
-    if (!sent.id || c) {
-      window.Lab.open(c ? c.id : null, {
-        mode: opts.mode === 'decrypt' ? 'decrypt' : 'encrypt',
-        text: typeof opts.text === 'string' && opts.text.length <= 20000 ? opts.text : undefined,
-        keys,
-        run: opts.run === true,
-      });
-    }
-  }
+  });
 })();

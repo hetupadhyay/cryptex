@@ -278,6 +278,50 @@
   }
 }
 
+/* ---------------- sheets ---------------- */
+
+/* The handle a phone sheet is dragged by (js/sheet.js). */
+.sheet-grip {
+  display: grid;
+  place-items: center;
+  height: 28px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.sheet-grip i {
+  width: 40px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--rule-strong);
+}
+
+.menu-sheet .sheet-grip {
+  margin-top: 6px;
+  margin-bottom: -14px;
+}
+
+/* ---------------- moving between pages ---------------- */
+
+/* Pages cross-fade into each other and the masthead stays where it is. */
+@view-transition {
+  navigation: auto;
+}
+
+.mast {
+  view-transition-name: masthead;
+}
+
+::view-transition-group(root) {
+  animation-duration: 200ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
+
 /* ---------------- no JavaScript ---------------- */
 
 .noscript {

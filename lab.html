@@ -80,6 +80,7 @@
       <a href="/learn" data-page="learn">Learn <small>600 BC to today</small></a>
       <a href="/lab" data-page="lab">Lab <small>Ten ciphers, step by step</small></a>
       <a href="/codebreaking" data-page="codebreaking">Codebreaking <small class="today-no">No. —</small></a>
+      <div class="sheet-grip" aria-hidden="true"><i></i></div>
     </nav>
   </header>
   <!-- /shell:header -->
@@ -143,14 +144,14 @@
               <!-- The player bar carries the caption, so the two never cover each other. -->
               <div class="dock">
                 <p class="caption" aria-live="polite"></p>
-                <button type="button" class="tb" data-act="prev" aria-label="Previous step">
+                <button type="button" class="tb" data-act="prev" aria-label="Previous step" aria-keyshortcuts="ArrowLeft" title="Previous step (←)">
                   <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 5 7.5 10l5 5" /></svg>
                 </button>
-                <button type="button" class="tb play" data-act="play" aria-label="Play" data-state="paused">
+                <button type="button" class="tb play" data-act="play" aria-label="Play" data-state="paused" aria-keyshortcuts="Space" title="Play or pause (Space)">
                   <svg class="i-play" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5.2v9.6L14.6 10z" /></svg>
                   <svg class="i-pause" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5v10M13 5v10" /></svg>
                 </button>
-                <button type="button" class="tb" data-act="next" aria-label="Next step">
+                <button type="button" class="tb" data-act="next" aria-label="Next step" aria-keyshortcuts="ArrowRight" title="Next step (→)">
                   <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 5 5 5-5 5" /></svg>
                 </button>
                 <button type="button" class="tb" data-act="end" aria-label="Skip to the end">
@@ -166,6 +167,8 @@
               </div>
             </div>
           </section>
+
+          <p class="lab-keys" aria-hidden="true"><kbd>Space</kbd> plays or pauses, <kbd>←</kbd> <kbd>→</kbd> step through, and <kbd>Enter</kbd> in the message runs it.</p>
 
           <div class="lab-foot">
             <section class="result" aria-labelledby="result-title">
@@ -210,6 +213,7 @@
       <!-- On phones the codebook opens from the Cipher button as a sheet. -->
       <dialog class="codebook-sheet" id="codebook-sheet" aria-labelledby="codebook-sheet-title">
         <div class="sheet-inner">
+          <div class="sheet-grip" aria-hidden="true"><i></i></div>
           <div class="sheet-head">
             <h2 id="codebook-sheet-title">Codebook</h2>
             <form method="dialog"><button type="submit" class="link">Close</button></form>
@@ -339,6 +343,7 @@
     </div>
   </footer>
   <!-- /shell:footer -->
+  <script src="js/sheet.js"></script>
   <script src="js/ciphers.js"></script>
   <script src="js/stage.js"></script>
   <script src="js/scenes/substitution.js"></script>
