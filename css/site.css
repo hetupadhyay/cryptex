@@ -274,17 +274,20 @@ main,
   text-decoration: none;
 }
 
+/* A key whose bow is a C. */
 .mark {
   width: 30px;
   height: 30px;
-  filter: drop-shadow(0 1px 1.5px rgba(22, 33, 42, 0.3));
 }
 
-/* The lens is the one part that follows the theme. */
-.mark-lens {
-  fill: rgba(255, 255, 255, 0.2);
-  stroke: var(--pencil);
-  stroke-width: 1.8;
+.mark-bow {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 4.6;
+}
+
+.mark-blade {
+  fill: var(--pencil);
 }
 
 .wordmark {
