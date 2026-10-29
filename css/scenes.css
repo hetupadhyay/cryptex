@@ -1,0 +1,687 @@
+/* ------------------------------------------------------------------
+   Scenes on the lab stage: tapes, alphabets, squares, fences, columns.
+   Colours and type come from the tokens in site.css.
+------------------------------------------------------------------- */
+
+/* ---------------- tapes ---------------- */
+
+.tape {
+  --tc: 22px;
+  display: grid;
+  gap: 6px;
+}
+
+.tape-label {
+  color: var(--ink-3);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.tape-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 3px;
+}
+
+.word {
+  display: flex;
+  gap: inherit;
+}
+
+.cell {
+  display: grid;
+  place-items: center;
+  width: var(--tc);
+  height: calc(var(--tc) * 1.3);
+  border-bottom: 1.5px solid var(--rule-strong);
+  font: 700 17px/1 var(--type);
+  color: var(--ink);
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.cell.gap {
+  width: 12px;
+  border-bottom-color: transparent;
+}
+
+.tape-in .cell.used {
+  color: var(--ink-3);
+}
+
+.cell.now {
+  background: var(--carbon-wash);
+  border-bottom-color: var(--carbon);
+  color: var(--carbon);
+}
+
+.tape-out .cell {
+  border-bottom-style: dashed;
+}
+
+.tape-out .cell.filled {
+  border-bottom-style: solid;
+  border-bottom-color: var(--carbon);
+  color: var(--carbon);
+}
+
+.cell.landed {
+  animation: land 320ms var(--ease-out);
+}
+
+.cell.settle {
+  animation: settle 420ms var(--ease-out);
+}
+
+@keyframes land {
+  from { background: var(--carbon-wash); }
+}
+
+@keyframes settle {
+  40% { transform: translateY(-3px); }
+}
+
+.tape.wide .cell:not(.gap):not(.slash) {
+  width: auto;
+  min-width: calc(var(--tc) * 1.6);
+  padding: 0 3px;
+}
+
+.cell.slash {
+  width: 14px;
+  border-bottom-color: transparent;
+  color: var(--ink-3);
+  font-weight: 400;
+}
+
+.ghost {
+  position: fixed;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  border-radius: 3px;
+  background: var(--sheet);
+  color: var(--carbon);
+  font-family: var(--type);
+  font-weight: 700;
+  box-shadow: 0 0 0 1px var(--carbon), 0 8px 18px -8px rgba(28, 40, 48, 0.45);
+  will-change: transform;
+}
+
+.ghost-key {
+  color: var(--brass);
+  box-shadow: 0 0 0 1px var(--brass), 0 8px 18px -8px rgba(28, 40, 48, 0.45);
+}
+
+/* Message with the key underneath. */
+.keyed .tape-row {
+  gap: 6px 3px;
+}
+
+.pair {
+  display: grid;
+  gap: 2px;
+}
+
+.pair.gap {
+  width: 12px;
+}
+
+.cell.key {
+  height: calc(var(--tc) * 1.15);
+  border-bottom-color: var(--brass-wash);
+  color: var(--brass);
+  font-size: 15px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 240ms var(--ease-out), transform 240ms var(--ease-out), background-color 180ms ease;
+}
+
+.cell.key.shown {
+  opacity: 1;
+  transform: none;
+}
+
+.cell.key.fed {
+  font-style: italic;
+}
+
+.cell.key.now {
+  background: var(--brass-wash);
+  border-bottom-color: var(--brass);
+  color: var(--brass);
+}
+
+/* Playfair pairs. */
+.pairs .tape-row {
+  gap: 6px 4px;
+}
+
+.digraph {
+  display: flex;
+  gap: 2px;
+  transition: margin 320ms var(--ease-out);
+}
+
+.pairs.split .digraph {
+  margin-right: 8px;
+}
+
+.pairs.split .cell.pad {
+  color: var(--pencil);
+  border-bottom-color: var(--pencil);
+}
+
+.pairs.split-anim .cell.pad {
+  animation: pad-in 420ms var(--ease-out) 300ms backwards;
+}
+
+@keyframes pad-in {
+  from { opacity: 0; transform: translateY(-6px); }
+}
+
+/* ---------------- substitution board ---------------- */
+
+.alpha-board {
+  --cell: min(30px, calc((100cqw - 2px) / 26));
+  display: grid;
+  justify-content: center;
+}
+
+.alpha-row {
+  position: relative;
+  display: flex;
+  width: calc(var(--cell) * 26);
+  height: calc(var(--cell) * 1.3);
+  overflow: hidden;
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+}
+
+.alpha-row.plain {
+  background: var(--sheet);
+}
+
+.alpha-row.cipher {
+  background: var(--well);
+}
+
+.alpha-track {
+  position: relative;
+  display: flex;
+  flex: none;
+  transition: transform 1200ms var(--ease-move);
+}
+
+.tile {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--cell);
+  height: calc(var(--cell) * 1.3);
+  font: 700 calc(var(--cell) * 0.6) / 1 var(--type);
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.alpha-row.plain .tile + .tile,
+.alpha-track .tile + .tile {
+  box-shadow: inset 1px 0 0 var(--rule);
+}
+
+.tile.wrapped {
+  color: var(--brass);
+}
+
+.tile.src {
+  background: var(--carbon);
+  color: var(--on-solid);
+}
+
+.tile.dst {
+  background: var(--pencil);
+  color: var(--on-solid);
+}
+
+/* Mirror: each tile placed by its index so it can travel across. */
+.intro-mirror .alpha-track {
+  width: calc(var(--cell) * 26);
+  height: 100%;
+}
+
+.tile.placed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateX(calc(var(--i) * var(--cell)));
+  transition: transform 1000ms var(--ease-move), background-color 200ms ease, color 200ms ease;
+}
+
+/* Compute: tiles flip over to show their new letter. */
+.tile.flip {
+  position: relative;
+  perspective: 300px;
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  backface-visibility: hidden;
+  transition: transform 560ms var(--ease-move);
+  transition-delay: inherit;
+}
+
+.face.back {
+  transform: rotateX(180deg);
+}
+
+.tile.turned .face.front {
+  transform: rotateX(-180deg);
+}
+
+.tile.turned .face.back {
+  transform: rotateX(0);
+}
+
+.alpha-beams {
+  display: flex;
+  width: calc(var(--cell) * 26);
+  height: 30px;
+}
+
+.beam {
+  position: relative;
+  flex: none;
+  width: var(--cell);
+}
+
+.beam::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: calc(50% - 1px);
+  width: 2px;
+  background: var(--ink);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 260ms var(--ease-out);
+}
+
+.alpha-beams.up .beam::before {
+  transform-origin: bottom;
+}
+
+.beam::after {
+  content: '';
+  position: absolute;
+  left: calc(50% - 4px);
+  bottom: 1px;
+  border: 4px solid transparent;
+  border-top: 6px solid var(--ink);
+  border-bottom: 0;
+  opacity: 0;
+  transition: opacity 120ms ease 200ms;
+}
+
+.alpha-beams.up .beam::after {
+  top: 1px;
+  bottom: auto;
+  border-top: 0;
+  border-bottom: 6px solid var(--ink);
+}
+
+.beam.on::before {
+  transform: scaleY(1);
+}
+
+.beam.on::after {
+  opacity: 1;
+}
+
+/* ---------------- tabula recta ---------------- */
+
+.tabula-wrap {
+  display: grid;
+  justify-content: center;
+  overflow-x: auto;
+}
+
+.tabula {
+  --tt: min(21px, calc((100cqw - 2px) / 27));
+  display: grid;
+  grid-template-columns: repeat(27, var(--tt));
+  grid-auto-rows: var(--tt);
+  font: 700 calc(var(--tt) * 0.56) / 1 var(--type);
+}
+
+.tt {
+  display: grid;
+  place-items: center;
+  color: var(--ink-2);
+  opacity: 0.18;
+  transition: opacity 360ms var(--ease-out), background-color 150ms ease, color 150ms ease;
+}
+
+.tabula.revealed .tt {
+  opacity: 1;
+}
+
+.tabula.wave .tt {
+  transition-delay: calc(var(--d, 0) * 16ms);
+}
+
+.tt.head {
+  opacity: 1;
+  background: var(--well);
+  color: var(--ink);
+}
+
+.tt.corner {
+  opacity: 1;
+  background: transparent;
+}
+
+.tt.trail {
+  background: var(--carbon-wash);
+  color: var(--ink);
+}
+
+.tt.lit {
+  background: var(--carbon);
+  color: var(--on-solid);
+}
+
+.tt.hit {
+  position: relative;
+  z-index: 1;
+  border-radius: 3px;
+  background: var(--pencil);
+  color: var(--on-solid);
+  box-shadow: 0 0 0 3px var(--sheet);
+}
+
+/* ---------------- 5×5 squares ---------------- */
+
+.square-wrap {
+  display: grid;
+  justify-content: center;
+}
+
+.square {
+  --sq: min(54px, calc((100cqw - 24px) / 5));
+  --gap: 5px;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, var(--sq));
+  grid-auto-rows: var(--sq);
+  gap: var(--gap);
+}
+
+.square.numbered {
+  --sq: min(48px, calc((100cqw - 30px) / 6));
+  grid-template-columns: repeat(6, var(--sq));
+}
+
+.sq {
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  background: var(--well);
+  font: 700 calc(var(--sq) * 0.4) / 1 var(--type);
+  opacity: 0;
+  transform: translateY(6px) scale(0.96);
+  transition: opacity 280ms var(--ease-out), transform 280ms var(--ease-out), background-color 180ms ease, color 180ms ease;
+}
+
+.sq.in {
+  opacity: 1;
+  transform: none;
+}
+
+.sq.from-key {
+  color: var(--brass);
+  box-shadow: inset 0 -2px 0 var(--brass-wash);
+}
+
+.sq.head {
+  opacity: 1;
+  transform: none;
+  background: transparent;
+  color: var(--ink-3);
+  font-family: var(--sans);
+  font-size: calc(var(--sq) * 0.32);
+}
+
+.sq.head.lit {
+  background: var(--carbon);
+  color: var(--on-solid);
+}
+
+.sq.trail {
+  background: var(--carbon-wash);
+}
+
+.sq.src {
+  background: var(--carbon);
+  color: var(--on-solid);
+}
+
+.sq.dst,
+.sq.hit {
+  background: var(--pencil);
+  color: var(--on-solid);
+  transform: scale(1.06);
+}
+
+.rect {
+  position: absolute;
+  left: calc(var(--c) * (var(--sq) + var(--gap)) - 5px);
+  top: calc(var(--r) * (var(--sq) + var(--gap)) - 5px);
+  width: calc(var(--w) * (var(--sq) + var(--gap)) - var(--gap) + 10px);
+  height: calc(var(--h) * (var(--sq) + var(--gap)) - var(--gap) + 10px);
+  border: 2px dashed var(--ink);
+  border-radius: 8px;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity 220ms var(--ease-out), transform 300ms var(--ease-out);
+}
+
+.rect.on {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------------- rail fence ---------------- */
+
+.fence-wrap {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.fence {
+  --fc: min(26px, calc((100cqw - 32px) / var(--n)));
+  --fh: calc(var(--fc) * 1.35);
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--n), var(--fc));
+  grid-template-rows: repeat(var(--rails), var(--fh));
+  background-image: linear-gradient(to bottom, transparent calc(50% - 0.5px), var(--rule) calc(50% - 0.5px), var(--rule) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+  background-size: 100% var(--fh);
+}
+
+.rail-labels {
+  display: grid;
+  grid-template-rows: repeat(var(--rails), calc(min(26px, calc((100cqw - 32px) / var(--n, 20))) * 1.35));
+}
+
+.rail-label {
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.zigzag {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.zigzag polyline {
+  fill: none;
+  stroke: var(--carbon);
+  stroke-width: 1.5;
+  stroke-opacity: 0.55;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1400ms var(--ease-move);
+}
+
+.fence.drawn polyline {
+  stroke-dashoffset: 0;
+}
+
+.slot {
+  display: grid;
+  place-items: center;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 3px;
+  background: var(--sheet);
+  color: var(--ink);
+  font-family: var(--type);
+  font-weight: 700;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease, opacity 240ms var(--ease-out), transform 240ms var(--ease-out);
+}
+
+.fence .slot {
+  position: relative;
+  z-index: 1;
+  margin: 3px 1px;
+  font-size: calc(var(--fc) * 0.6);
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.fence.drawn .slot {
+  opacity: 1;
+  transform: none;
+}
+
+.slot.filled {
+  border-color: var(--ink-3);
+}
+
+.slot.reading {
+  border-color: var(--carbon);
+  background: var(--carbon);
+  color: var(--on-solid);
+}
+
+.slot.landed {
+  animation: land 320ms var(--ease-out);
+}
+
+/* ---------------- columnar ---------------- */
+
+.columns-wrap {
+  display: grid;
+  justify-content: center;
+}
+
+.columns {
+  --cw: min(42px, calc((100cqw - 4px) / var(--cols)));
+  position: relative;
+  width: calc(var(--cw) * var(--cols));
+  height: calc(var(--cw) * 1.4 + 22px + var(--rows) * (var(--cw) - 4px + 4px));
+}
+
+.column {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  width: var(--cw);
+  transform: translateX(calc(var(--x, 0) * var(--cw)));
+  transition: transform 900ms var(--ease-move);
+}
+
+.col-key {
+  display: grid;
+  place-items: center;
+  width: calc(var(--cw) - 6px);
+  height: calc(var(--cw) - 6px);
+  border-radius: 4px;
+  background: var(--ink);
+  color: var(--on-solid);
+  font: 700 calc(var(--cw) * 0.45) / 1 var(--type);
+  transition: background-color 180ms ease;
+}
+
+.col-rank {
+  height: 18px;
+  color: var(--brass);
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out);
+}
+
+.col-rank.in {
+  opacity: 1;
+  transform: none;
+}
+
+.column .slot {
+  width: calc(var(--cw) - 6px);
+  height: calc(var(--cw) - 4px);
+  font-size: calc(var(--cw) * 0.45);
+}
+
+.column.now .col-key {
+  background: var(--carbon);
+}
+
+/* Scenes drawn without motion when jumping to a step. */
+.instant,
+.instant * {
+  transition: none !important;
+}
+
+@media (max-width: 640px) {
+  .tape {
+    --tc: 19px;
+  }
+
+  .cell {
+    font-size: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alpha-track,
+  .tile.placed,
+  .face,
+  .column,
+  .digraph,
+  .zigzag polyline {
+    transition-duration: 1ms !important;
+  }
+
+  .cell.landed,
+  .cell.settle {
+    animation: none;
+  }
+}

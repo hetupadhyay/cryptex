@@ -28,7 +28,6 @@
   const reduced = () => Stage.reduced;
   let attack = 'brute';
   let vigLength = null;
-  let lastText = null;
 
   // ---- brute force ------------------------------------------------------
 
@@ -215,7 +214,6 @@
     if (attack === 'brute') renderBrute(text, entrance);
     if (attack === 'freq') renderFreq(text);
     if (attack === 'vig') renderVig(text, entrance);
-    lastText = text;
   }
 
   function setAttack(name) {
@@ -255,11 +253,12 @@
   window.Breaker = {
     init() {
       buildFreqChart();
+      // Open on a real intercept, so the desk shows what it does straight away.
+      input.value = SAMPLES.caesar();
       render(false);
     },
     load,
-    refresh() {
-      if (input.value !== lastText) render(false);
-    },
+    // The attack that suits text from a given cipher.
+    attackFor: id => ({ caesar: 'brute', vigenere: 'vig' }[id] || 'freq'),
   };
 })();
