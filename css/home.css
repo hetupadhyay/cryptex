@@ -15,17 +15,6 @@
   --file-pencil: var(--pencil);
 }
 
-/* Small controls get small corners here. */
-.btn {
-  border-radius: 4px;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .btn.glass-btn:hover {
-    border-color: var(--ink-3);
-  }
-}
-
 /* ---------------- hero ---------------- */
 
 .hero {
