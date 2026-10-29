@@ -97,6 +97,7 @@
     code.textContent = preview;
     $('.share-preview', out).replaceChildren('They’ll see ', code, `, encrypted with ${c.name}` + (payload.k ? ', with the key included.' : ', and no key.'));
     out.hidden = false;
+    fromLab.hidden = true;
   });
 
   $('[data-act="copy-link"]', form).addEventListener('click', async e => {
@@ -112,6 +113,25 @@
   });
 
   syncKey();
+
+  const fromLab = $('.share-from', form);
+
+  window.Share = {
+    can: id => CHOICES.includes(id),
+    // Fills the form from a run in the lab and brings it into view. Nothing
+    // is made until the sender presses Create link.
+    fill({ id, text, key }) {
+      if (!CHOICES.includes(id)) return;
+      select.value = id;
+      syncKey();
+      if (keyDef()) keyInput.value = key;
+      $('#share-text').value = text;
+      error.textContent = '';
+      fromLab.hidden = false;
+      document.getElementById('share').scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth', block: 'start' });
+      $('#share-title').focus({ preventScroll: true });
+    },
+  };
 
   // ---- opening a link ---------------------------------------------------------
 
