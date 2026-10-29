@@ -1,1 +1,763 @@
-/* Filled in separately. */
+/* ------------------------------------------------------------------
+   The last chapters: Enigma, the one-time pad, and what any of it has
+   to do with the padlock in your browser. Brass for keys and rotor
+   letters, red pencil for ciphertext and findings, carbon for anything
+   decrypted or sent over the wire.
+------------------------------------------------------------------- */
+
+/* ---------------- shared ---------------- */
+
+.story-sheet {
+  container-type: inline-size;
+  display: grid;
+  gap: 26px;
+  padding: 28px 30px 30px;
+  border: 1px solid var(--rule);
+  border-radius: 28px;
+  background: var(--sheet);
+  box-shadow: var(--shadow-l);
+}
+
+.story-sheet + .story-sheet {
+  margin-top: 24px;
+}
+
+.story-head {
+  display: grid;
+  gap: 6px;
+  max-width: 62ch;
+}
+
+.story-kicker {
+  color: var(--brass);
+  font: 700 15px/1.3 var(--type);
+}
+
+.story-head h3 {
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
+
+.story-head p {
+  color: var(--ink-2);
+  font-size: 16.5px;
+}
+
+.story-sheet h4 {
+  font-size: 17px;
+  letter-spacing: -0.01em;
+}
+
+.story-coda {
+  max-width: 64ch;
+  padding-left: 16px;
+  border-left: 2.5px solid var(--pencil);
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.enigma-input,
+.otp-input {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ---------------- Enigma ---------------- */
+
+.enigma-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 40px;
+}
+
+.enigma-machine {
+  display: grid;
+  gap: 16px;
+}
+
+.machine {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  padding: 16px 14px 18px;
+  border-radius: 20px;
+  background: var(--well);
+}
+
+.rotors {
+  display: flex;
+  gap: 14px;
+}
+
+.rotor {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+
+.rotor-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  color: var(--ink-2);
+  transition: background-color 160ms ease, color 160ms ease, transform 140ms var(--ease-out);
+}
+
+.rotor-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.rotor-btn:active {
+  transform: scale(0.92);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .rotor-btn:hover {
+    background: var(--sheet);
+    color: var(--ink);
+  }
+
+  .lamp:hover {
+    border-color: var(--ink-3);
+  }
+}
+
+/* Three letters show through each window. The middle one sits between two
+   hairlines, like the little glass on the real machine. */
+.rotor-window {
+  --row: 30px;
+  position: relative;
+  width: 58px;
+  height: calc(var(--row) * 3);
+  border: 1px solid var(--rule-strong);
+  border-radius: 12px;
+  background: var(--sheet);
+  overflow: hidden;
+}
+
+.rotor-window::after {
+  content: '';
+  position: absolute;
+  top: var(--row);
+  left: 7px;
+  right: 7px;
+  height: var(--row);
+  border-block: 1px solid var(--rule);
+  pointer-events: none;
+}
+
+/* Five letters, one row up at rest, so a step only slides one row further. */
+.rotor-strip {
+  display: grid;
+  transform: translateY(-20%);
+}
+
+.rotor-strip span {
+  display: grid;
+  place-items: center;
+  height: var(--row);
+  color: var(--ink-3);
+  font: 700 19px/1 var(--type);
+}
+
+.rotor-strip span:nth-child(3) {
+  color: var(--brass);
+}
+
+.rotor-name {
+  color: var(--ink-3);
+  font: 700 12.5px/1 var(--type);
+  letter-spacing: 0.06em;
+}
+
+/* Keyboard and lampboard in one: you press a key, another one lights. */
+.lampboard {
+  container-type: inline-size;
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  max-width: 470px;
+}
+
+.lamp-row {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.lamp {
+  display: grid;
+  place-items: center;
+  width: min(44px, (100cqi - 48px) / 9);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 1px solid var(--rule-strong);
+  border-radius: 50%;
+  background: var(--sheet);
+  color: var(--ink-2);
+  font: 700 15px/1 var(--type);
+  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease, box-shadow 200ms ease, transform 140ms var(--ease-out);
+}
+
+.lamp:active {
+  transform: scale(0.92);
+}
+
+.lamp.pressed {
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+  color: var(--ink);
+}
+
+.lamp.lit {
+  border-color: var(--pencil);
+  background: var(--pencil);
+  color: var(--on-solid);
+  box-shadow: 0 0 0 5px var(--pencil-wash), 0 0 22px 4px var(--pencil-wash);
+  animation: lamp-on 260ms var(--ease-out);
+}
+
+@keyframes lamp-on {
+  from {
+    border-color: var(--rule-strong);
+    background-color: var(--sheet);
+    color: var(--ink-2);
+    box-shadow: 0 0 0 0 var(--pencil-wash);
+  }
+}
+
+.enigma-out {
+  display: grid;
+  gap: 7px;
+}
+
+.enigma-tape {
+  display: block;
+  min-height: 50px;
+  padding: 11px 14px;
+  border-radius: 12px;
+  background: var(--well);
+  color: var(--pencil);
+  font: 700 18px/1.5 var(--type);
+  letter-spacing: 0.08em;
+  overflow-wrap: anywhere;
+}
+
+.enigma-tape:empty::before {
+  content: 'The lamps that light appear here.';
+  color: var(--ink-3);
+  font: 400 14.5px/1.9 var(--sans);
+  letter-spacing: 0;
+}
+
+.enigma-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+}
+
+.enigma-plugs {
+  margin-top: 4px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+
+.story-notes {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  max-width: 60ch;
+}
+
+.story-notes h4:not(:first-child) {
+  margin-top: 14px;
+}
+
+.story-notes p {
+  color: var(--ink-2);
+  font-size: 15.5px;
+}
+
+.story-facts {
+  display: grid;
+  gap: 12px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.story-facts li {
+  padding-left: 14px;
+  border-left: 2.5px solid var(--pencil);
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.story-facts b {
+  color: var(--ink);
+}
+
+/* ---------------- one-time pad ---------------- */
+
+.otp-step {
+  display: grid;
+  gap: 12px;
+}
+
+.otp-step + .otp-step {
+  padding-top: 26px;
+  border-top: 1px solid var(--rule);
+}
+
+.otp-step > p:not([class]) {
+  max-width: 64ch;
+  color: var(--ink-2);
+}
+
+.otp-step .field {
+  max-width: 520px;
+}
+
+.otp-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+}
+
+.otp-row .field {
+  flex: 1 1 260px;
+}
+
+.otp-row .btn {
+  height: 44px;
+}
+
+.otp-legend {
+  color: var(--ink-3);
+  font: 700 13.5px/1.4 var(--type);
+}
+
+.otp-legend .m { color: var(--ink); }
+.otp-legend .k { color: var(--brass); }
+.otp-legend .c { color: var(--pencil); }
+.otp-legend .d { color: var(--carbon); }
+
+/* Each letter is a little sum written in a column, with the answer under a line. */
+.otp-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 4px;
+}
+
+.otp-tiles:empty {
+  display: none;
+}
+
+.otp-col {
+  display: grid;
+  width: 30px;
+  padding: 5px 0 4px;
+  border-radius: 9px;
+  background: var(--well);
+  font: 700 17px/1.5 var(--type);
+  text-align: center;
+}
+
+.otp-col b:last-child {
+  margin: 2px 5px 0;
+  padding-top: 2px;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.otp-gap {
+  width: 12px;
+}
+
+.real b:nth-child(1) { color: var(--ink); }
+.real b:nth-child(2) { color: var(--brass); }
+.real b:nth-child(3) { color: var(--pencil); }
+.other b:nth-child(1) { color: var(--pencil); }
+.other b:nth-child(2) { color: var(--brass); }
+.other b:nth-child(3) { color: var(--carbon); }
+
+.otp-verdict {
+  max-width: 64ch;
+  padding-left: 16px;
+  border-left: 2.5px solid var(--carbon);
+}
+
+.otp-rules {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: rule;
+}
+
+.otp-rules li {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 16px 18px 18px;
+  border-radius: 16px;
+  background: var(--well);
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.5;
+  counter-increment: rule;
+}
+
+.otp-rules li::before {
+  content: counter(rule);
+  color: var(--brass);
+  font: 700 26px/1 var(--type);
+}
+
+.otp-rules b {
+  color: var(--ink);
+  font-size: 16px;
+}
+
+.reuse-lines {
+  display: grid;
+  gap: 6px;
+  max-width: 560px;
+  margin: 0;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: var(--well);
+}
+
+.reuse-lines div {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 12px;
+}
+
+.reuse-lines dt {
+  color: var(--ink-3);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.reuse-lines dd {
+  margin: 0;
+  font: 700 18px/1.5 var(--type);
+  letter-spacing: 0.08em;
+}
+
+.reuse-lines .diff {
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.reuse-lines .diff dd {
+  color: var(--pencil);
+}
+
+.reuse .btn {
+  justify-self: start;
+}
+
+.otp > .story-coda {
+  margin-top: 4px;
+}
+
+/* ---------------- today ---------------- */
+
+.today-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.today-card,
+.today-check {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  backdrop-filter: blur(22px) saturate(170%);
+  border: 1px solid var(--glass-line);
+  box-shadow: var(--glass-edge), var(--shadow-s);
+}
+
+.today-card {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 8px;
+  padding: 22px 22px 20px;
+  border-radius: 22px;
+}
+
+.today-card .story-kicker {
+  font-size: 13.5px;
+}
+
+.today-card h3 {
+  font-size: 21px;
+  letter-spacing: -0.015em;
+}
+
+.today-card p {
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.today-card .link {
+  justify-self: start;
+  margin-top: 4px;
+}
+
+#today sup {
+  line-height: 0;
+}
+
+.handshake {
+  margin-top: 24px;
+}
+
+.handshake-head {
+  display: grid;
+  gap: 6px;
+}
+
+.handshake-head h3 {
+  font-size: 24px;
+  letter-spacing: -0.02em;
+}
+
+.handshake-head p {
+  color: var(--ink-2);
+}
+
+/* Four numbered steps on a dashed line, left to right on wide screens
+   and top to bottom on narrow ones. */
+.hs-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: hs;
+}
+
+.hs-step {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding-top: 40px;
+  counter-increment: hs;
+}
+
+.hs-step::before {
+  content: counter(hs);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--on-solid);
+  font: 700 14px/1 var(--type);
+}
+
+.hs-step::after {
+  content: '';
+  position: absolute;
+  top: 13.5px;
+  left: 38px;
+  right: -8px;
+  border-top: 1.5px dashed var(--rule-strong);
+}
+
+.hs-step:last-child::before {
+  background: var(--carbon);
+}
+
+.hs-step:last-child::after {
+  display: none;
+}
+
+.hs-dir {
+  color: var(--carbon);
+  font: 700 13.5px/1.3 var(--type);
+}
+
+.hs-dir i {
+  font-style: normal;
+}
+
+.hs-step p {
+  color: var(--ink-2);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+.today-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin-top: 24px;
+  padding: 22px 24px;
+  border-radius: 22px;
+}
+
+.today-lock {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 9px;
+  border-radius: 13px;
+  background: var(--carbon-wash);
+  fill: none;
+  stroke: var(--carbon);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.today-check > div {
+  display: grid;
+  gap: 6px;
+}
+
+.today-check h3 {
+  font-size: 19px;
+  letter-spacing: -0.01em;
+}
+
+.today-check p {
+  max-width: 72ch;
+  color: var(--ink-2);
+}
+
+#today > .story-coda {
+  margin-top: 36px;
+}
+
+/* ---------------- narrow sheets ---------------- */
+
+@container (max-width: 860px) {
+  .enigma-body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+
+  .hs-steps {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .hs-step {
+    padding: 2px 0 0 44px;
+  }
+
+  .hs-step::after {
+    top: 36px;
+    bottom: -16px;
+    left: 13.5px;
+    right: auto;
+    border-top: 0;
+    border-left: 1.5px dashed var(--rule-strong);
+  }
+}
+
+@container (max-width: 640px) {
+  .otp-rules {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  /* The number moves beside the rule instead of above it. */
+  .otp-rules li {
+    grid-template-columns: 26px minmax(0, 1fr);
+    column-gap: 10px;
+    padding: 14px 16px 16px;
+  }
+
+  .otp-rules li::before {
+    grid-row: span 2;
+    font-size: 22px;
+  }
+
+  .reuse-lines div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .reuse-lines dd {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 960px) {
+  .today-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .story-sheet {
+    padding: 22px 16px 24px;
+    border-radius: 22px;
+  }
+
+  .story-head h3 {
+    font-size: 25px;
+  }
+
+  .machine {
+    padding: 14px 10px 16px;
+  }
+
+  .today-check {
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 18px;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .today-card,
+  .today-check {
+    background: var(--sheet);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lamp.lit {
+    animation: none;
+  }
+
+  .lamp,
+  .rotor-btn {
+    transition-duration: 1ms;
+  }
+}
