@@ -18,6 +18,9 @@
   </script>
   <link rel="stylesheet" href="css/site.css">
   <link rel="stylesheet" href="css/scenes.css">
+  <link rel="stylesheet" href="css/story.css">
+  <link rel="stylesheet" href="css/daily.css">
+  <link rel="stylesheet" href="css/pages.css">
   <link rel="icon" href="img/mark.svg" type="image/svg+xml">
 </head>
 <body>
@@ -38,8 +41,10 @@
         <a href="#lab">Lab</a>
         <a href="#strength">Key strength</a>
         <a href="#desk">Codebreaking</a>
+        <a href="#daily">Daily</a>
         <a href="#intercepts">Intercepts</a>
         <a href="#share">Send a secret</a>
+        <a href="#today">Today</a>
       </nav>
       <button class="theme" type="button" role="switch" aria-checked="false" aria-label="Night mode">
         <span class="theme-label day">Day</span>
@@ -284,6 +289,9 @@
       </div>
     </section>
 
+    <!-- Daily intercept: filled by js/daily.js -->
+    <section class="section" id="daily" aria-labelledby="daily-title"></section>
+
     <!-- Intercepts -->
     <section class="section" id="intercepts" aria-labelledby="intercepts-title">
       <div class="section-head">
@@ -356,6 +364,15 @@
         </div>
       </form>
     </section>
+
+    <!-- The one that can't be broken: filled by js/story.js -->
+    <section class="section" id="unbreakable" aria-labelledby="unbreakable-title"></section>
+
+    <!-- Why this matters today: filled by js/story.js -->
+    <section class="section" id="today" aria-labelledby="today-title"></section>
+
+    <!-- About and credits -->
+    <section class="section" id="about" aria-labelledby="about-title"></section>
   </main>
 
   <footer class="foot">
@@ -394,6 +411,8 @@
   <script src="js/strength.js"></script>
   <script src="js/intercepts.js"></script>
   <script src="js/share.js"></script>
+  <script src="js/story.js"></script>
+  <script src="js/daily.js"></script>
   <script src="js/site.js"></script>
 </body>
 </html>
