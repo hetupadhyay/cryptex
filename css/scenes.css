@@ -23,8 +23,11 @@
   gap: 4px 3px;
 }
 
+/* A word that is wider than the whole line (letters-only tapes are one long
+   word) still wraps, rather than pushing the stage wider than the screen. */
 .word {
   display: flex;
+  flex-wrap: wrap;
   gap: inherit;
 }
 
