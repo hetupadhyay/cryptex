@@ -22,16 +22,39 @@
       'Every letter of the message is still here, only the order has changed, which is exactly why the letter counts below still look like ordinary English.',
       { rails: 3 }
     ),
+    affine: () => Ciphers.byId('affine').encrypt(
+      'The ledger is hidden behind the clock in the station master’s office. Collect it before the morning train and leave the key with the porter. Nobody else can know that it has moved.',
+      { a: 5, b: 8 }
+    ),
   };
+
+  // The attack each sample is meant for.
+  const SAMPLE_ATTACK = { caesar: 'brute', vigenere: 'vig', railfence: 'rail', affine: 'affine' };
 
   const input = $('#attack-text');
   const reduced = () => Stage.reduced;
   let attack = 'brute';
   let vigLength = null;
+  let vigMode = 'vigenere';
+
+  // One row of a ranked list: the text a key gives, and how well that fits
+  // English compared with the best row (0 to 1). The caller fills in the key.
+  function candidateRow(text, fit, best, i, entrance) {
+    const li = document.createElement('li');
+    li.className = 'shift-row' + (best ? ' best' : '');
+    li.innerHTML = '<span class="shift-n"></span><span class="shift-text"></span><span class="fit"><i></i></span>';
+    $('.shift-text', li).textContent = text.length > 90 ? text.slice(0, 90) + '…' : text;
+    $('.fit i', li).style.transform = `scaleX(${Math.max(0.02, Math.min(1, fit))})`;
+    if (entrance && !reduced()) {
+      li.style.animationDelay = `${i * 28}ms`;
+      li.classList.add('enter');
+    }
+    return li;
+  }
 
   // ---- brute force ------------------------------------------------------
 
-  const shiftList = $('.shifts');
+  const shiftList = $('.attack[data-attack="brute"] .shifts');
 
   function renderBrute(text, entrance) {
     const section = $('.attack[data-attack="brute"]');
@@ -50,19 +73,10 @@
     const ordered = byScore ? rows.slice().sort((a, b) => a.chi - b.chi) : rows;
 
     shiftList.replaceChildren(...ordered.map((r, i) => {
-      const li = document.createElement('li');
-      li.className = 'shift-row' + (r === best ? ' best' : '');
+      const li = candidateRow(r.text, bestChi / r.chi, r === best, i, entrance);
       li.dataset.shift = r.shift;
-      const fit = Math.max(0.02, Math.min(1, bestChi / r.chi));
-      li.innerHTML = '<span class="shift-n"></span><span class="shift-text"></span><span class="fit"><i></i></span>';
       $('.shift-n', li).textContent = r.shift;
-      $('.shift-text', li).textContent = r.text.length > 90 ? r.text.slice(0, 90) + '…' : r.text;
-      $('.fit i', li).style.transform = `scaleX(${fit})`;
       if (r === best) li.setAttribute('aria-label', `Shift ${r.shift}, most likely: ${r.text}`);
-      if (entrance && !reduced()) {
-        li.style.animationDelay = `${i * 28}ms`;
-        li.classList.add('enter');
-      }
       return li;
     }));
   }
@@ -76,6 +90,61 @@
       const dy = before.get(li.dataset.shift) - li.getBoundingClientRect().top;
       if (dy) li.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }], { duration: 420, easing: Stage.EASE_MOVE });
     });
+  }
+
+  // ---- affine -------------------------------------------------------------
+
+  const affineSection = $('.attack[data-attack="affine"]');
+  const affineList = $('.shifts', affineSection);
+
+  function renderAffine(text, entrance) {
+    const verdict = $('.verdict', affineSection);
+    if (!lettersOnly(text).length) {
+      affineList.replaceChildren();
+      verdict.textContent = 'Paste an affine ciphertext, or load the sample, to score all 312 keys at once.';
+      return;
+    }
+    const rows = Analysis.affineCandidates(text);
+    const best = rows[0];
+    verdict.textContent = `The key a = ${best.a}, b = ${best.b} reads most like English. 312 keys tried, and these are the best 10.`;
+
+    affineList.replaceChildren(...rows.slice(0, 10).map((r, i) => {
+      const li = candidateRow(r.text, best.chi / r.chi, r === best, i, entrance);
+      const key = $('.shift-n', li);
+      key.className = 'shift-n affine-key';
+      key.innerHTML = '<small>a</small><span></span><small>b</small><span></span>';
+      const [a, b] = $$('span', key);
+      a.textContent = r.a;
+      b.textContent = r.b;
+      li.setAttribute('aria-label', `a ${r.a}, b ${r.b}${r === best ? ', most likely' : ''}: ${r.text}`);
+      return li;
+    }));
+  }
+
+  // ---- rail fence -----------------------------------------------------------
+
+  const railSection = $('.attack[data-attack="rail"]');
+  const railList = $('.shifts', railSection);
+
+  function renderRail(text, entrance) {
+    const verdict = $('.verdict', railSection);
+    if (lettersOnly(text).length < 2) {
+      railList.replaceChildren();
+      verdict.textContent = 'Paste a rail fence ciphertext, or load the sample, to read it back on every rail count from 2 to 8.';
+      return;
+    }
+    const rows = Analysis.railCandidates(text);
+    const best = rows.reduce((a, b) => (b.score > a.score ? b : a));
+    verdict.textContent = `Reading it back on ${best.rails} rails gives the most common English letter pairs. That took 7 tries.`;
+
+    // Scores are average log-probabilities per pair, so the bar shows how much
+    // less likely each reading is than the best, stretched so small gaps show.
+    railList.replaceChildren(...rows.map((r, i) => {
+      const li = candidateRow(r.text, 10 ** ((r.score - best.score) * 2), r === best, i, entrance);
+      $('.shift-n', li).textContent = r.rails;
+      li.setAttribute('aria-label', `${r.rails} rails${r === best ? ', most likely' : ''}: ${r.text}`);
+      return li;
+    }));
   }
 
   // ---- frequency ----------------------------------------------------------
@@ -128,7 +197,7 @@
     if (letters.length < 40) {
       verdict.textContent = `Only ${letters.length} letters. Counts this small are mostly noise, so treat any pattern loosely.`;
     } else if (chiPlain < 120 && ioc > 0.058) {
-      verdict.textContent = 'These counts already match English. The letters haven’t been replaced, only moved around, so this is a transposition cipher.';
+      verdict.textContent = 'These counts already match English. The letters haven’t been replaced, only moved around, so this is a transposition cipher. If it’s a rail fence, try every rail count.';
     } else if (ioc < 0.05) {
       verdict.textContent = 'The counts are unusually flat. That happens when several alphabets are mixed together. Try the Vigenère attack.';
     } else {
@@ -151,6 +220,13 @@
 
   const vigSection = $('.attack[data-attack="vig"]');
   const iocBars = $('.bars', vigSection);
+  const VIG_NAMES = { vigenere: 'Vigenère', beaufort: 'Beaufort' };
+
+  function setVigMode(mode) {
+    vigMode = mode === 'beaufort' ? 'beaufort' : 'vigenere';
+    $(`input[name="vig-mode"][value="${vigMode}"]`).checked = true;
+    $('h3', vigSection).textContent = `${VIG_NAMES[vigMode]} key length`;
+  }
 
   function renderVig(text, entrance) {
     const verdict = $('.verdict', vigSection);
@@ -187,7 +263,8 @@
       return b;
     }));
 
-    const { key, plaintext } = Analysis.crackVigenere(text, vigLength);
+    const crack = vigMode === 'beaufort' ? Analysis.crackBeaufort : Analysis.crackVigenere;
+    const { key, plaintext } = crack(text, vigLength);
     verdict.textContent = vigLength === guess
       ? `Splitting the text into ${guess} columns makes each one look like English, so the key is probably ${guess} letters long.`
       : `Trying a key length of ${vigLength}. The best guess was ${guess}.`;
@@ -212,13 +289,28 @@
   function render(entrance) {
     const text = input.value;
     if (attack === 'brute') renderBrute(text, entrance);
+    if (attack === 'affine') renderAffine(text, entrance);
     if (attack === 'freq') renderFreq(text);
     if (attack === 'vig') renderVig(text, entrance);
+    if (attack === 'rail') renderRail(text, entrance);
+  }
+
+  // On narrow screens the tabs scroll sideways; keep the chosen one in view
+  // without moving the page itself.
+  function revealTab(tab) {
+    const strip = tab.parentElement;
+    if (strip.scrollWidth <= strip.clientWidth) return;
+    const box = strip.getBoundingClientRect();
+    const r = tab.getBoundingClientRect();
+    if (r.left >= box.left && r.right <= box.right) return;
+    const pad = parseFloat(getComputedStyle(strip).paddingLeft);
+    strip.scrollTo({ left: strip.scrollLeft + r.left - box.left - pad, behavior: reduced() ? 'auto' : 'smooth' });
   }
 
   function setAttack(name) {
     attack = name;
     $$('.attack-tab').forEach(t => t.setAttribute('aria-selected', t.dataset.attack === name));
+    revealTab($(`.attack-tab[data-attack="${name}"]`));
     $$('.work .attack').forEach(s => { s.hidden = s.dataset.attack !== name; });
     render(true);
   }
@@ -232,6 +324,10 @@
 
   $$('.attack-tab').forEach(t => t.addEventListener('click', () => setAttack(t.dataset.attack)));
   $$('input[name="brute-order"]').forEach(r => r.addEventListener('change', reorderBrute));
+  $$('input[name="vig-mode"]').forEach(r => r.addEventListener('change', () => {
+    setVigMode(r.value);
+    renderVig(input.value, true);
+  }));
   shiftInput.addEventListener('input', () => renderFreq(input.value));
   $('[data-act="best-shift"]').addEventListener('click', () => {
     shiftInput.value = bestShift(input.value);
@@ -240,15 +336,28 @@
 
   $$('[data-sample]').forEach(b => b.addEventListener('click', () => {
     const name = b.dataset.sample;
-    load(SAMPLES[name](), { caesar: 'brute', vigenere: 'vig', railfence: 'freq' }[name]);
+    load(SAMPLES[name](), SAMPLE_ATTACK[name]);
   }));
 
-  function load(text, which) {
+  // `which` can carry the Vigenère panel's mode after a colon, as in
+  // 'vig:beaufort', so callers that only pass attackFor's answer still land
+  // in the right mode. options.mode does the same thing.
+  function load(text, which, options = {}) {
+    const [name, mode] = String(which || attack).split(':');
     input.value = text;
     vigLength = null;
     shiftInput.value = 0;
-    setAttack(which || attack);
+    if (name === 'vig' && (which || options.mode)) setVigMode(options.mode || mode);
+    setAttack(name);
   }
+
+  const ATTACK_FOR = {
+    caesar: 'brute',
+    affine: 'affine',
+    vigenere: 'vig',
+    beaufort: 'vig:beaufort',
+    railfence: 'rail',
+  };
 
   window.Breaker = {
     init() {
@@ -259,6 +368,6 @@
     },
     load,
     // The attack that suits text from a given cipher.
-    attackFor: id => ({ caesar: 'brute', vigenere: 'vig' }[id] || 'freq'),
+    attackFor: id => ATTACK_FOR[id] || 'freq',
   };
 })();
