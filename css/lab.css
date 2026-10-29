@@ -215,6 +215,12 @@
   background: rgba(10, 15, 20, 0.42);
 }
 
+/* A near-black page needs a darker veil to look covered at all. */
+:root[data-theme='night'] .codebook-sheet::backdrop,
+:root[data-theme='night'] .secret-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.62);
+}
+
 .codebook-sheet[open] {
   animation: sheet-up 300ms var(--ease-out);
 }

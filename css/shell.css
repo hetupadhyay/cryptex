@@ -19,10 +19,11 @@
 :root[data-theme='night'] {
   --manila: #2b2a22;
   --manila-edge: #4b4636;
-  --slab: #080c0f;
+  --slab: #172028;
   --slab-ink: #dfe5e1;
   --slab-mute: #87939a;
   --slab-rule: rgba(223, 229, 225, 0.1);
+  --slab-edge: #2e3c46;
 }
 
 .theme-shift,
@@ -344,6 +345,7 @@
   position: relative;
   z-index: 1;
   margin-top: 120px;
+  border-top: 1px solid var(--slab-edge, transparent);
   background: var(--slab);
   color: var(--slab-ink);
   font-size: 14.5px;

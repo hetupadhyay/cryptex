@@ -59,10 +59,12 @@
       <span class="st-name"></span>
       <div class="st-bar-wrap">
         <span class="st-count">${power(row.keys)} ${row.keys === 1 ? 'key' : 'keys'}</span>
-        <span class="st-bar"><i style="--w:${width.toFixed(3)}"></i></span>
+        <span class="st-bar"><i></i></span>
       </div>
       <span class="st-time">${duration(row.keys / RATE)}</span>
       <span class="st-how"></span>`;
+    // Set as a property, not a style attribute, which the CSP would block.
+    li.querySelector('.st-bar i').style.setProperty('--w', width.toFixed(3));
     li.querySelector('.st-name').innerHTML = `${row.name}<small></small>`;
     li.querySelector('.st-name small').textContent = row.note;
     li.querySelector('.st-how').textContent = (row.modern ? '' : 'Broken by: ') + row.how;

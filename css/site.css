@@ -34,6 +34,9 @@
   --ink-3: #606c74;
   --rule: #d8dedb;
   --rule-strong: #b3bdb8;
+  /* The edge of a field or slider: dark enough to see it at 3:1. */
+  --control-edge: #7f8b86;
+  --key-face: var(--sheet);
   --key-side: #9aa6a0;
   --key-light: rgba(255, 255, 255, 0.9);
   --key-side-dark: #03080c;
@@ -81,6 +84,7 @@
   --ink-3: #828e96;
   --rule: #26323a;
   --rule-strong: #3a4852;
+  --control-edge: #66747d;
   --carbon: #93b3dc;
   --carbon-wash: rgba(147, 179, 220, 0.15);
   --pencil: #e5836f;
@@ -102,7 +106,10 @@
   --pad-ink: rgba(227, 232, 229, 0.04);
   --pad-ink-strong: rgba(229, 131, 111, 0.45);
   color-scheme: dark;
-  --key-side: #0b1115;
+  /* At night a paper key lifts off the page by being lighter, over an
+     edge darker than the page. */
+  --key-face: #1f2b34;
+  --key-side: #030608;
   --key-light: rgba(255, 255, 255, 0.05);
   --key-side-dark: #7f8b92;
   --key-light-dark: rgba(255, 255, 255, 0.6);
@@ -257,7 +264,7 @@ main {
   padding: 0 20px;
   border: 1px solid var(--rule-strong);
   border-radius: 5px;
-  background: var(--sheet);
+  background: var(--key-face);
   box-shadow: inset 0 1px 0 var(--key-light), 0 var(--edge) 0 var(--key-side);
   color: var(--ink);
   font-weight: 650;
@@ -388,7 +395,7 @@ select {
   width: 100%;
   min-height: 44px;
   padding: 10px 13px;
-  border: 1px solid var(--rule-strong);
+  border: 1px solid var(--control-edge);
   border-radius: 12px;
   background: var(--sheet);
   font-family: var(--type);
@@ -409,9 +416,12 @@ select {
 textarea:focus,
 input:focus,
 select:focus {
-  outline: none;
   border-color: var(--carbon);
-  box-shadow: 0 0 0 4px var(--carbon-wash);
+}
+
+::placeholder {
+  color: var(--ink-3);
+  opacity: 1;
 }
 
 .keys input[type='text'],
@@ -470,13 +480,13 @@ input[type='range'] {
 input[type='range']::-webkit-slider-runnable-track {
   height: 3px;
   border-radius: 2px;
-  background: var(--rule-strong);
+  background: var(--control-edge);
 }
 
 input[type='range']::-moz-range-track {
   height: 3px;
   border-radius: 2px;
-  background: var(--rule-strong);
+  background: var(--control-edge);
 }
 
 input[type='range']::-webkit-slider-thumb {
@@ -487,7 +497,7 @@ input[type='range']::-webkit-slider-thumb {
   border: 0;
   border-radius: 50%;
   background: var(--sheet);
-  box-shadow: 0 0 0 1px var(--rule-strong), var(--shadow-s);
+  box-shadow: 0 0 0 1px var(--control-edge), var(--shadow-s);
 }
 
 input[type='range']::-moz-range-thumb {
@@ -496,7 +506,7 @@ input[type='range']::-moz-range-thumb {
   border: 0;
   border-radius: 50%;
   background: var(--sheet);
-  box-shadow: 0 0 0 1px var(--rule-strong), var(--shadow-s);
+  box-shadow: 0 0 0 1px var(--control-edge), var(--shadow-s);
 }
 
 /* ---------------- sections ---------------- */
@@ -1358,7 +1368,7 @@ input[type='range']::-moz-range-thumb {
 }
 
 .bar.english {
-  background: var(--rule-strong);
+  background: var(--control-edge);
 }
 
 .bar.cipher {
