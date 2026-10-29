@@ -154,7 +154,7 @@
 }
 
 /* The lamp: night is the same desk with the lamp switched on. */
-.lamp {
+.mast .lamp {
   display: grid;
   place-items: center;
   width: 42px;
@@ -166,11 +166,11 @@
   transition: transform 140ms var(--ease-out), border-color 160ms ease;
 }
 
-.lamp:active {
+.mast .lamp:active {
   transform: scale(0.94);
 }
 
-.lamp svg {
+.mast .lamp svg {
   width: 22px;
   height: 22px;
   overflow: visible;
@@ -194,7 +194,7 @@
   transition: opacity 260ms ease;
 }
 
-.lamp[aria-pressed='true'] .lamp-beam {
+.mast .lamp[aria-pressed='true'] .lamp-beam {
   opacity: 0.6;
 }
 
@@ -276,6 +276,22 @@
   .menu-sheet {
     display: none;
   }
+}
+
+/* ---------------- no JavaScript ---------------- */
+
+.noscript {
+  position: relative;
+  z-index: 1;
+  width: min(var(--page), calc(100% - 40px));
+  margin: 16px auto 0;
+  padding: 14px 18px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 14px;
+  background: var(--sheet);
+  color: var(--ink);
+  font-size: 15px;
+  box-shadow: var(--shadow-s);
 }
 
 /* ---------------- footer ---------------- */

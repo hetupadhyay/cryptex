@@ -441,7 +441,6 @@
     if (!state.last) return;
     const ciphertext = state.last.mode === 'encrypt' ? state.last.output : state.last.input;
     Breaker.load(ciphertext, Breaker.attackFor(state.last.cipherId));
-    document.getElementById('desk')?.scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
   });
 
   // The message, cipher and key of the last run go into Send a secret.

@@ -3,21 +3,6 @@
    404). Uses the tokens from site.css, so both themes come for free.
 ------------------------------------------------------------------- */
 
-/* ---------------- no JavaScript ---------------- */
-
-.noscript {
-  position: relative;
-  z-index: 1;
-  width: min(var(--page), calc(100% - 40px));
-  margin: 16px auto 0;
-  padding: 14px 18px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 14px;
-  background: var(--sheet);
-  color: var(--ink);
-  font-size: 15px;
-  box-shadow: var(--shadow-s);
-}
 
 /* ---------------- standalone pages ---------------- */
 
