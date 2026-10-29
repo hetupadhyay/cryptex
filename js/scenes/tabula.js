@@ -17,8 +17,8 @@
     const autokey = cipher.id === 'autokey';
     const beaufort = cipher.id === 'beaufort';
     const keyword = lettersOnly(keys.key);
-    const source = input.toUpperCase();
-    const result = (enc ? cipher.encrypt : cipher.decrypt)(source, keys).toUpperCase();
+    const source = Ciphers.upper(input);
+    const result = Ciphers.upper((enc ? cipher.encrypt : cipher.decrypt)(source, keys));
     const plainLetters = lettersOnly(enc ? source : result);
 
     const stream = autokey

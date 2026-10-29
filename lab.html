@@ -142,7 +142,7 @@
               <div class="scene"></div>
               <p class="placeholder"><span>Press <b>Encrypt</b> to watch it happen, one letter at a time.</span></p>
               <!-- The player bar carries the caption, so the two never cover each other. -->
-              <div class="dock">
+              <div class="dock" inert>
                 <p class="caption" aria-live="polite"></p>
                 <button type="button" class="tb" data-act="prev" aria-label="Previous step" aria-keyshortcuts="ArrowLeft" title="Previous step (←)">
                   <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 5 7.5 10l5 5" /></svg>
@@ -159,7 +159,7 @@
                 </button>
                 <input class="scrub" type="range" min="0" max="0" value="0" aria-label="Step">
                 <span class="step-count">0 / 0</span>
-                <button type="button" class="speed-step" aria-label="Speed: normal">
+                <button type="button" class="speed-step" aria-label="Speed 1×, normal">
                   <span class="speed-word">Speed</span>
                   <span class="ticks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
                   <span class="speed-value">1×</span>
