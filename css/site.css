@@ -274,22 +274,20 @@ main,
   text-decoration: none;
 }
 
+/* A key whose bow is a C. */
 .mark {
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
+}
+
+.mark-bow {
   fill: none;
   stroke: var(--ink);
-  stroke-width: 1.6;
-  stroke-linecap: round;
+  stroke-width: 4.6;
 }
 
-.mark .ticks {
-  stroke: var(--ink-3);
-}
-
-.mark .needle {
-  stroke: var(--pencil);
-  stroke-width: 2.2;
+.mark-blade {
+  fill: var(--pencil);
 }
 
 .wordmark {
