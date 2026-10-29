@@ -91,8 +91,9 @@
     if (!frame) frame = requestAnimationFrame(tick);
   }
 
-  function goTo(s, opts = { response: 0.45, damping: 1 }, velocity = 0) {
+  function goTo(s, opts = { response: 0.45, damping: 1 }, velocity = 0, fromScroll = false) {
     shift = s;
+    if (!fromScroll) anchor = { shift: s, steps: scrollSteps() };
     for (const p of parts) {
       p.spring.tune(opts);
       p.spring.target = p.base + s;
@@ -161,6 +162,33 @@
     goTo(Math.round(current()) + delta);
   });
 
+  // ---- scrolling turns the rings on phones ------------------------------------
+
+  // On a phone, scrolling is the gesture people are already making, so the
+  // rings roll with the page: one letter for every SCROLL_STEP pixels.
+  const SCROLL_STEP = 34;
+  const narrow = window.matchMedia('(max-width: 960px)');
+  const hint = document.querySelector('.cryptex-panel > p');
+  const scrollSteps = () => Math.floor(window.scrollY / SCROLL_STEP);
+  let anchor = { shift: 0, steps: 0 };
+
+  function syncHint() {
+    hint.textContent = narrow.matches && !still.matches
+      ? 'A cryptex is a Caesar cipher you can hold. Scroll, or drag the rings: they turn together, so every letter shifts by the same amount.'
+      : 'A cryptex is a Caesar cipher you can hold. Drag or flick the rings: they turn together, so every letter shifts by the same amount.';
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!narrow.matches || still.matches || dragging || !parts.length) return;
+    // Only while the cryptex is on screen.
+    if (rings.getBoundingClientRect().bottom < 0) return;
+    const s = anchor.shift + (scrollSteps() - anchor.steps);
+    if (s !== shift) goTo(s, { response: 0.3, damping: 1 }, 0, true);
+  }, { passive: true });
+
+  narrow.addEventListener('change', syncHint);
+  syncHint();
+
   // ---- the word ---------------------------------------------------------------
 
   wordInput.addEventListener('input', () => {
@@ -170,6 +198,7 @@
     touched = true;
     word = clean;
     shift = Math.round(current());
+    anchor = { shift, steps: scrollSteps() };
     build(false);
   });
 
