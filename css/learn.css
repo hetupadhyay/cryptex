@@ -249,18 +249,6 @@ html {
   line-height: 1.55;
 }
 
-/* Small controls in the figures: tight corners, like the rest of the room. */
-.essay .btn.small {
-  border: 1px solid var(--rule-strong);
-  border-radius: 4px;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .essay .btn.small:hover {
-    border-color: var(--ink-3);
-  }
-}
-
 .essay input[type='text'] {
   border-radius: 4px;
 }

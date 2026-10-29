@@ -54,9 +54,6 @@
 }
 
 /* Small controls get small corners on this page. */
-#lab .btn,
-#share .btn,
-.secret-dialog .btn,
 #lab :is(textarea, input[type='text'], input[type='number'], select),
 #share :is(textarea, input[type='text'], input[type='number'], select) {
   border-radius: 4px;
@@ -580,12 +577,6 @@
 
 .secret-card .intercept {
   border-radius: 6px;
-}
-
-/* .btn in site.css clears the border .glass-btn gives these; put it back. */
-#share .btn.glass-btn,
-.secret-dialog .btn.glass-btn {
-  border: 1px solid var(--rule-strong);
 }
 
 /* ---------------- small screens ---------------- */

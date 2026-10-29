@@ -202,24 +202,13 @@
   gap: 10px;
 }
 
+/* Keys on a folder take the folder's darker rule for their edge. */
 .file-btn {
+  --edge: 2px;
   height: 40px;
   padding: 0 14px;
-  border: 1px solid var(--folder-rule);
-  border-radius: 4px;
-  background: var(--sheet);
-  color: var(--ink);
+  border-color: var(--folder-rule);
   font-size: 14px;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .file-btn:hover {
-    border-color: var(--ink);
-  }
-}
-
-.case .btn.primary {
-  border-radius: 4px;
 }
 
 .folder input[type='text'] {

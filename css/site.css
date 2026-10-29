@@ -34,6 +34,10 @@
   --ink-3: #606c74;
   --rule: #d8dedb;
   --rule-strong: #b3bdb8;
+  --key-side: #9aa6a0;
+  --key-light: rgba(255, 255, 255, 0.9);
+  --key-side-dark: #03080c;
+  --key-light-dark: rgba(255, 255, 255, 0.14);
   --carbon: #2b4c7e;
   --carbon-wash: rgba(43, 76, 126, 0.11);
   --pencil: #b4473a;
@@ -98,6 +102,10 @@
   --pad-ink: rgba(227, 232, 229, 0.04);
   --pad-ink-strong: rgba(229, 131, 111, 0.45);
   color-scheme: dark;
+  --key-side: #0b1115;
+  --key-light: rgba(255, 255, 255, 0.05);
+  --key-side-dark: #7f8b92;
+  --key-light-dark: rgba(255, 255, 255, 0.6);
 }
 
 *,
@@ -199,8 +207,6 @@ main {
   box-shadow: var(--shadow-s);
 }
 
-.btn.glass-btn,
-.glass-btn,
 .round-btn {
   background: var(--sheet);
   border: 1px solid var(--rule-strong);
@@ -237,45 +243,67 @@ main {
 
 /* ---------------- buttons ---------------- */
 
+/* Buttons are typewriter keys: the key sits on a darker edge, and
+   pressing it pushes it down onto that edge. A plain .btn is a paper key;
+   .primary is the dark one for the main action on a screen. */
 .btn {
+  --edge: 3px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 48px;
-  padding: 0 22px;
-  border: 0;
-  border-radius: 6px;
+  height: 46px;
+  margin-bottom: var(--edge);
+  padding: 0 20px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 5px;
+  background: var(--sheet);
+  box-shadow: inset 0 1px 0 var(--key-light), 0 var(--edge) 0 var(--key-side);
+  color: var(--ink);
   font-weight: 650;
-  font-size: 15.5px;
+  font-size: 15px;
   text-decoration: none;
   white-space: nowrap;
-  transition: transform 140ms var(--ease-out), filter 160ms ease, background-color 160ms ease;
+  cursor: pointer;
+  transition: transform 80ms var(--ease-out), box-shadow 80ms var(--ease-out), border-color 160ms ease, filter 160ms ease;
 }
 
 .btn:active {
-  transform: scale(0.97);
+  transform: translateY(var(--edge));
+  box-shadow: inset 0 1px 0 var(--key-light), 0 0 0 var(--key-side);
 }
 
 .btn.primary {
+  border-color: var(--ink);
   background: var(--ink);
+  box-shadow: inset 0 1px 0 var(--key-light-dark), 0 var(--edge) 0 var(--key-side-dark);
   color: var(--on-solid);
-  box-shadow: var(--shadow-s);
 }
 
-.btn.glass-btn {
-  color: var(--ink);
+.btn.primary:active {
+  box-shadow: inset 0 1px 0 var(--key-light-dark), 0 0 0 var(--key-side-dark);
 }
 
 .btn.small {
+  --edge: 2px;
   height: 38px;
   padding: 0 14px;
-  border-radius: 5px;
   font-size: 14px;
 }
 
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+  transform: none;
+}
+
 @media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    border-color: var(--ink-3);
+  }
+
   .btn.primary:hover {
+    border-color: var(--ink);
     filter: brightness(1.15);
   }
 }
