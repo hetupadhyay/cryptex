@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cryptex</title>
+  <meta name="description" content="Classical ciphers worked through one letter at a time, and the attacks that break them.">
+  <script>
+    // Pick the theme before first paint so the page doesn't flash.
+    (function () {
+      var theme = null;
+      try { theme = localStorage.getItem('cryptex-theme'); } catch (e) {}
+      if (theme !== 'day' && theme !== 'night') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day';
+      }
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="icon" href="img/mark.svg" type="image/svg+xml">
+</head>
+<body>
+  <canvas class="digits" aria-hidden="true"></canvas>
+
+  <header class="masthead">
+    <a class="brand" href="./" aria-label="Cryptex home">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="14.5" />
+        <circle cx="16" cy="16" r="9" />
+        <g class="ticks">
+          <path d="M16 1.5v3M16 27.5v3M1.5 16h3M27.5 16h3M5.7 5.7l2.1 2.1M24.2 24.2l2.1 2.1M5.7 26.3l2.1-2.1M24.2 7.8l2.1-2.1" />
+        </g>
+        <path class="needle" d="M16 16 L16 8.5" />
+      </svg>
+      <span class="wordmark">Cryptex</span>
+    </a>
+
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab" role="tab" id="tab-cipher" aria-controls="panel-cipher" aria-selected="true">Encrypt / Decrypt</button>
+      <button class="tab" role="tab" id="tab-break" aria-controls="panel-break" aria-selected="false" tabindex="-1">Break it</button>
+      <span class="tab-ink" aria-hidden="true"></span>
+    </nav>
+
+    <button class="theme" type="button" role="switch" aria-checked="false" aria-label="Night mode">
+      <span class="theme-label day">Day</span>
+      <span class="theme-label night">Night</span>
+      <span class="theme-thumb" aria-hidden="true"></span>
+    </button>
+  </header>
+
+  <main>
+    <!-- Encrypt / Decrypt -->
+    <section class="panel" id="panel-cipher" role="tabpanel" aria-labelledby="tab-cipher">
+      <div class="bench">
+        <form class="controls" id="cipher-form" autocomplete="off" novalidate>
+          <fieldset class="picker">
+            <legend>Cipher</legend>
+            <div class="picker-groups"></div>
+          </fieldset>
+
+          <div class="field">
+            <label for="message">Message</label>
+            <textarea id="message" rows="3" spellcheck="false">Meet me at the old bridge</textarea>
+            <p class="hint" id="message-hint"></p>
+          </div>
+
+          <div class="keys"></div>
+
+          <div class="mode" role="radiogroup" aria-label="Direction">
+            <label><input type="radio" name="mode" value="encrypt" checked><span>Encrypt</span></label>
+            <label><input type="radio" name="mode" value="decrypt"><span>Decrypt</span></label>
+          </div>
+
+          <p class="error" role="alert"></p>
+          <button class="run" type="submit">Encrypt</button>
+        </form>
+
+        <div class="work">
+          <section class="stage empty" aria-label="Step by step">
+            <div class="stage-head">
+              <h2 class="stage-title">Caesar</h2>
+              <span class="stage-family">Substitution</span>
+            </div>
+            <div class="scene"></div>
+            <p class="placeholder"><span>Press <b>Encrypt</b> to watch it happen, one letter at a time.</span></p>
+            <p class="caption" aria-live="polite"></p>
+            <div class="transport">
+              <button type="button" class="tb" data-act="prev" aria-label="Previous step">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 5 7.5 10l5 5" /></svg>
+              </button>
+              <button type="button" class="tb play" data-act="play" aria-label="Play" data-state="paused">
+                <svg class="i-play" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5.2v9.6L14.6 10z" /></svg>
+                <svg class="i-pause" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5v10M13 5v10" /></svg>
+              </button>
+              <button type="button" class="tb" data-act="next" aria-label="Next step">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 5 5 5-5 5" /></svg>
+              </button>
+              <button type="button" class="tb" data-act="end" aria-label="Skip to the end">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5.5 5 5 5-5 5M14.5 5v10" /></svg>
+              </button>
+              <input class="scrub" type="range" min="0" max="0" value="0" aria-label="Step">
+              <span class="step-count">0 / 0</span>
+              <div class="speed" role="radiogroup" aria-label="Speed">
+                <label><input type="radio" name="speed" value="0.5"><span>½×</span></label>
+                <label><input type="radio" name="speed" value="1" checked><span>1×</span></label>
+                <label><input type="radio" name="speed" value="2"><span>2×</span></label>
+                <label><input type="radio" name="speed" value="4"><span>4×</span></label>
+              </div>
+            </div>
+          </section>
+
+          <section class="result" aria-labelledby="result-title">
+            <div class="result-head">
+              <h3 id="result-title">Ciphertext</h3>
+              <div class="result-actions">
+                <button type="button" class="link" data-act="copy">Copy</button>
+                <button type="button" class="link" data-act="attack">Try to break it</button>
+              </div>
+            </div>
+            <output class="result-text" for="message"></output>
+          </section>
+
+          <section class="notes">
+            <p class="about"></p>
+            <p class="weak"><span>Why it fails</span> <span class="weak-text"></span></p>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- Break it -->
+    <section class="panel" id="panel-break" role="tabpanel" aria-labelledby="tab-break" hidden>
+      <div class="bench">
+        <div class="controls">
+          <div class="field">
+            <label for="attack-text">Ciphertext</label>
+            <textarea id="attack-text" rows="7" spellcheck="false"></textarea>
+            <p class="hint">No key needed. Longer text gives better results; a few sentences is plenty.</p>
+          </div>
+          <div class="samples">
+            <span>Load an intercepted message:</span>
+            <button type="button" class="chip" data-sample="caesar">Caesar</button>
+            <button type="button" class="chip" data-sample="vigenere">Vigenère</button>
+            <button type="button" class="chip" data-sample="railfence">Rail fence</button>
+          </div>
+
+          <div class="attack-pick" role="tablist" aria-label="Attack">
+            <button type="button" role="tab" class="attack-tab" data-attack="brute" aria-selected="true">
+              <b>Try every shift</b><span>Caesar has 25 keys. Score each one against English.</span>
+            </button>
+            <button type="button" role="tab" class="attack-tab" data-attack="freq" aria-selected="false">
+              <b>Count the letters</b><span>Compare the ciphertext’s letter counts with English.</span>
+            </button>
+            <button type="button" role="tab" class="attack-tab" data-attack="vig" aria-selected="false">
+              <b>Find a Vigenère key</b><span>Work out the key length, then each key letter.</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="work">
+          <section class="attack" data-attack="brute">
+            <div class="attack-head">
+              <h2>Every Caesar shift</h2>
+              <p class="verdict"></p>
+            </div>
+            <div class="sort-toggle" role="radiogroup" aria-label="Order">
+              <label><input type="radio" name="brute-order" value="shift" checked><span>By shift</span></label>
+              <label><input type="radio" name="brute-order" value="score"><span>Most English first</span></label>
+            </div>
+            <ol class="shifts"></ol>
+          </section>
+
+          <section class="attack" data-attack="freq" hidden>
+            <div class="attack-head">
+              <h2>Letter frequency</h2>
+              <p class="verdict"></p>
+            </div>
+            <figure class="chart freq-chart">
+              <div class="bars" role="img" aria-label="Letter frequencies of the ciphertext compared with English"></div>
+              <figcaption class="legend">
+                <span class="key-cipher">Your text</span>
+                <span class="key-english">Typical English</span>
+              </figcaption>
+            </figure>
+            <div class="slide-shift">
+              <label for="freq-shift">Shift the text back by <output class="shift-out">0</output></label>
+              <input id="freq-shift" type="range" min="0" max="25" value="0">
+              <button type="button" class="link" data-act="best-shift">Line up the best match</button>
+            </div>
+            <p class="preview"></p>
+            <dl class="tops"></dl>
+          </section>
+
+          <section class="attack" data-attack="vig" hidden>
+            <div class="attack-head">
+              <h2>Vigenère key length</h2>
+              <p class="verdict"></p>
+            </div>
+            <figure class="chart ioc-chart">
+              <div class="bars" role="group" aria-label="Index of coincidence for each key length"></div>
+              <figcaption class="legend">
+                <span>Pick a length to try it. The dashed line is ordinary English; random letters sit near the bottom.</span>
+              </figcaption>
+            </figure>
+            <div class="recovered">
+              <h3>Recovered key</h3>
+              <div class="key-tiles"></div>
+              <p class="preview"></p>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Cryptex runs entirely in your browser. Nothing you type leaves the page.</p>
+  </footer>
+
+  <script src="js/ciphers.js"></script>
+  <script src="js/analysis.js"></script>
+  <script src="js/stage.js"></script>
+  <script src="js/scenes/substitution.js"></script>
+  <script src="js/scenes/tabula.js"></script>
+  <script src="js/scenes/playfair.js"></script>
+  <script src="js/scenes/polybius.js"></script>
+  <script src="js/scenes/railfence.js"></script>
+  <script src="js/scenes/columnar.js"></script>
+  <script src="js/background.js"></script>
+  <script src="js/breaker.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
