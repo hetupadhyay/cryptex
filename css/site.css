@@ -108,7 +108,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 96px;
+  scroll-padding-top: 84px;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -121,11 +121,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   overflow-x: hidden;
-}
-
-.theme-shift,
-.theme-shift * {
-  transition: background-color 320ms ease, color 320ms ease, border-color 320ms ease, fill 320ms ease !important;
 }
 
 button,
@@ -159,43 +154,6 @@ p {
   margin: 0;
 }
 
-/* Soft lamplight behind everything, so the glass has something to catch. */
-.ambient {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.ambient i {
-  position: absolute;
-  border-radius: 50%;
-}
-
-.ambient i:nth-child(1) {
-  width: 70vmax;
-  height: 70vmax;
-  top: -30vmax;
-  right: -22vmax;
-  background: radial-gradient(closest-side, var(--glow-brass), transparent);
-}
-
-.ambient i:nth-child(2) {
-  width: 64vmax;
-  height: 64vmax;
-  top: 30vh;
-  left: -30vmax;
-  background: radial-gradient(closest-side, var(--glow-carbon), transparent);
-}
-
-.ambient i:nth-child(3) {
-  width: 50vmax;
-  height: 50vmax;
-  bottom: -26vmax;
-  right: 10vw;
-  background: radial-gradient(closest-side, var(--glow-pencil), transparent);
-}
-
 canvas.pad {
   position: fixed;
   inset: 0;
@@ -207,23 +165,16 @@ canvas.pad {
   mask-image: radial-gradient(ellipse 70% 75% at 50% 55%, rgba(0, 0, 0, 0.45), #000);
 }
 
-main,
-.foot {
+main {
   position: relative;
   z-index: 1;
 }
 
-/* ---------------- glass ---------------- */
+/* ---------------- surfaces ---------------- */
 
-.nav-bar,
-.toolbar,
-.dock,
-.timeline-card,
-.cryptex-panel,
-.glass-btn,
-.share,
-.secret-card,
-.round-btn {
+/* Glass only where content scrolls underneath it: the lab's player bar
+   here, and the masthead in shell.css. Everything else is a sheet. */
+.dock {
   background: var(--glass);
   -webkit-backdrop-filter: var(--frost);
   backdrop-filter: var(--frost);
@@ -232,53 +183,27 @@ main,
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .nav-bar,
-  .toolbar,
-  .dock,
-  .timeline-card,
-  .cryptex-panel,
-  .glass-btn,
-  .share,
-  .secret-card,
-  .round-btn {
+  .dock {
     background: var(--sheet);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
 }
 
-/* ---------------- nav ---------------- */
-
-/* Widths of the fades at the ends of the scrolling link row on small
-   screens, registered so they can ease in and out. */
-@property --fade-start {
-  syntax: '<length>';
-  inherits: false;
-  initial-value: 0px;
+.toolbar,
+.timeline-card,
+.cryptex-panel,
+.share,
+.secret-card {
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  box-shadow: var(--shadow-s);
 }
 
-@property --fade-end {
-  syntax: '<length>';
-  inherits: false;
-  initial-value: 0px;
-}
-
-.nav {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  padding: calc(env(safe-area-inset-top, 0px) + 14px) var(--gutter) 0;
-}
-
-.nav-bar {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  max-width: var(--page);
-  margin: 0 auto;
-  padding: 8px 8px 8px 16px;
-  border-radius: 18px;
-  background: var(--glass-strong);
+.glass-btn,
+.round-btn {
+  background: var(--sheet);
+  border: 1px solid var(--rule-strong);
 }
 
 .brand {
@@ -308,76 +233,6 @@ main,
 .wordmark {
   font: 700 21px/1 var(--type);
   letter-spacing: 0.02em;
-}
-
-.nav-links {
-  display: flex;
-  gap: 2px;
-  margin-left: auto;
-}
-
-.nav-links a {
-  position: relative;
-  padding: 7px 12px;
-  border-radius: 10px;
-  color: var(--ink-2);
-  font-size: 14.5px;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color 160ms ease, background-color 160ms ease;
-}
-
-.nav-links a.current {
-  color: var(--ink);
-  background: var(--carbon-wash);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .nav-links a:hover {
-    color: var(--ink);
-  }
-}
-
-.theme {
-  position: relative;
-  display: inline-grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 3px;
-  border: 1px solid var(--rule);
-  border-radius: 12px;
-  background: var(--well);
-  font-size: 13px;
-  font-weight: 650;
-}
-
-.theme-label {
-  position: relative;
-  z-index: 1;
-  padding: 4px 11px;
-  color: var(--ink-3);
-  transition: color 220ms ease;
-}
-
-.theme-thumb {
-  position: absolute;
-  top: 3px;
-  bottom: 3px;
-  left: 3px;
-  width: calc(50% - 3px);
-  border-radius: 9px;
-  background: var(--sheet);
-  box-shadow: var(--shadow-s);
-  transition: transform 340ms var(--ease-out);
-}
-
-.theme[aria-checked='false'] .day,
-.theme[aria-checked='true'] .night {
-  color: var(--ink);
-}
-
-.theme[aria-checked='true'] .theme-thumb {
-  transform: translateX(100%);
 }
 
 /* ---------------- buttons ---------------- */
@@ -660,8 +515,7 @@ input[type='range']::-moz-range-thumb {
 /* ---------------- sections ---------------- */
 
 .hero,
-.section,
-.foot {
+.section {
   max-width: var(--page);
   margin: 0 auto;
   padding-left: var(--gutter);
@@ -2178,27 +2032,7 @@ input[type='range']::-moz-range-thumb {
   gap: 10px 14px;
 }
 
-/* ---------------- footer ---------------- */
-
-.foot {
-  padding-block: 96px 40px;
-  color: var(--ink-3);
-  font-size: 14px;
-}
-
-.foot p {
-  padding-top: 18px;
-  border-top: 1px solid var(--rule);
-}
-
 /* ---------------- small screens ---------------- */
-
-@media (max-width: 1080px) {
-  .nav-links a {
-    padding: 7px 9px;
-    font-size: 14px;
-  }
-}
 
 @media (max-width: 960px) {
   /* On narrow screens the cryptex moves up under the headline, so the
@@ -2238,37 +2072,18 @@ input[type='range']::-moz-range-thumb {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .nav-bar {
-    flex-wrap: wrap;
-    row-gap: 0;
-  }
+  
 
   /* The links become a row that scrolls sideways. Whichever end has more
      links past it fades out, so the row reads as carrying on (site.js
      sets the classes). */
-  .nav-links {
-    order: 3;
-    width: 100%;
-    margin: 0 -4px;
-    padding: 4px 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
-    mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
-    transition: --fade-start 200ms ease, --fade-end 200ms ease;
-  }
+  
 
-  .nav-links.more-start {
-    --fade-start: 36px;
-  }
+  
 
-  .nav-links.more-end {
-    --fade-end: 36px;
-  }
+  
 
-  .nav-links::-webkit-scrollbar {
-    display: none;
-  }
+  
 
   /* Room for a fingertip around the links, brand and switch, without
      making any of them look bigger. */
@@ -2276,9 +2091,8 @@ input[type='range']::-moz-range-thumb {
     position: relative;
   }
 
-  .nav-links a::before,
-  .brand::before,
-  .theme::before {
+  
+  .brand::before {
     content: '';
     position: absolute;
     inset: -4px 0;
@@ -2288,18 +2102,12 @@ input[type='range']::-moz-range-thumb {
     inset: -7px 0;
   }
 
-  .nav-links a {
-    flex: none;
-    min-width: 44px;
-    text-align: center;
-  }
+  
 
-  .theme {
-    margin-left: auto;
-  }
+  
 
   html {
-    scroll-padding-top: 128px;
+    scroll-padding-top: 76px;
   }
 }
 
@@ -2449,7 +2257,7 @@ input[type='range']::-moz-range-thumb {
     scroll-behavior: auto;
   }
 
-  .theme-thumb,
+  
   .st-bar i {
     transition-duration: 1ms !important;
   }
