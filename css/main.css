@@ -1,6 +1,6 @@
 /* ------------------------------------------------------------------
    Cryptex
-   Day is a cryptanalyst's worksheet: cool graph paper, slate ink,
+   Day is a cryptanalyst's worksheet: a faint cipher pad, slate ink,
    carbon-copy blue, red pencil for findings, brass for key letters.
    Night is the same desk under a lamp.
 ------------------------------------------------------------------- */
@@ -28,8 +28,6 @@
   --paper: #edf0eb;
   --sheet: #f8f9f6;
   --well: #e3e8e3;
-  --grid-minor: rgba(43, 76, 126, 0.055);
-  --grid-major: rgba(43, 76, 126, 0.1);
   --ink: #1c2830;
   --ink-2: #4b5862;
   --ink-3: #7f8b94;
@@ -42,7 +40,8 @@
   --brass: #8a6a22;
   --brass-wash: rgba(138, 106, 34, 0.14);
   --on-solid: #f8f9f6;
-  --digits: rgba(28, 40, 48, 0.085);
+  --pad-ink: rgba(28, 40, 48, 0.05);
+  --pad-ink-strong: rgba(180, 71, 58, 0.5);
   --lift: 0 1px 0 rgba(28, 40, 48, 0.04), 0 6px 18px -10px rgba(28, 40, 48, 0.25);
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -58,8 +57,6 @@
   --paper: #121a1f;
   --sheet: #18222a;
   --well: #1f2b33;
-  --grid-minor: rgba(143, 176, 218, 0.04);
-  --grid-major: rgba(143, 176, 218, 0.075);
   --ink: #dde3df;
   --ink-2: #a3adb2;
   --ink-3: #6f7c84;
@@ -72,7 +69,8 @@
   --brass: #d3b16a;
   --brass-wash: rgba(211, 177, 106, 0.16);
   --on-solid: #121a1f;
-  --digits: rgba(221, 227, 223, 0.06);
+  --pad-ink: rgba(221, 227, 223, 0.04);
+  --pad-ink-strong: rgba(227, 130, 111, 0.45);
   --lift: 0 1px 0 rgba(0, 0, 0, 0.2), 0 8px 22px -12px rgba(0, 0, 0, 0.6);
   color-scheme: dark;
 }
@@ -91,13 +89,6 @@ body {
   margin: 0;
   min-height: 100vh;
   background-color: var(--paper);
-  background-image:
-    linear-gradient(var(--grid-major) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
-    linear-gradient(var(--grid-minor) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px);
-  background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
-  background-position: -1px -1px;
   color: var(--ink);
   font: 400 15px/1.55 var(--sans);
   font-feature-settings: 'ss01';
@@ -110,13 +101,16 @@ body {
   transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease, fill 300ms ease !important;
 }
 
-canvas.digits {
+canvas.pad {
   position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
   z-index: 0;
+  /* Strongest at the edges of the sheet, quieter behind the reading area. */
+  -webkit-mask-image: radial-gradient(ellipse 70% 75% at 50% 55%, rgba(0, 0, 0, 0.45), #000);
+  mask-image: radial-gradient(ellipse 70% 75% at 50% 55%, rgba(0, 0, 0, 0.45), #000);
 }
 
 button,
