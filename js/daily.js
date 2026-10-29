@@ -606,7 +606,6 @@
 
     $('[data-act="to-desk"]', card).addEventListener('click', () => {
       Breaker.load(puzzle.text, Breaker.attackFor(puzzle.cipher));
-      document.getElementById('desk')?.scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
     });
 
     $('[data-act="to-lab"]', card).addEventListener('click', () => {

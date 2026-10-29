@@ -1,5 +1,5 @@
 /*
- * The "Break it" tab: attacks that work without the key.
+ * The codebreaker's desk: attacks that work without the key.
  */
 (function () {
   'use strict';
@@ -295,22 +295,16 @@
     if (attack === 'rail') renderRail(text, entrance);
   }
 
-  // On narrow screens the tabs scroll sideways; keep the chosen one in view
-  // without moving the page itself.
-  function revealTab(tab) {
-    const strip = tab.parentElement;
-    if (strip.scrollWidth <= strip.clientWidth) return;
-    const box = strip.getBoundingClientRect();
-    const r = tab.getBoundingClientRect();
-    if (r.left >= box.left && r.right <= box.right) return;
-    const pad = parseFloat(getComputedStyle(strip).paddingLeft);
-    strip.scrollTo({ left: strip.scrollLeft + r.left - box.left - pad, behavior: reduced() ? 'auto' : 'smooth' });
-  }
+  const attackTabs = $$('.attack-tab');
 
-  function setAttack(name) {
+  function setAttack(name, focus) {
     attack = name;
-    $$('.attack-tab').forEach(t => t.setAttribute('aria-selected', t.dataset.attack === name));
-    revealTab($(`.attack-tab[data-attack="${name}"]`));
+    attackTabs.forEach(t => {
+      const on = t.dataset.attack === name;
+      t.setAttribute('aria-selected', on);
+      t.tabIndex = on ? 0 : -1;
+      if (on && focus) t.focus();
+    });
     $$('.work .attack').forEach(s => { s.hidden = s.dataset.attack !== name; });
     render(true);
   }
@@ -322,7 +316,17 @@
     debounce = setTimeout(() => render(false), 180);
   });
 
-  $$('.attack-tab').forEach(t => t.addEventListener('click', () => setAttack(t.dataset.attack)));
+  // The index reads top to bottom, so the arrows go either way.
+  attackTabs.forEach((t, i) => {
+    t.addEventListener('click', () => setAttack(t.dataset.attack));
+    t.addEventListener('keydown', e => {
+      const n = attackTabs.length;
+      const to = { ArrowDown: i + 1, ArrowRight: i + 1, ArrowUp: i - 1, ArrowLeft: i - 1, Home: 0, End: n - 1 }[e.key];
+      if (to === undefined) return;
+      e.preventDefault();
+      setAttack(attackTabs[(to + n) % n].dataset.attack, true);
+    });
+  });
   $$('input[name="brute-order"]').forEach(r => r.addEventListener('change', reorderBrute));
   $$('input[name="vig-mode"]').forEach(r => r.addEventListener('change', () => {
     setVigMode(r.value);
