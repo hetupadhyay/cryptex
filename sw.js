@@ -13,7 +13,7 @@
 'use strict';
 
 // stamp:start (written by tools/stamp.py)
-const VERSION = '44eb5fd14c';
+const VERSION = 'aa583cc0ba';
 const PRECACHE = [
   '/',
   '/learn',
@@ -21,15 +21,15 @@ const PRECACHE = [
   '/codebreaking',
   '/terms',
   '/privacy',
-  '/css/codebreaking.css?v=dc9e4528a0',
+  '/css/codebreaking.css?v=747a85efb5',
   '/css/daily.css?v=875309f422',
   '/css/desk.css?v=89df0a7983',
   '/css/home.css?v=a1a699ce96',
-  '/css/lab.css?v=fbea155d0c',
-  '/css/learn.css?v=8c0a610d60',
-  '/css/pages.css?v=4adfaea274',
+  '/css/lab.css?v=7eb12ba74b',
+  '/css/learn.css?v=4011634be2',
+  '/css/pages.css?v=e75b1a6ac5',
   '/css/scenes.css?v=3828524726',
-  '/css/shell.css?v=86cb6c2055',
+  '/css/shell.css?v=165af077c5',
   '/css/site.css?v=bd4eac637f',
   '/css/story.css?v=1e29ccb1a7',
   '/js/analysis.js?v=64f37747e0',
