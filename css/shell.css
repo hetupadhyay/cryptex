@@ -228,6 +228,8 @@
 }
 
 .menu-sheet a small {
+  /* Inline-block, so the current page's underline stops at its name. */
+  display: inline-block;
   color: var(--ink-3);
   font: 400 13.5px var(--type);
   letter-spacing: 0;

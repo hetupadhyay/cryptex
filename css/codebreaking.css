@@ -32,16 +32,16 @@
 }
 
 .codebreaking-head h1 {
-  font-size: clamp(36px, 5vw, 54px);
+  font-size: clamp(38px, 5vw, 58px);
   line-height: 1.02;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.032em;
 }
 
 .codebreaking-head p {
   max-width: 56ch;
-  margin-top: 14px;
+  margin-top: 16px;
   color: var(--ink-2);
-  font-size: 17.5px;
+  font-size: 18px;
   line-height: 1.55;
 }
 

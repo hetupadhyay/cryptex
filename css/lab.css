@@ -18,26 +18,28 @@
 /* ---------------- page head ---------------- */
 
 #lab {
-  padding-top: 52px;
+  padding-top: 56px;
 }
 
+/* Every page opens the same way: the title, then an 18px intro. */
 .lab-head {
   display: grid;
-  gap: 12px;
+  gap: 16px;
   max-width: 640px;
   margin-bottom: 36px;
 }
 
 .lab-head h1 {
-  font-size: clamp(42px, 5.4vw, 64px);
-  line-height: 1;
-  letter-spacing: -0.035em;
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.02;
+  letter-spacing: -0.032em;
 }
 
 .lab-head p {
+  max-width: 56ch;
   color: var(--ink-2);
   font-size: 18px;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .lab-grid {
