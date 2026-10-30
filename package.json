@@ -9,7 +9,8 @@
   "scripts": {
     "test": "node --test tests/*.test.js",
     "test:browser": "npm --prefix tests/browser test",
-    "start": "node tools/dev.js 8000"
+    "start": "node tools/dev.js 8000",
+    "start:db": "node --env-file=.env tools/dev.js 8000"
   },
   "license": "MIT",
   "dependencies": {

@@ -28,7 +28,7 @@ test('signing up, cracking a mission, and finding it on another device', async (
   const page = await first.newPage();
   const problems = watch(page, baseURL);
   await signUp(page, email);
-  await expect(page.locator('#account-who')).toHaveText('Signed in as Ada.');
+  await expect(page.locator('#account-who')).toHaveText('Ada');
   await expect(page.locator('.mast [data-account]')).toHaveText('A');
 
   await page.goto('/codebreaking#missions');

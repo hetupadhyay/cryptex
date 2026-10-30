@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="css/site.css?v=54f47ed6a5">
   <link rel="stylesheet" href="css/shell.css?v=4cba7da85e">
   <link rel="stylesheet" href="css/pages.css?v=e75b1a6ac5">
-  <link rel="stylesheet" href="css/account.css?v=0a0935efee">
+  <link rel="stylesheet" href="css/account.css?v=95fa87de1e">
   <link rel="icon" href="img/mark.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
@@ -64,32 +64,34 @@
   </header>
   <!-- /shell:header -->
 
-  <main class="doc auth" id="top">
+  <main class="doc auth account" id="top">
     <article class="doc-sheet auth-sheet" aria-labelledby="account-title">
-      <header class="doc-head">
-        <h1 id="account-title">Your account</h1>
-        <p class="doc-summary account-who" id="account-who">Loading…</p>
-      </header>
+      <h1 class="vh" id="account-title">Your account</h1>
 
       <p class="auth-notice" id="auth-notice" role="status" hidden></p>
 
       <div class="account-body" hidden>
-        <section aria-labelledby="progress-title">
-          <h2 id="progress-title">Progress</h2>
-          <p class="account-progress" id="account-progress"></p>
+        <!-- Who you are and how far you've got, on one card. -->
+        <section class="account-card" aria-label="You">
+          <span class="account-key" id="account-key" aria-hidden="true"></span>
+          <div class="account-id">
+            <p class="account-who" id="account-who"></p>
+            <p class="account-email"><span id="account-email"></span> <b class="badge" id="account-verified"></b></p>
+            <p class="account-line" id="verify-line" hidden>
+              <button type="button" class="link" data-act="resend">Send the confirmation link again</button>
+              <span class="hint" id="resend-said" role="status"></span>
+            </p>
+          </div>
+          <div class="account-tally">
+            <ol class="mission-marks" id="mission-marks" aria-hidden="true"></ol>
+            <p class="account-progress" id="account-progress"></p>
+          </div>
         </section>
 
-        <section aria-labelledby="email-title">
-          <h2 id="email-title">Email</h2>
-          <p class="account-email"><span id="account-email"></span> <b class="badge" id="account-verified"></b></p>
-          <p class="account-line" id="verify-line" hidden>
-            <button type="button" class="link" data-act="resend">Send the confirmation link again</button>
-            <span class="hint" id="resend-said" role="status"></span>
-          </p>
-        </section>
-
+        <div class="account-grid">
         <section aria-labelledby="name-title">
           <h2 id="name-title">Name</h2>
+          <p class="section-note">Shown at the top of this page.</p>
           <form class="inline-form" id="name-form" novalidate>
             <label class="vh" for="account-name">Your name</label>
             <input id="account-name" type="text" autocomplete="name" maxlength="60">
@@ -100,6 +102,7 @@
 
         <section aria-labelledby="methods-title">
           <h2 id="methods-title">Ways to sign in</h2>
+          <p class="section-note">Keep at least one, so you can always get back in.</p>
           <ul class="methods" id="methods">
             <li data-method="password"><span class="method-name">Email and password</span> <span class="method-state"></span></li>
             <li data-method="google" hidden><span class="method-name">Google</span> <span class="method-state"></span> <a class="link" data-link href="/api/auth/google?link=1">Link</a> <button type="button" class="link" data-unlink="google">Unlink</button></li>
@@ -107,6 +110,15 @@
             <li data-method="apple" hidden><span class="method-name">Apple</span> <span class="method-state"></span> <a class="link" data-link href="/api/auth/apple?link=1">Link</a> <button type="button" class="link" data-unlink="apple">Unlink</button></li>
           </ul>
           <p class="error" id="methods-error" role="alert"></p>
+        </section>
+
+        <section aria-labelledby="sessions-title">
+          <h2 id="sessions-title">Signing out</h2>
+          <p class="section-note">Your progress stays saved to your account.</p>
+          <div class="auth-actions">
+            <button class="btn" type="button" data-act="logout">Sign out</button>
+            <button class="btn" type="button" data-act="logout-everywhere">Sign out on every device</button>
+          </div>
         </section>
 
         <section aria-labelledby="password-title">
@@ -128,14 +140,7 @@
             </div>
           </form>
         </section>
-
-        <section aria-labelledby="sessions-title">
-          <h2 id="sessions-title">Signing out</h2>
-          <div class="auth-actions">
-            <button class="btn" type="button" data-act="logout">Sign out</button>
-            <button class="btn" type="button" data-act="logout-everywhere">Sign out on every device</button>
-          </div>
-        </section>
+        </div>
 
         <section class="danger" aria-labelledby="delete-title">
           <h2 id="delete-title">Delete your account</h2>
@@ -226,7 +231,7 @@
 
   <script src="js/site.js?v=7443140c2c"></script>
   <script src="js/account.js?v=42b5ee1c6d"></script>
-  <script src="js/auth.js?v=7617b13823"></script>
+  <script src="js/auth.js?v=6271ab55db"></script>
   <script src="js/pwa.js?v=5b673ad196"></script>
 </body>
 </html>

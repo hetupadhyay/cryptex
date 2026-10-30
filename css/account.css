@@ -147,8 +147,9 @@
 
 /* ---------------- your account ---------------- */
 
-.account-body {
-  max-width: 560px;
+/* The page is wider than the terms: a card on top, then two columns. */
+.doc.account {
+  max-width: 880px;
 }
 
 .account-body .auth-form {
@@ -156,31 +157,178 @@
   margin-top: 14px;
 }
 
-.account-email {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 6px 12px;
+/* The card: your initial on a key, who you are, and the eight missions. */
+.doc-sheet .account-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 22px 24px;
+  margin-top: 8px;
+  padding: 28px;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: var(--sheet);
+  box-shadow: var(--shadow-s);
 }
 
-.account-email span {
+.account-key {
+  --edge: 4px;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  margin-bottom: var(--edge);
+  border: 1px solid var(--rule-strong);
+  border-radius: 12px;
+  background: var(--key-face);
+  box-shadow: inset 0 1px 0 var(--key-light), 0 var(--edge) 0 var(--key-side);
   color: var(--ink);
-  font: 700 16px var(--type);
+  font: 700 34px/1 var(--type);
+}
+
+.doc-sheet .account-card p {
+  margin-top: 0;
+}
+
+.doc-sheet .account-who {
+  color: var(--ink);
+  font-size: clamp(26px, 4vw, 34px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
   overflow-wrap: anywhere;
 }
 
+.doc-sheet .account-email {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin-top: 8px;
+}
+
+.account-email span {
+  color: var(--ink-2);
+  font: 400 16px var(--type);
+  overflow-wrap: anywhere;
+}
+
+/* Confirmed or not, as a rubber stamp. */
 .badge {
-  padding: 2px 8px;
-  border: 1px solid var(--rule-strong);
+  padding: 1px 8px;
+  border: 1.5px solid currentColor;
   border-radius: 4px;
   color: var(--pencil);
-  font: 700 12.5px/1.5 var(--type);
-  letter-spacing: 0.04em;
+  font: 700 12px/1.5 var(--type);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  transform: rotate(-2deg);
 }
 
 .badge.ok {
   color: var(--carbon);
+}
+
+.doc-sheet .account-card .account-line {
+  margin-top: 6px;
+  font-size: 15px;
+}
+
+.account-tally {
+  grid-column: 1 / -1;
+  padding-top: 20px;
+  border-top: 1px dashed var(--rule-strong);
+}
+
+/* One square per mission, filled in carbon once it's cracked. */
+.mission-marks {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 44px));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.doc-sheet .mission-marks li {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  margin: 0;
+  border: 1.5px dashed var(--rule-strong);
+  border-radius: 7px;
+  color: var(--ink-3);
+  font: 700 15px/1 var(--type);
+  transition: background-color 360ms var(--ease-out), border-color 360ms var(--ease-out), color 360ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 45ms);
+}
+
+.doc-sheet .mission-marks li.done {
+  border-style: solid;
+  border-color: var(--carbon);
+  background: var(--carbon);
+  color: var(--on-solid);
+}
+
+.doc-sheet .account-tally .account-progress {
+  margin-top: 14px;
+  color: var(--ink-2);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .doc-sheet .mission-marks li {
+    transition: none;
+  }
+}
+
+/* The settings, side by side when there's room. */
+.account-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 48px;
+  align-items: start;
+}
+
+.doc-sheet .account-grid section {
+  margin-top: 34px;
+  padding-top: 22px;
+  border-top: 1px solid var(--rule);
+}
+
+.doc-sheet .account-grid h2 {
+  font-size: 18px;
+}
+
+.doc-sheet section .section-note {
+  margin-top: 4px;
+  color: var(--ink-3);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .account-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .doc-sheet .account-card {
+    gap: 18px 16px;
+    padding: 20px 18px;
+  }
+
+  .account-key {
+    width: 56px;
+    height: 56px;
+    font-size: 26px;
+  }
+
+  .mission-marks {
+    gap: 6px;
+  }
 }
 
 .account-line {

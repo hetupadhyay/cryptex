@@ -167,13 +167,24 @@
       $('#account-progress').textContent =
         `${cracked} of 8 missions cracked, ${days} daily ${days === 1 ? 'intercept' : 'intercepts'} cracked, best streak ${best} ${best === 1 ? 'day' : 'days'}. ` +
         'It’s saved to your account, so it’s there on any device you sign in on.';
+      const marks = $('#mission-marks');
+      if (!marks.children.length) {
+        for (let i = 1; i <= 8; i++) {
+          const li = document.createElement('li');
+          li.textContent = i;
+          li.style.setProperty('--i', i);
+          marks.append(li);
+        }
+      }
+      [...marks.children].forEach((li, i) => li.classList.toggle('done', i < cracked));
     }
 
     function show(u) {
       me = u;
       window.Account.remember(u);
       window.Account.render(u);
-      $('#account-who').textContent = `Signed in as ${u.name || u.email}.`;
+      $('#account-who').textContent = u.name || u.email.split('@')[0];
+      $('#account-key').textContent = (u.name || u.email).charAt(0).toUpperCase();
       $('#account-email').textContent = u.email;
       const badge = $('#account-verified');
       badge.textContent = u.emailVerified ? 'Confirmed' : 'Not confirmed yet';
