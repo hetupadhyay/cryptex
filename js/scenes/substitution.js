@@ -151,7 +151,6 @@
       const step = steps[i];
       clearMarks();
       setAlphabet(i >= 1, animate && i === 1);
-      board.classList.toggle('settled', i >= 1);
 
       letters.forEach((l, n) => {
         const stepIndex = n + 2;

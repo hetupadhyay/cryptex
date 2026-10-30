@@ -112,7 +112,6 @@
       }
 
       arrange(now.sorted, animate && now.sorted !== before.sorted);
-      grid.classList.toggle('sorted', now.sorted);
 
       const shownFilled = animate ? before.filled : now.filled;
       columns.forEach(({ cells }, c) => cells.forEach((slot, r) => {

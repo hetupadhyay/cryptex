@@ -70,8 +70,4 @@
     li.querySelector('.st-how').textContent = (row.modern ? '' : 'Broken by: ') + row.how;
     list.append(li);
   }
-
-  // The bars are drawn at full length from the start: the chart is read,
-  // not played. (site.css still keeps them at zero until .shown is set.)
-  document.querySelector('.strength').classList.add('shown');
 })();
