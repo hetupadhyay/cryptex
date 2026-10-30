@@ -19,18 +19,33 @@
 :root[data-theme='night'] {
   --manila: #2b2a22;
   --manila-edge: #4b4636;
-  --slab: #080c0f;
+  --slab: #172028;
   --slab-ink: #dfe5e1;
   --slab-mute: #87939a;
   --slab-rule: rgba(223, 229, 225, 0.1);
-}
-
-.theme-shift,
-.theme-shift * {
-  transition: background-color 320ms ease, color 320ms ease, border-color 320ms ease, fill 320ms ease, stroke 320ms ease !important;
+  --slab-edge: #2e3c46;
 }
 
 /* ---------------- masthead ---------------- */
+
+/* For keyboards: the first Tab offers a way past the masthead. */
+.skip {
+  position: fixed;
+  z-index: 100;
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  left: var(--gutter);
+  padding: 10px 14px;
+  border-radius: 5px;
+  background: var(--ink);
+  color: var(--on-solid);
+  font-weight: 650;
+  text-decoration: none;
+  transform: translateY(-160%);
+}
+
+.skip:focus {
+  transform: none;
+}
 
 .mast {
   position: sticky;
@@ -232,6 +247,8 @@
 }
 
 .menu-sheet a small {
+  /* Inline-block, so the current page's underline stops at its name. */
+  display: inline-block;
   color: var(--ink-3);
   font: 400 13.5px var(--type);
   letter-spacing: 0;
@@ -278,6 +295,50 @@
   }
 }
 
+/* ---------------- sheets ---------------- */
+
+/* The handle a phone sheet is dragged by (js/sheet.js). */
+.sheet-grip {
+  display: grid;
+  place-items: center;
+  height: 28px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.sheet-grip i {
+  width: 40px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--rule-strong);
+}
+
+.menu-sheet .sheet-grip {
+  margin-top: 6px;
+  margin-bottom: -14px;
+}
+
+/* ---------------- moving between pages ---------------- */
+
+/* Pages cross-fade into each other and the masthead stays where it is. */
+@view-transition {
+  navigation: auto;
+}
+
+.mast {
+  view-transition-name: masthead;
+}
+
+::view-transition-group(root) {
+  animation-duration: 200ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
+
 /* ---------------- no JavaScript ---------------- */
 
 .noscript {
@@ -300,6 +361,7 @@
   position: relative;
   z-index: 1;
   margin-top: 120px;
+  border-top: 1px solid var(--slab-edge, transparent);
   background: var(--slab);
   color: var(--slab-ink);
   font-size: 14.5px;
@@ -410,12 +472,6 @@
   font: 700 13.5px var(--type);
   letter-spacing: 0.06em;
   cursor: help;
-}
-
-.signature:focus-visible {
-  outline: 2px solid var(--slab-ink);
-  outline-offset: 3px;
-  border-radius: 2px;
 }
 
 .foot-links {

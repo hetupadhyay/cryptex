@@ -1,0 +1,5 @@
+# Local tools and editors, never part of the site.
+.vercel/
+node_modules/
+*.log
+.DS_Store

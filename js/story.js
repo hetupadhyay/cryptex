@@ -1,7 +1,8 @@
 /*
  * The figures in two chapters: Enigma, the machine that was broken anyway,
- * and the one-time pad, the one cipher that can't be. Story.open() brings
- * either figure into view and sets it working.
+ * and the one-time pad, the one cipher that can't be. The machine itself
+ * is in js/enigma.js; open() brings either figure into view and sets it
+ * working.
  */
 (function () {
   'use strict';
@@ -11,89 +12,7 @@
   const isLetter = ch => /^[A-Z]$/i.test(ch);
   const indexes = text => [...lettersOnly(text)].map(toIndex);
 
-  // ---- Enigma I ---------------------------------------------------------------
-
-  // Army and air force rotors. The notch is the letter showing in the window
-  // when the rotor is about to carry its left-hand neighbour along.
-  const ROTORS = {
-    I: { wiring: 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', notch: 'Q' },
-    II: { wiring: 'AJDKSIRUXBLHWTMCQGZNPYFVOE', notch: 'E' },
-    III: { wiring: 'BDFHJLCPRTXVZNYEIWGAKMUSQO', notch: 'V' },
-    IV: { wiring: 'ESOVPZJAYQUIRHXLNFTGKDCMWB', notch: 'J' },
-    V: { wiring: 'VZBRGITYUPSDNHLXAWMJQOFECK', notch: 'Z' },
-  };
-  const REFLECTOR_B = 'YRUHQSLDPXNGOKMIEBFZCWVJAT';
-
-  // Plugboard pairs like "AT BL" as a swap table. Pairs after the first
-  // mistake are ignored, and the mistake is reported.
-  function plugboard(pairs) {
-    const map = [...ALPHABET].map((_, i) => i);
-    for (const pair of String(pairs).toUpperCase().split(/[^A-Z]+/).filter(Boolean)) {
-      if (pair.length !== 2 || pair[0] === pair[1]) {
-        return { map, error: `Plug letters in pairs of two different letters, like AT. ${pair} isn’t one.` };
-      }
-      const [a, b] = [...pair].map(toIndex);
-      const taken = map[a] !== a ? pair[0] : map[b] !== b ? pair[1] : '';
-      if (taken) return { map, error: `${taken} is already plugged. Each letter takes one cable.` };
-      map[a] = b;
-      map[b] = a;
-    }
-    return { map, error: '' };
-  }
-
-  // Rotors are listed left to right, as they sat in the machine. Rings and
-  // start positions are letters, one per rotor.
-  function machine({ rotors = ['I', 'II', 'III'], rings = 'AAA', start = 'AAA', plugs = '' } = {}) {
-    const wheels = rotors.map(name => {
-      const fwd = [...ROTORS[name].wiring].map(toIndex);
-      const back = [];
-      fwd.forEach((out, i) => { back[out] = i; });
-      return { fwd, back, notch: toIndex(ROTORS[name].notch) };
-    });
-    const ring = [...rings].map(toIndex);
-    const pos = [...start].map(toIndex);
-    const plug = plugboard(plugs).map;
-    const reflect = [...REFLECTOR_B].map(toIndex);
-
-    // One pass through rotor i, in either direction.
-    const through = (table, i, x) => {
-      const offset = pos[i] - ring[i];
-      return mod(table[mod(x + offset, 26)] - offset, 26);
-    };
-
-    // The rotors turn before the current flows. The middle rotor moves again
-    // on the very next key press once it reaches its own notch, taking the
-    // left rotor with it: the double step.
-    function step() {
-      if (pos[1] === wheels[1].notch) {
-        pos[0] = mod(pos[0] + 1, 26);
-        pos[1] = mod(pos[1] + 1, 26);
-      } else if (pos[2] === wheels[2].notch) {
-        pos[1] = mod(pos[1] + 1, 26);
-      }
-      pos[2] = mod(pos[2] + 1, 26);
-    }
-
-    function press(letter) {
-      step();
-      let x = plug[toIndex(letter)];
-      for (let i = 2; i >= 0; i--) x = through(wheels[i].fwd, i, x);
-      x = reflect[x];
-      for (let i = 0; i <= 2; i++) x = through(wheels[i].back, i, x);
-      return ALPHABET[plug[x]];
-    }
-
-    return { pos, press };
-  }
-
-  // Letters go through the machine, everything else is copied as it is.
-  // Enigma is its own inverse, so this decrypts too.
-  function encrypt(text, settings) {
-    const m = machine(settings);
-    return [...String(text).toUpperCase()].map(ch => (isLetter(ch) ? m.press(ch) : ch)).join('');
-  }
-
-  const Enigma = { ROTORS, REFLECTOR_B, plugboard, machine, encrypt };
+  const { plugboard, machine, encrypt } = Enigma;
 
   // ---- the Enigma panel ---------------------------------------------------------
 
@@ -106,6 +25,7 @@
   const plugInput = $('#enigma-plugs');
   const plugError = $('#enigma-plug-error');
   const tape = $('.enigma-tape', panel);
+  const lampSays = $('.enigma-said', panel);
   const note = $('.enigma-note', panel);
   const strips = [...panel.querySelectorAll('.rotor-strip')];
   const lamps = {};
@@ -188,6 +108,9 @@
     setRotors(m.pos, turn);
     if (light) lightLamp(pressed, lit);
     else lightLamp(null, null);
+    // A screen reader hears the lamp, not the whole tape again. Not while
+    // the machine types a message itself: that would be a letter a beat.
+    lampSays.textContent = light && lit && !typing ? `${pressed} lights ${lit}` : '';
   }
 
   function press(letter) {
@@ -260,9 +183,23 @@
     update(false, true);
   }));
 
+  // A half-typed pair isn't a mistake yet, so the error waits for a pause
+  // in typing, or for the field to be left.
+  let plugTimer;
+  function showPlugError(error) {
+    plugError.textContent = error;
+    plugInput.setAttribute('aria-invalid', Boolean(error));
+  }
   plugInput.addEventListener('input', () => {
-    plugError.textContent = plugboard(plugInput.value).error;
     update(false);
+    clearTimeout(plugTimer);
+    const { error } = plugboard(plugInput.value);
+    if (!error) showPlugError('');
+    else plugTimer = setTimeout(() => showPlugError(error), 900);
+  });
+  plugInput.addEventListener('change', () => {
+    clearTimeout(plugTimer);
+    showPlugError(plugboard(plugInput.value).error);
   });
 
   $('[data-act="enigma-decrypt"]', panel).addEventListener('click', () => {
@@ -313,22 +250,36 @@
     return [...text].map(ch => (ch === ' ' ? ' ' : ALPHABET[letters[n++]])).join('');
   }
 
-  // One column per character: the rows stacked for a letter, a gap for a space.
-  function renderTiles(el, rows) {
-    el.replaceChildren(...[...rows[0]].map((ch, i) => {
-      const col = document.createElement('span');
-      if (ch === ' ') {
-        col.className = 'otp-gap';
-        return col;
+  // Spelled out a letter at a time, word by word, for a screen reader.
+  const spell = row => row.split(' ').map(word => [...word].join(' ')).join(', ');
+
+  // One column per letter with the rows stacked, grouped into words so a
+  // word never splits across lines. Read top to bottom the columns make no
+  // sense aloud, so a screen reader gets each row whole, with its name.
+  function renderTiles(el, rows, names) {
+    const said = document.createElement('p');
+    said.className = 'vh';
+    said.textContent = rows.map((row, i) => `${names[i]}: ${spell(row)}.`).join(' ');
+    const words = [];
+    let at = 0;
+    for (const word of rows[0].split(' ')) {
+      const group = document.createElement('span');
+      group.className = 'otp-word';
+      group.setAttribute('aria-hidden', 'true');
+      for (let i = at; i < at + word.length; i++) {
+        const col = document.createElement('span');
+        col.className = 'otp-col';
+        for (const row of rows) {
+          const b = document.createElement('b');
+          b.textContent = row[i];
+          col.append(b);
+        }
+        group.append(col);
       }
-      col.className = 'otp-col';
-      for (const row of rows) {
-        const b = document.createElement('b');
-        b.textContent = row[i];
-        col.append(b);
-      }
-      return col;
-    }));
+      at += word.length + 1;
+      words.push(group);
+    }
+    el.replaceChildren(said, ...words);
   }
 
   const padPanel = $('.otp');
@@ -348,7 +299,7 @@
     if (pad.length < m.length) pad = pad.concat(randomLetters(m.length - pad.length));
     const key = pad.slice(0, m.length);
     cipher = m.map((x, i) => mod(x + key[i], 26));
-    renderTiles(padTiles, [msg, shape(msg, key), shape(msg, cipher)]);
+    renderTiles(padTiles, [msg, shape(msg, key), shape(msg, cipher)], ['Message', 'Pad', 'Ciphertext']);
     renderAlt();
   }
 
@@ -367,7 +318,7 @@
     altHint.textContent = '';
     // The pad that turns this ciphertext into this message: ciphertext minus message.
     const key = a.map((x, i) => mod(cipher[i] - x, 26));
-    renderTiles(altTiles, [shape(alt, cipher), shape(alt, key), alt]);
+    renderTiles(altTiles, [shape(alt, cipher), shape(alt, key), alt], ['Ciphertext', 'This pad', 'Your message']);
   }
 
   padText.addEventListener('input', renderPad);
@@ -422,7 +373,4 @@
       renderPad();
     }
   }
-
-  window.Enigma = Enigma;
-  window.Story = { open };
 })();

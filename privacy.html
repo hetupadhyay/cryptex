@@ -4,14 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Privacy · Cryptex</title>
-  <meta name="description" content="Cryptex has no accounts, cookies, analytics, ads or server. Here is what stays on your device.">
+  <meta name="description" content="Cryptex has no accounts, cookies, analytics, ads or server of its own. Here is what stays on your device.">
+  <link rel="canonical" href="https://cryptex.vercel.app/privacy">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#edf0ef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0e1418" media="(prefers-color-scheme: dark)">
-  <script src="js/theme.js"></script>
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="stylesheet" href="css/shell.css">
-  <link rel="stylesheet" href="css/pages.css">
+  <script src="js/theme.js?v=8626267322"></script>
+  <link rel="stylesheet" href="css/site.css?v=663543549d">
+  <link rel="stylesheet" href="css/shell.css?v=341482449c">
+  <link rel="stylesheet" href="css/pages.css?v=e75b1a6ac5">
   <link rel="icon" href="img/mark.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
@@ -19,6 +20,7 @@
 <body class="doc-page" data-page="doc">
 
   <!-- shell:header -->
+  <a class="skip" href="#top">Skip to content</a>
   <header class="mast">
     <div class="mast-bar">
       <a class="brand" href="/" aria-label="Cryptex home">
@@ -36,8 +38,8 @@
       <div class="mast-right">
         <a class="today-link" href="/codebreaking#today">
           <span>Today’s intercept</span>
-          <b class="today-no">No. —</b>
-          <time class="today-left">—</time>
+          <b class="today-no"></b>
+          <time class="today-left" aria-hidden="true"></time>
         </a>
         <button class="lamp" type="button" aria-pressed="false" aria-label="Night lamp">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -53,7 +55,8 @@
     <nav class="menu-sheet" id="menu" aria-label="Main" hidden>
       <a href="/learn" data-page="learn">Learn <small>600 BC to today</small></a>
       <a href="/lab" data-page="lab">Lab <small>Ten ciphers, step by step</small></a>
-      <a href="/codebreaking" data-page="codebreaking">Codebreaking <small class="today-no">No. —</small></a>
+      <a href="/codebreaking" data-page="codebreaking">Codebreaking <small class="today-no"></small></a>
+      <div class="sheet-grip" aria-hidden="true"><i></i></div>
     </nav>
   </header>
   <!-- /shell:header -->
@@ -61,26 +64,26 @@
   <main class="doc" id="top">
     <article class="doc-sheet" aria-labelledby="doc-title">
       <header class="doc-head">
-        <p class="doc-kicker">Legal</p>
         <h1 id="doc-title">Privacy</h1>
-        <p class="doc-meta">Effective 29 October 2026</p>
+        <p class="doc-meta">Effective 30 October 2026</p>
       </header>
 
-      <p class="doc-summary">Cryptex has no accounts, cookies, analytics, ads or server of its own. Everything happens in your browser, and nothing you type is sent anywhere.</p>
+      <p class="doc-summary">Cryptex has no accounts, cookies, analytics, ads or server of its own. Everything happens in your browser, and nothing you type is sent to a server, unless you put it in a secret link and share it.</p>
 
       <section>
         <h2>What Cryptex doesn’t collect</h2>
-        <p>There’s nothing to sign up for, and the site sets no cookies. It has no analytics, no tracking pixels, no ads, and no scripts or fonts from other sites: every file comes from the site itself. The ciphers, the animations and the attacks all run on your device, so the messages you type into the lab, the codebreaker’s desk or the intercepts never leave it.</p>
+        <p>There’s nothing to sign up for, and the site sets no cookies. It has no analytics, no tracking pixels, no ads, and no scripts or fonts from other sites: every file comes from the site itself. The ciphers, the animations and the attacks all run on your device, so the messages you type into the lab, the codebreaker’s desk, the missions or today’s intercept never leave it.</p>
       </section>
 
       <section>
         <h2>What’s kept on your device</h2>
         <p>A few small things are saved in your browser’s local storage, so they’re still there next time. They stay on your device and are never sent anywhere:</p>
         <ul>
-          <li>whether you picked the Day or Night theme;</li>
-          <li>which intercepts you’ve cracked;</li>
-          <li>your daily intercept streak.</li>
+          <li>whether the night lamp is on;</li>
+          <li>which of the eight missions you’ve cracked;</li>
+          <li>the dates you cracked today’s intercept, the hints you used, and your best streak.</li>
         </ul>
+        <p>When you send text from one page to another, with Send to the desk or Open in the lab, it waits in your browser’s session storage and is deleted as soon as the other page picks it up. If it’s never picked up, it’s thrown away after a minute or when you close the tab.</p>
         <p>Your browser also keeps a copy of the site’s files, so it opens when you’re offline.</p>
         <p>To clear all of it, delete this site’s data in your browser’s settings, usually under privacy, cookies and site data. A private window forgets everything when you close it.</p>
       </section>
@@ -94,11 +97,12 @@
       <section>
         <h2>Hosting</h2>
         <p>The site is hosted on Vercel. Like most hosts, Vercel keeps standard request logs, such as your IP address, your browser type, the page you asked for and when, to run and protect its service. Those logs are handled under <a href="https://vercel.com/legal/privacy-policy">Vercel’s own privacy policy</a>. Cryptex adds no tracking of its own.</p>
+        <p>To make pages open faster, your browser may load a Cryptex page in the background when you point at a link to it, so that request can appear in the host’s logs even if you never open the page. On your first visit your browser also fetches the site’s other pages and files in the background, so it can open them offline.</p>
       </section>
 
       <section>
-        <h2>Links to GitHub</h2>
-        <p>Links to the source code and to report a problem take you to GitHub, which has its own privacy policy.</p>
+        <h2>Links to other sites</h2>
+        <p>Links to the source code and to report a problem take you to GitHub, and the author’s profile link takes you to LinkedIn. Each has its own privacy policy.</p>
       </section>
 
       <section>
@@ -134,7 +138,7 @@
             <li><a href="/learn#enigma">Enigma</a></li>
             <li><a href="/learn#one-time-pad">One-time pad</a></li>
             <li><a href="/learn#strength">Key strength</a></li>
-            <li><a href="/learn#today">Why it matters</a></li>
+            <li><a href="/learn#why-it-matters">Why it matters</a></li>
           </ul>
         </div>
         <div>
@@ -164,9 +168,9 @@
       </nav>
     </div>
     <div class="foot-bar">
-      <p class="foot-who">© 2026 <b>Het Nimeshkumar Upadhyay</b></p>
-      <p>Made by <span class="signature" tabindex="0" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-label="Het Upadhyay, written in a Caesar cipher" title="Shift 3. Hover to decode.">KHW XSDGKBDB</span></p>
-      <p>Runs in your browser. Nothing you type leaves the page.</p>
+      <p class="foot-who">© 2026 <b>Het Upadhyay</b></p>
+      <p>Made by <span class="vh">Het Upadhyay</span><span class="signature" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-hidden="true" title="Shift 3. Point at it or tap it to decode.">KHW XSDGKBDB</span></p>
+      <p>Runs in your browser. Nothing you type is sent to a server.</p>
       <div class="foot-links">
         <a href="/terms">Terms</a>
         <a href="/privacy">Privacy</a>
@@ -182,7 +186,9 @@
   </footer>
   <!-- /shell:footer -->
 
-  <script src="js/site.js"></script>
-  <script src="js/pwa.js"></script>
+  <script src="js/sheet.js?v=f4d1354ad7"></script>
+
+  <script src="js/site.js?v=c274758143"></script>
+  <script src="js/pwa.js?v=5b673ad196"></script>
 </body>
 </html>

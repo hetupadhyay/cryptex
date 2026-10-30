@@ -1,63 +1,45 @@
 /* ------------------------------------------------------------------
-   About, the site footer, and the standalone pages (terms, privacy,
-   404). Uses the tokens from site.css, so both themes come for free.
+   The standalone pages: terms, privacy and 404. Terms and privacy are
+   read like Learn: on the paper itself, in one column.
 ------------------------------------------------------------------- */
 
-
-/* ---------------- standalone pages ---------------- */
-
-/* No section links in the nav, so the switch sits on the right by itself. */
+/* ---------------- terms and privacy ---------------- */
 
 .doc {
-  max-width: 760px;
+  max-width: 640px;
   margin: 0 auto;
   padding: 56px var(--gutter) 0;
   box-sizing: content-box;
 }
 
-.doc-sheet {
-  padding: 52px 60px 56px;
-  border: 1px solid var(--rule);
-  border-radius: 28px;
-  background: var(--sheet);
-  box-shadow: var(--shadow-l);
-}
-
 .doc-head {
   display: grid;
-  gap: 12px;
+  gap: 16px;
   padding-bottom: 28px;
-  border-bottom: 1px solid var(--rule);
-}
-
-.doc-kicker {
-  color: var(--brass);
-  font: 700 13px/1 var(--type);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  border-bottom: 1px solid var(--rule-strong);
 }
 
 .doc-head h1 {
-  font-size: clamp(38px, 6vw, 58px);
-  line-height: 1;
-  letter-spacing: -0.035em;
-  font-weight: 750;
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.02;
+  letter-spacing: -0.032em;
 }
 
+/* The effective date, set like a dateline on Learn. */
 .doc-meta {
-  color: var(--ink-3);
-  font-size: 14.5px;
+  order: -1;
+  color: var(--brass);
+  font: 700 15.5px/1.4 var(--type);
 }
 
+/* The short version, leaned on with a carbon rule like the pad's verdict. */
 .doc-summary {
   margin-top: 28px;
-  padding: 16px 20px;
-  border-radius: 16px;
-  background: var(--carbon-wash);
+  padding-left: 18px;
+  border-left: 2px solid var(--carbon);
   color: var(--ink);
-  font-size: 16.5px;
-  font-weight: 550;
-  line-height: 1.55;
+  font-size: 18px;
+  line-height: 1.6;
 }
 
 .doc-sheet section {
@@ -74,7 +56,7 @@
 .doc-sheet section ul {
   margin-top: 10px;
   color: var(--ink-2);
-  font-size: 16.5px;
+  font-size: 17px;
   line-height: 1.65;
 }
 
@@ -147,7 +129,7 @@
   gap: 2px;
   padding: 12px 20px;
   border: 1px solid var(--rule);
-  border-radius: 14px;
+  border-radius: 10px;
   background: var(--well);
   font: 700 19px/1.4 var(--type);
   letter-spacing: 0.14em;
@@ -178,20 +160,8 @@
 /* ---------------- small screens ---------------- */
 
 @media (max-width: 640px) {
-  
-
-  
-
-  /* Explore down the left, Project and Legal stacked beside it. */
-  
-
   .doc {
-    padding-top: 28px;
-  }
-
-  .doc-sheet {
-    padding: 30px 20px 34px;
-    border-radius: 22px;
+    padding-top: 36px;
   }
 
   .doc-sheet section {

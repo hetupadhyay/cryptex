@@ -27,3 +27,6 @@ jobs:
       # Every page carries a copy of the masthead and footer.
       - name: Masthead and footer in sync on every page
         run: python3 tools/sync-shell.py --check
+
+      - name: File stamps are up to date
+        run: python3 tools/stamp.py --check

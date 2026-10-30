@@ -19,8 +19,8 @@
   // shortcut: the counts mirror the rows in js/strength.js; keep the two in step.
   const RATE = 1e9;
   const factorial = n => (n <= 1 ? 1 : n * factorial(n - 1));
-  const KEYWORD_5 = { keys: 26 ** 5, count: '26<sup>5</sup> = 11,881,376', note: 'for a 5-letter keyword' };
-  const SQUARE = { keys: factorial(25), count: '25! ≈ 1.6 × 10<sup>25</sup>', note: 'ways to fill a keyed square' };
+  const KEYWORD_5 = { keys: 26 ** 5, count: '26<span class="vh"> to the power of </span><sup>5</sup> = 11,881,376', note: 'for a 5-letter keyword' };
+  const SQUARE = { keys: factorial(25), count: '25! ≈ 1.6 × 10<span class="vh"> to the power of </span><sup>25</sup>', note: 'ways to fill a keyed square' };
   const KEYSPACE = {
     caesar: { keys: 25, count: '25', note: 'shifts from 1 to 25' },
     atbash: { keys: 1, count: '1', note: 'there is nothing to choose' },
@@ -55,7 +55,8 @@
   const resultTitle = $('#result-title');
   const cipherBtn = $('.cipher-btn', form);
   const sheet = $('.codebook-sheet');
-  const speedBtn = $('.speed-step', stageEl);
+  const speedGroup = $('.speed', stageEl);
+  const speedKeys = $$('[data-speed]', speedGroup);
 
   const state = {
     cipher: Ciphers.list[0],
@@ -91,7 +92,7 @@
         entry.className = 'cb-entry';
         entry.dataset.id = c.id;
         entry.setAttribute('role', 'radio');
-        entry.innerHTML = `<span class="cb-name"></span><span class="cb-spec">${SPECIMEN}<span aria-hidden="true"> → </span><span class="sr"> becomes </span><b></b></span>`;
+        entry.innerHTML = `<span class="cb-name"></span><span class="cb-spec">${SPECIMEN}<span aria-hidden="true"> → </span><span class="vh"> becomes </span><b></b></span>`;
         $('.cb-name', entry).textContent = c.name;
         $('.cb-spec b', entry).textContent = c.encrypt(SPECIMEN, defaults);
         group.append(entry);
@@ -135,11 +136,14 @@
     sheet.showModal();
     cipherBtn.setAttribute('aria-expanded', 'true');
     $('.cb-entry[aria-checked="true"]', sheet).focus();
+    Sheet.opened('codebook', () => sheet.close());
   });
   sheet.addEventListener('close', () => {
     cipherBtn.setAttribute('aria-expanded', 'false');
     cipherBtn.focus();
+    Sheet.closed('codebook');
   });
+  Sheet.swipe(sheet, { grip: $('.sheet-grip', sheet), edge: 'bottom', close: () => sheet.close() });
   // A tap on the dimmed page around the sheet closes it.
   sheet.addEventListener('click', e => { if (e.target === sheet) sheet.close(); });
   window.matchMedia('(min-width: 821px)').addEventListener('change', e => { if (e.matches && sheet.open) sheet.close(); });
@@ -183,7 +187,7 @@
     keysBox.replaceChildren();
     if (!c.keys.length) {
       const note = document.createElement('p');
-      note.className = 'note';
+      note.className = 'key-note';
       note.textContent = 'Atbash has no key. The method is the whole secret.';
       keysBox.append(note);
       return;
@@ -213,6 +217,7 @@
         input.value = values[k.id];
       }
       input.id = id;
+      input.setAttribute('aria-describedby', 'lab-error');
       input.addEventListener('input', () => {
         values[k.id] = input.value;
         markStale();
@@ -231,7 +236,7 @@
     $('.about').textContent = c.about;
     $('.weak-text').textContent = c.weakness;
     showKeyspace(c);
-    errorBox.textContent = '';
+    flag([message], '');
     clearStage();
     updateHint();
   }
@@ -256,6 +261,7 @@
     if (swap && last && last.mode === prev && last.cipherId === state.cipher.id && message.value === last.input) {
       message.value = last.output;
     }
+    flag([message, ...$$('input, select', keysBox)], '');
     clearStage();
     updateHint();
   }
@@ -273,6 +279,11 @@
         break;
       }
     }
+    // End on the last space nearby rather than in the middle of a word.
+    if (cut < text.length && !countDigits && !LETTERS_ONLY.includes(c.scene)) {
+      const space = text.lastIndexOf(' ', cut);
+      if (space > 0 && space > cut - 14) cut = space;
+    }
     return { text: text.slice(0, cut), cut: cut < text.length };
   }
 
@@ -282,7 +293,7 @@
     if (LETTERS_ONLY.includes(c.scene)) notes.push(`${c.name} works on letters only, so spaces and punctuation are dropped.`);
     if (c.id === 'polybius' && state.mode === 'decrypt') notes.push('Enter digit pairs; a slash marks a word break.');
     if (sceneInput(message.value).cut) {
-      notes.push(`The animation covers the first ${SCENE_LIMIT[c.scene]} letters. The result covers everything.`);
+      notes.push(`The animation covers about the first ${SCENE_LIMIT[c.scene]} letters. The result covers everything.`);
     }
     hint.textContent = notes.join(' ');
   }
@@ -294,7 +305,12 @@
 
   // ---- running --------------------------------------------------------------
 
+  // Every run and every clear gets a number, so a scene that was waiting
+  // for the old one to fade out knows when it's no longer wanted.
+  let runs = 0;
+
   function clearStage() {
+    runs++;
     player.reset();
     $('.scene', stageEl).replaceChildren();
     $('.caption', stageEl).textContent = '';
@@ -308,18 +324,33 @@
     updateHint();
   }
 
+  // A problem is marked on the field it's about, which takes focus.
+  function flag(fields, problem) {
+    errorBox.textContent = problem;
+    for (const f of fields) f.setAttribute('aria-invalid', Boolean(problem));
+    if (problem) fields[0]?.focus();
+  }
+
   function run() {
     const c = state.cipher;
     const keys = state.keys[c.id];
+    const keyFields = $$('input, select', keysBox);
     const problem = c.check(keys);
-    errorBox.textContent = problem;
+    flag(keyFields, problem);
+    message.setAttribute('aria-invalid', false);
     if (problem) return;
 
     const text = message.value;
-    const hasContent = c.id === 'polybius' && state.mode === 'decrypt' ? /[1-5]/.test(text) : /[a-z]/i.test(text);
+    const digits = c.id === 'polybius' && state.mode === 'decrypt';
+    const hasContent = digits ? /[1-5]/.test(text) : /[a-z]/i.test(text);
     if (!hasContent) {
-      errorBox.textContent = state.mode === 'encrypt' ? 'Type a message with at least one letter.' : 'Paste some ciphertext to decrypt.';
-      message.focus();
+      flag([message], state.mode === 'encrypt' ? 'Type a message with at least one letter.' : 'Paste some ciphertext to decrypt.');
+      return;
+    }
+    // Polybius reads pairs of digits from 1 to 5; anything else would be
+    // dropped without a word, so say so instead.
+    if (digits && text.split(/[\s/]+/).filter(Boolean).some(g => !/^(?:[1-5]{2})+$/.test(g))) {
+      flag([message], 'Polybius ciphertext is pairs of digits from 1 to 5, like 23 15 / 41 11.');
       return;
     }
 
@@ -336,14 +367,22 @@
     }
 
     const mount = $('.scene', stageEl);
+    const mode = state.mode;
+    const id = ++runs;
+    // What comes out decides its colour: ciphertext in red pencil, a
+    // message read back in carbon.
+    const out = mode === 'encrypt' ? 'cipher' : 'plain';
+    stageEl.dataset.out = out;
+    $('.result').dataset.out = out;
     const build = () => {
-      const scene = Scenes[c.scene]({ cipher: c, keys, mode: state.mode, input: sceneInput(text).text, mount, cue: player.cue });
+      if (id !== runs) return;
+      const scene = Scenes[c.scene]({ cipher: c, keys, mode, input: sceneInput(text).text, mount, cue: player.cue });
       player.load(scene);
     };
 
     // Fade the old scene out quickly before the new one is built.
     if (mount.children.length && !Stage.reduced) {
-      mount.animate([{ opacity: 1 }, { opacity: 0, filter: 'blur(2px)' }], { duration: 160, easing: 'ease-out' }).finished.then(build);
+      mount.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: 'ease-out' }).finished.then(build);
     } else {
       build();
     }
@@ -381,17 +420,30 @@
 
   // ---- the player bar ---------------------------------------------------------
 
-  // One button steps through the speeds; the ticks fill up as it goes faster.
+  // Four speed keys in a row, one pressed in. The pressed key slides across
+  // to the one picked; the arrows move it too, as in any radio group.
   function showSpeed() {
-    const s = SPEEDS[state.speed];
-    Stage.speed = s.value;
-    $('.speed-value', speedBtn).textContent = s.text;
-    $$('.ticks i', speedBtn).forEach((t, i) => t.classList.toggle('on', i <= state.speed));
-    speedBtn.setAttribute('aria-label', `Speed: ${s.say}`);
+    Stage.speed = SPEEDS[state.speed].value;
+    speedGroup.style.setProperty('--at', state.speed);
+    speedKeys.forEach((k, i) => {
+      k.setAttribute('aria-checked', i === state.speed);
+      k.tabIndex = i === state.speed ? 0 : -1;
+    });
   }
-  speedBtn.addEventListener('click', () => {
-    state.speed = (state.speed + 1) % SPEEDS.length;
-    showSpeed();
+  speedKeys.forEach((k, i) => {
+    k.setAttribute('aria-label', `${SPEEDS[i].text}, ${SPEEDS[i].say} speed`);
+    k.addEventListener('click', () => {
+      state.speed = i;
+      showSpeed();
+    });
+    k.addEventListener('keydown', e => {
+      const to = { ArrowRight: i + 1, ArrowUp: i + 1, ArrowLeft: i - 1, ArrowDown: i - 1, Home: 0, End: SPEEDS.length - 1 }[e.key];
+      if (to === undefined) return;
+      e.preventDefault();
+      state.speed = Math.max(0, Math.min(SPEEDS.length - 1, to));
+      showSpeed();
+      speedKeys[state.speed].focus();
+    });
   });
   showSpeed();
 
@@ -417,10 +469,28 @@
 
   // Arrow keys step through the scene when the stage has focus.
   stageEl.tabIndex = -1;
-  stageEl.addEventListener('keydown', e => {
-    if (e.target.closest('input, textarea, select')) return;
-    if (e.key === 'ArrowRight') player.next();
-    else if (e.key === 'ArrowLeft') player.prev();
+  // Space plays and pauses, the arrows step, anywhere on the page except
+  // while typing or inside a control that uses those keys itself. Until
+  // something has run, or while the stage is scrolled away, Space scrolls
+  // the page as usual.
+  const stageInView = () => {
+    const r = stageEl.getBoundingClientRect();
+    return r.bottom > 0 && r.top < innerHeight;
+  };
+  document.addEventListener('keydown', e => {
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.target.closest('input, textarea, select, dialog, [role="radiogroup"], [contenteditable]')) return;
+    if (stageEl.classList.contains('empty') || !stageInView()) return;
+    if (e.key === ' ' && !e.target.closest('button, a')) {
+      e.preventDefault();
+      player.toggle();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      player.next();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      player.prev();
+    }
   });
 
   // ---- result actions ---------------------------------------------------------
@@ -428,13 +498,18 @@
   $('[data-act="copy"]').addEventListener('click', async e => {
     if (!state.last) return;
     const btn = e.currentTarget;
+    const said = $('#copy-said');
     try {
       await navigator.clipboard.writeText(state.last.output);
-      btn.textContent = 'Copied';
+      btn.textContent = said.textContent = 'Copied';
     } catch {
-      btn.textContent = 'Select the text to copy';
+      getSelection().selectAllChildren(resultText);
+      btn.textContent = said.textContent = 'Selected. Copy it from here';
     }
-    setTimeout(() => { btn.textContent = 'Copy'; }, 1600);
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      said.textContent = '';
+    }, 1600);
   });
 
   $('[data-act="attack"]').addEventListener('click', () => {
@@ -483,24 +558,26 @@
 
   // Work sent here from another page: a timeline card, an intercept, a secret.
   // Session storage can hold anything, so take only what fits a cipher.
-  const sent = Handoff.take('lab');
-  if (sent) {
-    const c = sent.id ? Ciphers.byId(sent.id) : null;
-    const opts = sent.opts && typeof sent.opts === 'object' ? sent.opts : {};
-    const keys = {};
-    if (c && opts.keys && typeof opts.keys === 'object') {
-      for (const k of c.keys) {
-        const v = opts.keys[k.id];
-        if ((typeof v === 'string' && v.length <= 64) || Number.isFinite(v)) keys[k.id] = v;
+  Handoff.ready(() => {
+    const sent = Handoff.take('lab');
+    if (sent) {
+      const c = sent.id ? Ciphers.byId(sent.id) : null;
+      const opts = sent.opts && typeof sent.opts === 'object' ? sent.opts : {};
+      const keys = {};
+      if (c && opts.keys && typeof opts.keys === 'object') {
+        for (const k of c.keys) {
+          const v = opts.keys[k.id];
+          if ((typeof v === 'string' && v.length <= 64) || Number.isFinite(v)) keys[k.id] = v;
+        }
+      }
+      if (!sent.id || c) {
+        window.Lab.open(c ? c.id : null, {
+          mode: opts.mode === 'decrypt' ? 'decrypt' : 'encrypt',
+          text: typeof opts.text === 'string' && opts.text.length <= 20000 ? opts.text : undefined,
+          keys,
+          run: opts.run === true,
+        });
       }
     }
-    if (!sent.id || c) {
-      window.Lab.open(c ? c.id : null, {
-        mode: opts.mode === 'decrypt' ? 'decrypt' : 'encrypt',
-        text: typeof opts.text === 'string' && opts.text.length <= 20000 ? opts.text : undefined,
-        keys,
-        run: opts.run === true,
-      });
-    }
-  }
+  });
 })();

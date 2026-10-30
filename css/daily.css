@@ -285,3 +285,27 @@
     transition-duration: 1ms;
   }
 }
+
+/* The card is filled in by script; it holds roughly its finished size
+   from the first paint so the answer form doesn't jump down. */
+.daily-card .daily-no,
+.daily-card .daily-date,
+.daily-card .daily-level {
+  min-height: 1lh;
+}
+
+.daily-card .mission-brief {
+  min-height: 2lh;
+}
+
+.daily-card .intercept {
+  min-height: 3lh;
+}
+
+@media (max-width: 640px) {
+  .daily-card .mission-brief,
+  .daily-card .intercept {
+    min-height: 4lh;
+  }
+}
+

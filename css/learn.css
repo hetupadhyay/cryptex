@@ -20,7 +20,7 @@ html {
   column-gap: 40px;
   max-width: var(--page);
   margin: 0 auto;
-  padding: 64px max(20px, env(safe-area-inset-right, 0px)) 0 var(--gutter);
+  padding: 56px max(20px, env(safe-area-inset-right, 0px)) 0 var(--gutter);
   box-sizing: content-box;
 }
 
@@ -54,14 +54,14 @@ html {
 
 .essay-head h1 {
   font-size: clamp(38px, 5vw, 58px);
-  line-height: 1.03;
+  line-height: 1.02;
   letter-spacing: -0.032em;
 }
 
 .standfirst {
-  margin-top: 22px;
+  margin-top: 16px;
   color: var(--ink-2);
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.55;
 }
 
@@ -247,18 +247,6 @@ html {
   color: var(--ink-2);
   font-size: 14.5px;
   line-height: 1.55;
-}
-
-/* Small controls in the figures: tight corners, like the rest of the room. */
-.essay .btn.small {
-  border: 1px solid var(--rule-strong);
-  border-radius: 4px;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .essay .btn.small:hover {
-    border-color: var(--ink-3);
-  }
 }
 
 .essay input[type='text'] {

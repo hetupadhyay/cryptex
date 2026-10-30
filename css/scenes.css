@@ -67,6 +67,21 @@
   color: var(--carbon);
 }
 
+/* Ciphertext is always red pencil and a message read back is carbon, so
+   when decrypting the two highlights on the board swap colours too. */
+.stage[data-out='cipher'] .tape-out .cell.filled {
+  border-bottom-color: var(--pencil);
+  color: var(--pencil);
+}
+
+.stage[data-out='plain'] .tile.src {
+  background: var(--pencil);
+}
+
+.stage[data-out='plain'] .tile.dst {
+  background: var(--carbon);
+}
+
 .cell.landed {
   animation: land 320ms var(--ease-out);
 }
@@ -186,15 +201,26 @@
 /* ---------------- substitution board ---------------- */
 
 .alpha-board {
-  --cell: min(30px, calc((100cqw - 2px) / 26));
+  /* --span is 26 letters a row, or 13 when a narrow stage splits the board
+     into two halves (substitution.js), so letters stay readable and
+     nothing ever runs off the side. */
+  --cell: min(30px, calc((100cqw - 2px) / var(--span, 26)));
   display: grid;
   justify-content: center;
+}
+
+.alpha-board.split {
+  gap: 16px;
+}
+
+.alpha-half {
+  display: grid;
 }
 
 .alpha-row {
   position: relative;
   display: flex;
-  width: calc(var(--cell) * 26);
+  width: calc(var(--cell) * var(--span, 26));
   height: calc(var(--cell) * 1.3);
   overflow: hidden;
   border: 1px solid var(--rule-strong);
@@ -214,6 +240,12 @@
   display: flex;
   flex: none;
   transition: transform 1200ms var(--ease-move);
+}
+
+/* Caesar: each half's track starts at its own first letter and slides
+   left by the shift. */
+.intro-slide .alpha-track {
+  transform: translateX(calc(var(--cell) * -1 * (var(--base, 0) + var(--shift, 0))));
 }
 
 .tile {
@@ -247,7 +279,7 @@
 
 /* Mirror: each tile placed by its index so it can travel across. */
 .intro-mirror .alpha-track {
-  width: calc(var(--cell) * 26);
+  width: calc(var(--cell) * var(--span, 26));
   height: 100%;
 }
 
@@ -289,7 +321,7 @@
 
 .alpha-beams {
   display: flex;
-  width: calc(var(--cell) * 26);
+  width: calc(var(--cell) * var(--span, 26));
   height: 30px;
 }
 
@@ -348,11 +380,11 @@
 .tabula-wrap {
   display: grid;
   justify-content: center;
-  overflow-x: auto;
 }
 
 .tabula {
   --tt: min(21px, calc((100cqw - 2px) / 27));
+  position: relative;
   display: grid;
   grid-template-columns: repeat(27, var(--tt));
   grid-auto-rows: var(--tt);
@@ -363,26 +395,36 @@
   display: grid;
   place-items: center;
   color: var(--ink-2);
-  opacity: 0.18;
-  transition: opacity 360ms var(--ease-out), background-color 150ms ease, color 150ms ease;
+  transition: background-color 150ms ease, color 150ms ease;
 }
 
-.tabula.revealed .tt {
-  opacity: 1;
+/* Until it's needed the table sits faint behind a veil, which lifts as
+   one piece. Fading 676 cells one by one costs hundreds of layers. */
+.tabula::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--sheet);
+  opacity: 0.82;
+  pointer-events: none;
+  transition: opacity 520ms var(--ease-out);
 }
 
-.tabula.wave .tt {
-  transition-delay: calc(var(--d, 0) * 16ms);
+.tabula.revealed::after {
+  opacity: 0;
 }
 
 .tt.head {
-  opacity: 1;
+  position: relative;
+  z-index: 2;
   background: var(--well);
   color: var(--ink);
 }
 
 .tt.corner {
-  opacity: 1;
+  position: relative;
+  z-index: 2;
   background: transparent;
 }
 
@@ -405,47 +447,49 @@
   box-shadow: 0 0 0 3px var(--sheet);
 }
 
-/* On a narrow stage the whole table is too small to read, so it is shown
-   magnified through a window that pans to each lookup (--px and --py come
-   from tabula.js). The header row and column move against the pan, so the
-   labels always stay along the top and left edges. */
-@container (max-width: 560px) {
-  .tabula-wrap {
-    --tz: 24px;
-    display: block;
-    height: calc(var(--tz) * 11 + 2px);
-    overflow: hidden;
-    border: 1px solid var(--rule);
-    border-radius: 10px;
-  }
+/* On a narrow stage the whole table is too small to read, and on a short
+   window it's taller than the screen, so it is shown magnified through a
+   window that pans to each lookup (tabula.js sets .zoom, --rows, --px and
+   --py). The header row and column move against the pan, so the labels
+   always stay along the top and left edges. */
+.tabula-wrap.zoom {
+  --tz: 24px;
+  display: block;
+  width: 100%;
+  max-width: calc(var(--tz) * 27 + 2px);
+  margin-inline: auto;
+  height: calc(var(--tz) * var(--rows, 11) + 2px);
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+}
 
-  .tabula {
-    --tt: var(--tz);
-    width: max-content;
-    transform: translate(calc(var(--px, 0px) * -1), calc(var(--py, 0px) * -1));
-    transition: transform var(--pan, 0ms) var(--ease-move);
-    will-change: transform;
-  }
+.zoom .tabula {
+  --tt: var(--tz);
+  width: max-content;
+  transform: translate(calc(var(--px, 0px) * -1), calc(var(--py, 0px) * -1));
+  transition: transform var(--pan, 0ms) var(--ease-move);
+  will-change: transform;
+}
 
-  .tt.head,
-  .tt.corner {
-    z-index: 2;
-    transition: transform var(--pan, 0ms) var(--ease-move), background-color 150ms ease, color 150ms ease;
-  }
+.zoom .tt.head,
+.zoom .tt.corner {
+  z-index: 2;
+  transition: transform var(--pan, 0ms) var(--ease-move), background-color 150ms ease, color 150ms ease;
+}
 
-  .tt.head.col {
-    transform: translateY(var(--py, 0px));
-  }
+.zoom .tt.head.col {
+  transform: translateY(var(--py, 0px));
+}
 
-  .tt.head.row {
-    transform: translateX(var(--px, 0px));
-  }
+.zoom .tt.head.row {
+  transform: translateX(var(--px, 0px));
+}
 
-  .tt.corner {
-    z-index: 3;
-    background: var(--well);
-    transform: translate(var(--px, 0px), var(--py, 0px));
-  }
+.zoom .tt.corner {
+  z-index: 3;
+  background: var(--well);
+  transform: translate(var(--px, 0px), var(--py, 0px));
 }
 
 /* ---------------- 5×5 squares ---------------- */
@@ -543,15 +587,21 @@
 /* ---------------- rail fence ---------------- */
 
 .fence-wrap {
-  display: flex;
+  display: grid;
   justify-content: center;
+  gap: 18px;
+}
+
+/* One stretch of the zig-zag. A long message is laid out in several
+   (railfence.js), so the cells stay readable without leaving the stage. */
+.fence-band {
+  --fc: min(26px, calc((100cqw - 32px) / var(--n)));
+  --fh: calc(var(--fc) * 1.35);
+  display: flex;
   gap: 8px;
-  overflow-x: auto;
 }
 
 .fence {
-  --fc: min(26px, calc((100cqw - 32px) / var(--n)));
-  --fh: calc(var(--fc) * 1.35);
   position: relative;
   display: grid;
   grid-template-columns: repeat(var(--n), var(--fc));
@@ -562,7 +612,7 @@
 
 .rail-labels {
   display: grid;
-  grid-template-rows: repeat(var(--rails), calc(min(26px, calc((100cqw - 32px) / var(--n, 20))) * 1.35));
+  grid-template-rows: repeat(var(--rails), var(--fh));
 }
 
 .rail-label {
@@ -644,6 +694,8 @@
   justify-content: center;
 }
 
+/* The keyword is at most 10 letters (ciphers.js), so the columns always
+   fit the stage at a readable width. */
 .columns {
   --cw: min(42px, calc((100cqw - 4px) / var(--cols)));
   position: relative;
@@ -702,7 +754,8 @@
 
 /* Scenes drawn without motion when jumping to a step. */
 .instant,
-.instant * {
+.instant *,
+.instant *::after {
   transition: none !important;
 }
 

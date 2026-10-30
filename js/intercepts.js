@@ -1,5 +1,6 @@
 /*
- * Intercepts: eight messages to crack, roughly in order of difficulty.
+ * Missions: eight intercepted messages to crack, roughly in order of
+ * difficulty.
  * Ciphertexts are made from the plaintext when the page loads, so the
  * answers only live here and nowhere in the markup.
  */
@@ -36,21 +37,21 @@
       hints: ['Count the letters at the desk. If they already look like English, nothing was replaced.', 'Only the order changed, so it’s a transposition. Try a rail fence.', 'Three rails.'],
     },
     {
-      id: 'gottingen', place: 'Göttingen, 1801', title: 'The mathematician’s postcard', cipher: 'affine', keys: { a: 5, b: 8 },
+      id: 'gottingen', place: 'Brunswick, 1801', title: 'The mathematician’s letter', cipher: 'affine', keys: { a: 5, b: 8 },
       plain: 'Every prime keeps its secrets until someone looks closely.',
-      brief: 'A postcard between two mathematicians. Scribbled in the margin: “multiply, then add”.',
+      brief: 'A letter between two mathematicians. Scribbled in the margin: “multiply, then add”.',
       hints: ['It’s still one fixed alphabet, so letter counts work. The most common letter is probably E.', 'It’s an affine cipher with a multiplier of 5.', 'a = 5 and b = 8.'],
     },
     {
       id: 'chartley', place: 'Chartley Hall, 1586', title: 'A letter to the queen', cipher: 'vigenere', keys: { key: 'CROWN' },
       plain: 'The queen must be warned before midnight. Her letters are being read.',
-      brief: 'Mary, Queen of Scots, wrote in cipher from captivity, and her letters were read anyway. This one is keyed with a word anyone at court would think of.',
+      brief: 'Mary, Queen of Scots, wrote from captivity in a nomenclator, a cipher of symbols that Thomas Phelippes broke by counting them. This letter uses a newer idea, a keyword, and it’s one anyone at court would think of.',
       hints: ['It’s Vigenère with a five-letter keyword.', 'Think about what a queen wears.', 'The keyword is CROWN.'],
     },
     {
       id: 'wheatstone', place: 'London, 1854', title: 'Wheatstone’s puzzle', cipher: 'playfair', keys: { key: 'CHARLES' },
       plain: 'Meet at the bridge at noon',
-      brief: 'Charles Wheatstone liked to slip Playfair puzzles into the newspaper personal columns. This one is keyed with his own first name.',
+      brief: 'Charles Wheatstone and Lyon Playfair liked to crack the coded notes lovers placed in the personal columns of The Times. This one is keyed with Wheatstone’s own first name.',
       hints: ['It’s Playfair. The square is built from a keyword.', 'The keyword is the inventor’s first name.', 'CHARLES. Decrypt it in the lab and ignore any padding Xs.'],
     },
     {
@@ -84,7 +85,10 @@
 
   const cracked = loadCracked();
 
+  // Another tab may have cracked a file since this one loaded, so what's
+  // stored is added to, never written over.
   function save() {
+    for (const id of loadCracked()) cracked.add(id);
     try {
       localStorage.setItem(STORE, JSON.stringify([...cracked]));
     } catch {}
@@ -102,36 +106,46 @@
   const hintList = $('.hint-list', card);
   const hintBtn = $('[data-act="hint"]', card);
   const interceptEl = $('.intercept', card);
+  const nextBtn = $('.next-file', card);
 
   let index = MISSIONS.findIndex(m => !cracked.has(m.id));
   if (index < 0) index = 0;
   let hintsShown = 0;
 
+  const fileNo = i => String(i + 1).padStart(2, '0');
+
+  const items = MISSIONS.map((m, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'mission-item';
+    b.innerHTML = '<span class="mi-num"></span><span class="mi-text"><b></b><span></span></span><span class="mi-state"></span>';
+    $('.mi-num', b).textContent = fileNo(i);
+    $('.mi-text b', b).textContent = m.title;
+    $('.mi-text span', b).textContent = m.place;
+    b.addEventListener('click', () => open(i));
+    return b;
+  });
+  list.replaceChildren(...items.map(b => {
+    const li = document.createElement('li');
+    li.append(b);
+    return li;
+  }));
+
   function renderList() {
-    list.replaceChildren(...MISSIONS.map((m, i) => {
-      const li = document.createElement('li');
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'mission-item' + (cracked.has(m.id) ? ' cracked' : '');
+    items.forEach((b, i) => {
+      const done = cracked.has(MISSIONS[i].id);
+      b.classList.toggle('cracked', done);
       b.setAttribute('aria-current', i === index);
-      b.innerHTML = '<span class="mi-num"></span><span class="mi-text"><b></b><span></span></span><span class="mi-state"></span>';
-      $('.mi-num', b).textContent = fileNo(i);
-      $('.mi-text b', b).textContent = m.title;
-      $('.mi-text span', b).textContent = m.place;
-      $('.mi-state', b).textContent = cracked.has(m.id) ? 'Cracked' : '';
-      b.addEventListener('click', () => open(i));
-      li.append(b);
-      return li;
-    }));
+      $('.mi-state', b).textContent = done ? 'Cracked' : '';
+    });
     // "cracked" can drop out on a phone, where the tabs are tight.
     if (progress) progress.innerHTML = `${cracked.size} of ${MISSIONS.length}<span class="tab-more"> cracked</span>`;
   }
 
-  const fileNo = i => String(i + 1).padStart(2, '0');
-
   function show(i) {
     index = i;
     hintsShown = 0;
+    revealing++;
     const m = MISSIONS[i];
     $('.mission-no', card).textContent = `File ${fileNo(i)}`;
     $('.mission-place', card).textContent = m.place;
@@ -144,6 +158,7 @@
     feedback.textContent = '';
     feedback.className = 'answer-feedback';
     hintList.replaceChildren();
+    nextBtn.hidden = true;
     hintBtn.hidden = false;
     hintBtn.textContent = 'Show a hint';
     card.classList.toggle('cracked', cracked.has(m.id));
@@ -155,7 +170,13 @@
   // Picked from the index. Where the file sits below the index (on a
   // phone), bring it up so the choice visibly did something.
   function open(i) {
+    const changed = i !== index;
     show(i);
+    // A different file settles into place, so the change reads as a new
+    // file and not a flicker.
+    if (changed && !Stage.reduced) {
+      card.animate([{ opacity: 0.4, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+    }
     if (card.getBoundingClientRect().top > innerHeight * 0.7) {
       card.scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
     }
@@ -177,8 +198,11 @@
     return s;
   }
 
-  // Scrambles the intercept into the plaintext, a letter at a time.
+  // Scrambles the intercept into the plaintext, a letter at a time. Opening
+  // another file stops it, so it can't write over the new intercept.
+  let revealing = 0;
   function reveal(m) {
+    const run = ++revealing;
     const target = m.plain.toUpperCase();
     if (Stage.reduced) {
       interceptEl.textContent = target;
@@ -188,6 +212,7 @@
     const length = target.length;
     const total = Math.min(1600, 400 + length * 12);
     function frame(t) {
+      if (run !== revealing) return;
       const done = Math.floor(((t - start) / total) * length);
       let out = '';
       for (let i = 0; i < length; i++) {
@@ -221,8 +246,16 @@
         reveal(m);
       }
       const next = MISSIONS.findIndex(x => !cracked.has(x.id));
-      feedback.textContent = next < 0 ? 'Cracked. That’s every intercept. Not bad at all.' : `Cracked. Next up: ${MISSIONS[next].title}.`;
+      feedback.textContent = next < 0 ? 'Cracked. That’s every mission. Not bad at all.' : `Cracked. Next up: ${MISSIONS[next].title}.`;
       feedback.className = 'answer-feedback right';
+      nextBtn.hidden = next < 0;
+      if (next >= 0) {
+        nextBtn.textContent = `Open file ${fileNo(next)}`;
+        nextBtn.onclick = () => {
+          open(next);
+          input.focus({ preventScroll: true });
+        };
+      }
       renderList();
       return;
     }
@@ -240,19 +273,33 @@
     const li = document.createElement('li');
     li.textContent = m.hints[hintsShown++];
     hintList.append(li);
-    if (hintsShown >= m.hints.length) hintBtn.hidden = true;
-    else hintBtn.textContent = 'Show another hint';
+    if (hintsShown < m.hints.length) {
+      hintBtn.textContent = 'Show another hint';
+      return;
+    }
+    // The button goes once the hints run out; keep focus on what it showed.
+    li.tabIndex = -1;
+    li.focus();
+    hintBtn.hidden = true;
   });
 
   $('[data-act="to-desk"]', card).addEventListener('click', () => {
-    const m = MISSIONS[index];
-    Breaker.load(m.text, Breaker.attackFor(m.cipher));
+    // Starts from the letter counts: choosing the attack is part of the puzzle.
+    Breaker.load(MISSIONS[index].text, 'freq');
   });
 
   $('[data-act="to-lab"]', card).addEventListener('click', () => {
     const m = MISSIONS[index];
     // Leave the cipher as it is: picking it is part of the puzzle.
     Lab.open(null, { mode: 'decrypt', text: m.text });
+  });
+
+  // Files cracked in another tab show up here too.
+  window.addEventListener('storage', e => {
+    if (e.key !== STORE) return;
+    for (const id of loadCracked()) cracked.add(id);
+    if (cracked.has(MISSIONS[index].id) && !card.classList.contains('cracked')) show(index);
+    else renderList();
   });
 
   show(index);

@@ -1,9 +1,9 @@
 /* ------------------------------------------------------------------
-   Cryptex
-   A single scrolling page through two thousand years of secret writing.
-   Glass for the floating layers (nav, toolbar, dock, cards), solid
-   sheets for anything you read closely. Slate ink, carbon-copy blue,
-   red pencil for findings, brass for keys and the cryptex itself.
+   Cryptex: what every page shares. The look is a codebreaker's room:
+   paper, sheets for anything read closely, manila folders for case
+   files, and glass only on the masthead, where the page slides under it.
+   Slate ink, carbon-copy blue, red pencil for ciphertext and findings,
+   brass for keys and the cryptex itself.
 ------------------------------------------------------------------- */
 
 @font-face {
@@ -25,6 +25,26 @@
   font-display: swap;
 }
 
+/* Local fonts adjusted to take the same space as the real ones, so text
+   doesn't move when the real fonts arrive. Worked out from each font's
+   average letter width and its ascent and descent. */
+@font-face {
+  font-family: 'Hanken Grotesk fallback';
+  src: local('Arial'), local('Liberation Sans'), local('Helvetica');
+  size-adjust: 101.5%;
+  ascent-override: 98.5%;
+  descent-override: 29.9%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Courier Prime fallback';
+  src: local('Courier New'), local('Liberation Mono'), local('Courier');
+  size-adjust: 99.9%;
+  ascent-override: 78.1%;
+  descent-override: 34.2%;
+  line-gap-override: 0%;
+}
+
 :root {
   --paper: #edf0ef;
   --sheet: #fbfcfb;
@@ -34,6 +54,13 @@
   --ink-3: #606c74;
   --rule: #d8dedb;
   --rule-strong: #b3bdb8;
+  /* The edge of a field or slider: dark enough to see it at 3:1. */
+  --control-edge: #7f8b86;
+  --key-face: var(--sheet);
+  --key-side: #9aa6a0;
+  --key-light: rgba(255, 255, 255, 0.9);
+  --key-side-dark: #03080c;
+  --key-light-dark: rgba(255, 255, 255, 0.14);
   --carbon: #2b4c7e;
   --carbon-wash: rgba(43, 76, 126, 0.11);
   --pencil: #b4473a;
@@ -42,25 +69,17 @@
   --brass-wash: rgba(138, 106, 34, 0.14);
   --on-solid: #fbfcfb;
 
-  --glass: rgba(251, 252, 251, 0.6);
-  --glass-strong: rgba(251, 252, 251, 0.78);
-  --glass-line: rgba(255, 255, 255, 0.75);
-  --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  --frost: blur(22px) saturate(170%);
   --shadow-s: 0 1px 2px rgba(22, 33, 42, 0.05), 0 6px 16px -8px rgba(22, 33, 42, 0.18);
   --shadow-l: 0 2px 4px rgba(22, 33, 42, 0.04), 0 24px 48px -20px rgba(22, 33, 42, 0.28);
 
-  --glow-brass: rgba(201, 166, 90, 0.26);
-  --glow-carbon: rgba(43, 76, 126, 0.14);
-  --glow-pencil: rgba(180, 71, 58, 0.08);
   --pad-ink: rgba(22, 33, 42, 0.04);
   --pad-ink-strong: rgba(180, 71, 58, 0.5);
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-move: cubic-bezier(0.77, 0, 0.175, 1);
 
-  --sans: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --type: 'Courier Prime', 'Courier New', ui-monospace, monospace;
+  --sans: 'Hanken Grotesk', 'Hanken Grotesk fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --type: 'Courier Prime', 'Courier Prime fallback', 'Courier New', ui-monospace, monospace;
 
   --page: 1200px;
   --gutter: max(20px, env(safe-area-inset-left, 0px));
@@ -77,6 +96,7 @@
   --ink-3: #828e96;
   --rule: #26323a;
   --rule-strong: #3a4852;
+  --control-edge: #66747d;
   --carbon: #93b3dc;
   --carbon-wash: rgba(147, 179, 220, 0.15);
   --pencil: #e5836f;
@@ -85,19 +105,19 @@
   --brass-wash: rgba(214, 179, 107, 0.16);
   --on-solid: #0e1418;
 
-  --glass: rgba(24, 33, 41, 0.55);
-  --glass-strong: rgba(24, 33, 41, 0.78);
-  --glass-line: rgba(255, 255, 255, 0.08);
-  --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   --shadow-s: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 18px -8px rgba(0, 0, 0, 0.5);
   --shadow-l: 0 2px 4px rgba(0, 0, 0, 0.25), 0 28px 56px -20px rgba(0, 0, 0, 0.7);
 
-  --glow-brass: rgba(214, 179, 107, 0.13);
-  --glow-carbon: rgba(147, 179, 220, 0.12);
-  --glow-pencil: rgba(229, 131, 111, 0.07);
   --pad-ink: rgba(227, 232, 229, 0.04);
   --pad-ink-strong: rgba(229, 131, 111, 0.45);
   color-scheme: dark;
+  /* At night a paper key lifts off the page by being lighter, over an
+     edge darker than the page. */
+  --key-face: #1f2b34;
+  --key-side: #030608;
+  --key-light: rgba(255, 255, 255, 0.05);
+  --key-side-dark: #7f8b92;
+  --key-light-dark: rgba(255, 255, 255, 0.6);
 }
 
 *,
@@ -139,6 +159,17 @@ button {
   display: none !important;
 }
 
+/* Read out, not shown. */
+.vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 :focus-visible {
   outline: 2px solid var(--carbon);
   outline-offset: 2px;
@@ -147,11 +178,14 @@ button {
 h1, h2, h3, h4 {
   margin: 0;
   font-weight: 700;
+  line-height: 1.2;
   text-wrap: balance;
 }
 
+/* No single word left alone on a paragraph's last line. */
 p {
   margin: 0;
+  text-wrap: pretty;
 }
 
 canvas.pad {
@@ -172,22 +206,13 @@ main {
 
 /* ---------------- surfaces ---------------- */
 
-/* Glass only where content scrolls underneath it: the lab's player bar
-   here, and the masthead in shell.css. Everything else is a sheet. */
+/* The lab's player bar floats over the scene as a solid sheet: a frosted
+   bar would smear the letters it passes over. Glass is kept for the
+   masthead alone (shell.css). */
 .dock {
-  background: var(--glass);
-  -webkit-backdrop-filter: var(--frost);
-  backdrop-filter: var(--frost);
-  border: 1px solid var(--glass-line);
-  box-shadow: var(--glass-edge), var(--shadow-s);
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .dock {
-    background: var(--sheet);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  box-shadow: inset 0 1px 0 var(--key-light), var(--shadow-l);
 }
 
 .toolbar,
@@ -197,13 +222,6 @@ main {
   background: var(--sheet);
   border: 1px solid var(--rule);
   box-shadow: var(--shadow-s);
-}
-
-.btn.glass-btn,
-.glass-btn,
-.round-btn {
-  background: var(--sheet);
-  border: 1px solid var(--rule-strong);
 }
 
 .brand {
@@ -237,46 +255,70 @@ main {
 
 /* ---------------- buttons ---------------- */
 
+/* Buttons are typewriter keys: the key sits on a darker edge, and
+   pressing it pushes it down onto that edge. A plain .btn is a paper key;
+   .primary is the dark one for the main action on a screen. */
 .btn {
+  --edge: 3px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 48px;
-  padding: 0 22px;
-  border: 0;
-  border-radius: 6px;
+  height: 46px;
+  margin-bottom: var(--edge);
+  padding: 0 20px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 5px;
+  background: var(--key-face);
+  box-shadow: inset 0 1px 0 var(--key-light), 0 var(--edge) 0 var(--key-side);
+  color: var(--ink);
   font-weight: 650;
-  font-size: 15.5px;
+  font-size: 15px;
   text-decoration: none;
   white-space: nowrap;
-  transition: transform 140ms var(--ease-out), filter 160ms ease, background-color 160ms ease;
+  cursor: pointer;
+  transition: transform 80ms var(--ease-out), box-shadow 80ms var(--ease-out), border-color 160ms ease, filter 160ms ease;
 }
 
 .btn:active {
-  transform: scale(0.97);
+  transform: translateY(var(--edge));
+  box-shadow: inset 0 1px 0 var(--key-light), 0 0 0 var(--key-side);
 }
 
 .btn.primary {
+  border-color: var(--ink);
   background: var(--ink);
+  box-shadow: inset 0 1px 0 var(--key-light-dark), 0 var(--edge) 0 var(--key-side-dark);
   color: var(--on-solid);
-  box-shadow: var(--shadow-s);
 }
 
-.btn.glass-btn {
-  color: var(--ink);
+.btn.primary:active {
+  box-shadow: inset 0 1px 0 var(--key-light-dark), 0 0 0 var(--key-side-dark);
 }
 
 .btn.small {
+  --edge: 2px;
   height: 38px;
   padding: 0 14px;
-  border-radius: 5px;
   font-size: 14px;
 }
 
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+  transform: none;
+}
+
 @media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    border-color: var(--ink-3);
+  }
+
+  /* The dark key lightens a shade toward the page: visible in day and
+     in night, where the key is light. */
   .btn.primary:hover {
-    filter: brightness(1.15);
+    border-color: color-mix(in srgb, var(--ink) 82%, var(--paper));
+    background: color-mix(in srgb, var(--ink) 82%, var(--paper));
   }
 }
 
@@ -292,17 +334,6 @@ main {
   text-underline-offset: 3px;
 }
 
-.round-btn {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border-radius: 50%;
-  transition: transform 140ms var(--ease-out), opacity 160ms ease;
-}
-
-.round-btn svg,
 .tb svg {
   width: 18px;
   height: 18px;
@@ -311,30 +342,6 @@ main {
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
-}
-
-.round-btn:active {
-  transform: scale(0.94);
-}
-
-.round-btn:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-
-.chip {
-  padding: 6px 12px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 4px;
-  background: var(--sheet);
-  color: var(--ink);
-  font-size: 13.5px;
-  font-weight: 600;
-  transition: transform 140ms var(--ease-out), border-color 160ms ease;
-}
-
-.chip:active {
-  transform: scale(0.96);
 }
 
 /* ---------------- form bits ---------------- */
@@ -360,7 +367,7 @@ select {
   width: 100%;
   min-height: 44px;
   padding: 10px 13px;
-  border: 1px solid var(--rule-strong);
+  border: 1px solid var(--control-edge);
   border-radius: 12px;
   background: var(--sheet);
   font-family: var(--type);
@@ -381,9 +388,17 @@ select {
 textarea:focus,
 input:focus,
 select:focus {
-  outline: none;
   border-color: var(--carbon);
-  box-shadow: 0 0 0 4px var(--carbon-wash);
+}
+
+::placeholder {
+  color: var(--ink-3);
+  opacity: 1;
+}
+
+/* A field with a problem gets a red pencil edge; the message says why. */
+[aria-invalid='true']:not(:focus) {
+  border-color: var(--pencil);
 }
 
 .keys input[type='text'],
@@ -442,13 +457,13 @@ input[type='range'] {
 input[type='range']::-webkit-slider-runnable-track {
   height: 3px;
   border-radius: 2px;
-  background: var(--rule-strong);
+  background: var(--control-edge);
 }
 
 input[type='range']::-moz-range-track {
   height: 3px;
   border-radius: 2px;
-  background: var(--rule-strong);
+  background: var(--control-edge);
 }
 
 input[type='range']::-webkit-slider-thumb {
@@ -459,7 +474,7 @@ input[type='range']::-webkit-slider-thumb {
   border: 0;
   border-radius: 50%;
   background: var(--sheet);
-  box-shadow: 0 0 0 1px var(--rule-strong), var(--shadow-s);
+  box-shadow: 0 0 0 1px var(--control-edge), var(--shadow-s);
 }
 
 input[type='range']::-moz-range-thumb {
@@ -468,7 +483,7 @@ input[type='range']::-moz-range-thumb {
   border: 0;
   border-radius: 50%;
   background: var(--sheet);
-  box-shadow: 0 0 0 1px var(--rule-strong), var(--shadow-s);
+  box-shadow: 0 0 0 1px var(--control-edge), var(--shadow-s);
 }
 
 /* ---------------- sections ---------------- */
@@ -558,11 +573,26 @@ input[type='range']::-moz-range-thumb {
   display: flex;
   align-items: center;
   max-width: 100%;
-  filter: drop-shadow(0 30px 36px rgba(22, 33, 42, 0.28)) drop-shadow(0 4px 6px rgba(22, 33, 42, 0.18));
+  isolation: isolate;
 }
 
-:root[data-theme='night'] .cryptex {
-  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.6)) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
+/* The shadow on the table, drawn once behind the cryptex. A drop-shadow
+   filter would be redrawn on every frame the rings turn. */
+.cryptex::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: calc(var(--r) * 1.7 - 2px);
+  border-radius: 16px;
+  transform: translateY(-50%);
+  box-shadow: 0 30px 36px rgba(22, 33, 42, 0.28), 0 4px 6px rgba(22, 33, 42, 0.18);
+}
+
+:root[data-theme='night'] .cryptex::before {
+  box-shadow: 0 30px 40px rgba(0, 0, 0, 0.6), 0 4px 6px rgba(0, 0, 0, 0.4);
 }
 
 .cap {
@@ -598,7 +628,9 @@ input[type='range']::-moz-range-thumb {
   padding: 0 4px;
   overflow: hidden;
   background: #221b0c;
-  perspective: 900px;
+  /* No perspective: the faces still curve away like a cylinder, and
+     without it browsers draw the letters sharp instead of from a
+     magnified, softer copy. */
   cursor: grab;
   touch-action: none;
   user-select: none;
@@ -633,7 +665,6 @@ input[type='range']::-moz-range-thumb {
   height: var(--face);
   margin-top: calc(var(--face) / -2);
   transform-style: preserve-3d;
-  will-change: transform;
 }
 
 .ring-face {
@@ -731,8 +762,6 @@ input[type='range']::-moz-range-thumb {
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------------- history ---------------- */
-
 /* ---------------- lab ---------------- */
 
 .toolbar {
@@ -751,22 +780,9 @@ input[type='range']::-moz-range-thumb {
   gap: 14px;
 }
 
-.toolbar-row .grow {
-  flex: 1 1 280px;
-}
-
-.toolbar-row textarea {
-  min-height: 46px;
-  height: 46px;
-}
-
 .keys {
   display: flex;
   gap: 12px;
-}
-
-.keys:empty {
-  display: none;
 }
 
 .keys .field {
@@ -777,7 +793,7 @@ input[type='range']::-moz-range-thumb {
   width: 110px;
 }
 
-.keys .note {
+.keys .key-note {
   align-self: center;
   max-width: 220px;
   color: var(--ink-3);
@@ -820,7 +836,7 @@ input[type='range']::-moz-range-thumb {
 }
 
 .stale .stage-head::after {
-  content: 'Inputs changed. Run it again to update.';
+  content: 'Inputs changed. Press Encrypt or Decrypt again to update.';
   margin-left: auto;
   color: var(--brass);
   font-size: 13.5px;
@@ -967,11 +983,6 @@ input[type='range']::-moz-range-thumb {
   margin-bottom: 8px;
 }
 
-.result-head h3 {
-  color: var(--ink-2);
-  font-size: 14px;
-}
-
 .result-actions {
   display: flex;
   gap: 16px;
@@ -986,10 +997,21 @@ input[type='range']::-moz-range-thumb {
 .result-text {
   display: block;
   min-height: 1.5em;
+  /* A very long result scrolls in its card instead of filling the page. */
+  max-height: 18lh;
+  overflow-y: auto;
   font: 700 20px/1.5 var(--type);
   letter-spacing: 0.04em;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
+}
+
+.result[data-out='cipher'] .result-text {
+  color: var(--pencil);
+}
+
+.result[data-out='plain'] .result-text {
+  color: var(--carbon);
 }
 
 .result-text:empty::before {
@@ -1009,12 +1031,6 @@ input[type='range']::-moz-range-thumb {
 .notes p {
   color: var(--ink-2);
   font-size: 15.5px;
-}
-
-.weak span:first-child {
-  margin-right: 4px;
-  color: var(--pencil);
-  font-weight: 700;
 }
 
 /* ---------------- key strength ---------------- */
@@ -1076,10 +1092,6 @@ input[type='range']::-moz-range-thumb {
   transform-origin: left;
   transform: scaleX(var(--w, 0));
   transition: transform 1100ms var(--ease-out);
-}
-
-.strength:not(.shown) .st-bar i {
-  transform: scaleX(0.002);
 }
 
 .strength-row.modern .st-bar i {
@@ -1207,10 +1219,6 @@ input[type='range']::-moz-range-thumb {
   font-size: 16.5px;
 }
 
-.sort-toggle {
-  justify-self: start;
-}
-
 .shifts {
   margin: 0;
   padding: 0;
@@ -1283,6 +1291,15 @@ input[type='range']::-moz-range-thumb {
   font-weight: 700;
 }
 
+/* The winning row is the answer, so on a phone it wraps rather than
+   being cut off. */
+@media (max-width: 640px) {
+  .shift-row.best .shift-text {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+
 .shift-row.best .fit i {
   background: var(--pencil);
 }
@@ -1330,7 +1347,7 @@ input[type='range']::-moz-range-thumb {
 }
 
 .bar.english {
-  background: var(--rule-strong);
+  background: var(--control-edge);
 }
 
 .bar.cipher {
@@ -1527,16 +1544,6 @@ input[type='range']::-moz-range-thumb {
 .mission-rail {
   display: grid;
   gap: 12px;
-}
-
-.mission-progress {
-  color: var(--ink-2);
-  font-size: 14.5px;
-  font-weight: 650;
-}
-
-.mission-progress b {
-  color: var(--ink);
 }
 
 .mission-list {
@@ -1801,8 +1808,6 @@ input[type='range']::-moz-range-thumb {
 
 .secret-dialog::backdrop {
   background: rgba(10, 15, 20, 0.35);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
 }
 
 .secret-dialog[open] {
@@ -1810,16 +1815,16 @@ input[type='range']::-moz-range-thumb {
 }
 
 @keyframes sheet-in {
-  from { opacity: 0; transform: translateY(16px) scale(0.97); filter: blur(4px); }
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
 }
 
 .secret-card {
   display: grid;
   gap: 16px;
   padding: 26px 26px 22px;
-  border-radius: 28px;
-  background: var(--glass-strong);
-  box-shadow: var(--glass-edge), var(--shadow-l);
+  border-radius: 10px;
+  background: var(--sheet);
+  box-shadow: var(--shadow-l);
 }
 
 .secret-card h2 {
@@ -1827,13 +1832,8 @@ input[type='range']::-moz-range-thumb {
   letter-spacing: -0.02em;
 }
 
-.secret-meta,
-.secret-hint {
+.secret-meta {
   color: var(--ink-2);
-}
-
-.secret-hint:empty {
-  display: none;
 }
 
 .secret-actions {
@@ -1852,6 +1852,8 @@ input[type='range']::-moz-range-thumb {
     grid-template-columns: minmax(0, 1fr);
     gap: 22px;
     padding-top: 28px;
+    /* Tab follows the order on screen, where browsers support it. */
+    reading-flow: grid-order;
   }
 
   .hero-copy {
@@ -1923,13 +1925,6 @@ input[type='range']::-moz-range-thumb {
 }
 
 @media (max-width: 640px) {
-  /* The blur under the sticky nav and dock is redrawn on every scroll.
-     A smaller radius costs a phone far less and, on panels this size,
-     looks much the same. */
-  :root {
-    --frost: blur(14px) saturate(170%);
-  }
-
   .section {
     padding-top: 64px;
   }
@@ -2008,10 +2003,6 @@ input[type='range']::-moz-range-thumb {
     margin: -6px 6px;
   }
 
-  .dock .speed {
-    margin-left: auto;
-  }
-
   
 
   .strength-row {
@@ -2061,5 +2052,32 @@ input[type='range']::-moz-range-thumb {
   .stamp.landing,
   .secret-dialog[open] {
     animation: none;
+  }
+}
+
+/* ---------------- high-contrast modes ---------------- */
+
+/* Forced colours drop backgrounds, which is all a chart bar is. Draw
+   them in system colours instead so the charts stay readable. */
+@media (forced-colors: active) {
+  .bar,
+  .fit i,
+  .st-bar i,
+  .key-cipher::before,
+  .key-english::before {
+    forced-color-adjust: none;
+  }
+
+  .bar.cipher,
+  .key-cipher::before,
+  .shift-row.best .fit i {
+    background: Highlight;
+  }
+
+  .bar.english,
+  .key-english::before,
+  .fit i,
+  .st-bar i {
+    background: CanvasText;
   }
 }

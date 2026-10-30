@@ -41,22 +41,43 @@
     });
   });
 
+  // A folder's own name opens it, and no name at all (Back to the bare
+  // address) opens the first. #top, from the skip link, is neither.
   window.addEventListener('hashchange', () => {
-    show(location.hash.slice(1), { push: false });
+    const file = location.hash.slice(1);
+    if (file && !files.includes(file)) return;
+    show(file || files[0], { push: false });
     reveal();
   });
 
-  // Anything sent to the desk opens its folder first.
+  // A link to the folder already in the address (from the footer, say)
+  // changes nothing in the address, so no hashchange comes. Open it here.
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href]');
+    if (!a || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const url = new URL(a.href);
+    if (url.pathname !== location.pathname || url.hash !== location.hash || !files.includes(url.hash.slice(1))) return;
+    e.preventDefault();
+    show(url.hash.slice(1));
+    reveal();
+  });
+
+  // Anything sent to the desk opens its folder first. If the button that
+  // sent it was in the folder that just closed, focus goes to the desk's tab.
   const load = Breaker.load;
   Breaker.load = (...args) => {
+    const from = document.activeElement;
     show('desk');
     reveal();
+    if (from && from.closest('.file-panel[hidden]')) tabs[files.indexOf('desk')].focus({ preventScroll: true });
     return load(...args);
   };
 
   Breaker.init();
   show(location.hash.slice(1), { push: false });
 
-  const sent = Handoff.take('desk');
-  if (sent && sent.text) Breaker.load(sent.text, sent.attack);
+  Handoff.ready(() => {
+    const sent = Handoff.take('desk');
+    if (sent && sent.text) Breaker.load(sent.text, sent.attack);
+  });
 })();

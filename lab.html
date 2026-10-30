@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Lab · Cryptex</title>
+  <title>Cipher lab: ten classical ciphers, step by step · Cryptex</title>
   <meta name="description" content="Pick one of ten classical ciphers, type a message and watch every step of it being encrypted or decrypted.">
   <link rel="canonical" href="https://cryptex.vercel.app/lab">
-  <meta name="author" content="Het Nimeshkumar Upadhyay">
+  <meta name="author" content="Het Upadhyay">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#edf0ef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0e1418" media="(prefers-color-scheme: dark)">
@@ -14,7 +14,7 @@
   <!-- Link previews -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Cryptex">
-  <meta property="og:title" content="Lab · Cryptex">
+  <meta property="og:title" content="Cipher lab: ten classical ciphers, step by step · Cryptex">
   <meta property="og:description" content="Pick one of ten classical ciphers, type a message and watch every step of it being encrypted or decrypted.">
   <meta property="og:url" content="https://cryptex.vercel.app/lab">
   <meta property="og:image" content="https://cryptex.vercel.app/img/og.png">
@@ -23,7 +23,7 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="The Cryptex key logo and the words Every secret has a weakness, next to the brass rings of a cryptex.">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Lab · Cryptex">
+  <meta name="twitter:title" content="Cipher lab: ten classical ciphers, step by step · Cryptex">
   <meta name="twitter:description" content="Pick one of ten classical ciphers, type a message and watch every step of it being encrypted or decrypted.">
   <meta name="twitter:image" content="https://cryptex.vercel.app/img/og.png">
   <meta name="twitter:image:alt" content="The Cryptex key logo and the words Every secret has a weakness, next to the brass rings of a cryptex.">
@@ -36,15 +36,16 @@
   <meta name="apple-mobile-web-app-title" content="Cryptex">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-  <script src="js/theme.js"></script>
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="stylesheet" href="css/shell.css">
-  <link rel="stylesheet" href="css/scenes.css">
-  <link rel="stylesheet" href="css/lab.css">
+  <script src="js/theme.js?v=8626267322"></script>
+  <link rel="stylesheet" href="css/site.css?v=663543549d">
+  <link rel="stylesheet" href="css/shell.css?v=341482449c">
+  <link rel="stylesheet" href="css/scenes.css?v=80f816938d">
+  <link rel="stylesheet" href="css/lab.css?v=cc3ce4751c">
   <link rel="icon" href="img/mark.svg" type="image/svg+xml">
 </head>
 <body data-page="lab">
   <!-- shell:header -->
+  <a class="skip" href="#top">Skip to content</a>
   <header class="mast">
     <div class="mast-bar">
       <a class="brand" href="/" aria-label="Cryptex home">
@@ -62,8 +63,8 @@
       <div class="mast-right">
         <a class="today-link" href="/codebreaking#today">
           <span>Today’s intercept</span>
-          <b class="today-no">No. —</b>
-          <time class="today-left">—</time>
+          <b class="today-no"></b>
+          <time class="today-left" aria-hidden="true"></time>
         </a>
         <button class="lamp" type="button" aria-pressed="false" aria-label="Night lamp">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -79,7 +80,8 @@
     <nav class="menu-sheet" id="menu" aria-label="Main" hidden>
       <a href="/learn" data-page="learn">Learn <small>600 BC to today</small></a>
       <a href="/lab" data-page="lab">Lab <small>Ten ciphers, step by step</small></a>
-      <a href="/codebreaking" data-page="codebreaking">Codebreaking <small class="today-no">No. —</small></a>
+      <a href="/codebreaking" data-page="codebreaking">Codebreaking <small class="today-no"></small></a>
+      <div class="sheet-grip" aria-hidden="true"><i></i></div>
     </nav>
   </header>
   <!-- /shell:header -->
@@ -112,14 +114,20 @@
             </button>
             <div class="field message-field">
               <label for="message">Message</label>
-              <textarea id="message" rows="1" spellcheck="false">Meet me at the old bridge</textarea>
+              <textarea id="message" rows="1" spellcheck="false" aria-describedby="message-hint lab-error">Meet me at the old bridge</textarea>
             </div>
             <div class="toolbar-row">
-              <div class="keys"></div>
+              <!-- Caesar's key, as js/lab.js draws it, so the form doesn't jump when it loads. -->
+              <div class="keys">
+                <div class="field narrow">
+                  <label for="key-caesar-shift">Shift</label>
+                  <input type="number" min="1" max="25" inputmode="numeric" value="3" id="key-caesar-shift">
+                </div>
+              </div>
               <div class="field">
                 <span class="field-label" id="mode-label">Direction</span>
                 <div class="lever" role="group" aria-labelledby="mode-label" data-mode="encrypt">
-                  <span class="lever-side lever-plain">Plain text</span>
+                  <span class="lever-side lever-plain">Message</span>
                   <button type="button" class="lever-btn" aria-label="Switch to decrypting">
                     <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 10h12.5M11.5 5.5 16 10l-4.5 4.5" /></svg>
                   </button>
@@ -129,7 +137,7 @@
               <button class="btn primary run" type="submit">Encrypt</button>
             </div>
             <p class="hint" id="message-hint"></p>
-            <p class="error" role="alert"></p>
+            <p class="error" id="lab-error" role="alert"></p>
           </form>
 
           <section class="stage empty" aria-label="Step by step">
@@ -141,16 +149,16 @@
               <div class="scene"></div>
               <p class="placeholder"><span>Press <b>Encrypt</b> to watch it happen, one letter at a time.</span></p>
               <!-- The player bar carries the caption, so the two never cover each other. -->
-              <div class="dock">
+              <div class="dock" inert>
                 <p class="caption" aria-live="polite"></p>
-                <button type="button" class="tb" data-act="prev" aria-label="Previous step">
+                <button type="button" class="tb" data-act="prev" aria-label="Previous step" aria-keyshortcuts="ArrowLeft" title="Previous step (←)">
                   <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 5 7.5 10l5 5" /></svg>
                 </button>
-                <button type="button" class="tb play" data-act="play" aria-label="Play" data-state="paused">
+                <button type="button" class="tb play" data-act="play" aria-label="Play" data-state="paused" aria-keyshortcuts="Space" title="Play or pause (Space)">
                   <svg class="i-play" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5.2v9.6L14.6 10z" /></svg>
                   <svg class="i-pause" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5v10M13 5v10" /></svg>
                 </button>
-                <button type="button" class="tb" data-act="next" aria-label="Next step">
+                <button type="button" class="tb" data-act="next" aria-label="Next step" aria-keyshortcuts="ArrowRight" title="Next step (→)">
                   <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 5 5 5-5 5" /></svg>
                 </button>
                 <button type="button" class="tb" data-act="end" aria-label="Skip to the end">
@@ -158,14 +166,18 @@
                 </button>
                 <input class="scrub" type="range" min="0" max="0" value="0" aria-label="Step">
                 <span class="step-count">0 / 0</span>
-                <button type="button" class="speed-step" aria-label="Speed: normal">
-                  <span class="speed-word">Speed</span>
-                  <span class="ticks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-                  <span class="speed-value">1×</span>
-                </button>
+                <div class="speed" role="radiogroup" aria-label="Speed">
+                  <span class="speed-key" aria-hidden="true"></span>
+                  <button type="button" role="radio" aria-checked="false" tabindex="-1" data-speed="0">½×</button>
+                  <button type="button" role="radio" aria-checked="true" tabindex="0" data-speed="1">1×</button>
+                  <button type="button" role="radio" aria-checked="false" tabindex="-1" data-speed="2">2×</button>
+                  <button type="button" role="radio" aria-checked="false" tabindex="-1" data-speed="3">4×</button>
+                </div>
               </div>
             </div>
           </section>
+
+          <p class="lab-keys" aria-hidden="true"><kbd>Space</kbd> plays or pauses, <kbd>←</kbd> <kbd>→</kbd> step through, and <kbd>Enter</kbd> in the message runs it.</p>
 
           <div class="lab-foot">
             <section class="result" aria-labelledby="result-title">
@@ -173,6 +185,7 @@
                 <h2 id="result-title">Ciphertext</h2>
                 <div class="result-actions">
                   <button type="button" class="link" data-act="copy">Copy</button>
+                  <span class="vh" id="copy-said" role="status"></span>
                   <button type="button" class="link" data-act="attack">Try to break it</button>
                   <button type="button" class="link" data-act="send">Send this as a secret</button>
                 </div>
@@ -210,6 +223,7 @@
       <!-- On phones the codebook opens from the Cipher button as a sheet. -->
       <dialog class="codebook-sheet" id="codebook-sheet" aria-labelledby="codebook-sheet-title">
         <div class="sheet-inner">
+          <div class="sheet-grip" aria-hidden="true"><i></i></div>
           <div class="sheet-head">
             <h2 id="codebook-sheet-title">Codebook</h2>
             <form method="dialog"><button type="submit" class="link">Close</button></form>
@@ -230,7 +244,7 @@
         <p class="hint share-from" hidden>Filled in from your last run in the lab. Check it over, then create the link.</p>
         <div class="field">
           <label for="share-text">Your message</label>
-          <textarea id="share-text" rows="3" spellcheck="false">Lunch is on me if you can read this</textarea>
+          <textarea id="share-text" rows="3" spellcheck="false" aria-describedby="share-error">Lunch is on me if you can read this</textarea>
         </div>
         <div class="share-row">
           <div class="field">
@@ -239,7 +253,7 @@
           </div>
           <div class="field" id="share-key-field">
             <label for="share-key">Key</label>
-            <input id="share-key" type="text" spellcheck="false">
+            <input id="share-key" type="text" spellcheck="false" aria-describedby="share-error">
           </div>
           <label class="check">
             <input type="checkbox" id="share-include-key">
@@ -250,7 +264,8 @@
         <p class="error" id="share-error" role="alert"></p>
         <div class="share-out" hidden>
           <input id="share-link" type="text" readonly aria-label="Link to your secret">
-          <button type="button" class="btn glass-btn small" data-act="copy-link">Copy link</button>
+          <button type="button" class="btn small" data-act="copy-link">Copy link</button>
+          <span class="vh" id="copy-link-said" role="status"></span>
           <p class="share-preview"></p>
         </div>
       </form>
@@ -261,10 +276,9 @@
       <h2 id="secret-title">Someone sent you a secret</h2>
       <p class="secret-meta"></p>
       <pre class="intercept secret-text"></pre>
-      <p class="secret-hint"></p>
       <div class="secret-actions">
         <button type="button" class="btn primary" data-act="secret-crack">Try to crack it</button>
-        <button type="button" class="btn glass-btn" data-act="secret-lab" hidden>Decrypt it in the lab</button>
+        <button type="button" class="btn" data-act="secret-lab" hidden>Decrypt it in the lab</button>
         <button type="submit" class="link">Close</button>
       </div>
     </form>
@@ -292,7 +306,7 @@
             <li><a href="/learn#enigma">Enigma</a></li>
             <li><a href="/learn#one-time-pad">One-time pad</a></li>
             <li><a href="/learn#strength">Key strength</a></li>
-            <li><a href="/learn#today">Why it matters</a></li>
+            <li><a href="/learn#why-it-matters">Why it matters</a></li>
           </ul>
         </div>
         <div>
@@ -322,9 +336,9 @@
       </nav>
     </div>
     <div class="foot-bar">
-      <p class="foot-who">© 2026 <b>Het Nimeshkumar Upadhyay</b></p>
-      <p>Made by <span class="signature" tabindex="0" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-label="Het Upadhyay, written in a Caesar cipher" title="Shift 3. Hover to decode.">KHW XSDGKBDB</span></p>
-      <p>Runs in your browser. Nothing you type leaves the page.</p>
+      <p class="foot-who">© 2026 <b>Het Upadhyay</b></p>
+      <p>Made by <span class="vh">Het Upadhyay</span><span class="signature" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-hidden="true" title="Shift 3. Point at it or tap it to decode.">KHW XSDGKBDB</span></p>
+      <p>Runs in your browser. Nothing you type is sent to a server.</p>
       <div class="foot-links">
         <a href="/terms">Terms</a>
         <a href="/privacy">Privacy</a>
@@ -339,18 +353,19 @@
     </div>
   </footer>
   <!-- /shell:footer -->
-  <script src="js/ciphers.js"></script>
-  <script src="js/stage.js"></script>
-  <script src="js/scenes/substitution.js"></script>
-  <script src="js/scenes/tabula.js"></script>
-  <script src="js/scenes/playfair.js"></script>
-  <script src="js/scenes/polybius.js"></script>
-  <script src="js/scenes/railfence.js"></script>
-  <script src="js/scenes/columnar.js"></script>
-  <script src="js/handoff.js"></script>
-  <script src="js/lab.js"></script>
-  <script src="js/share.js"></script>
-  <script src="js/site.js"></script>
-  <script src="js/pwa.js"></script>
+  <script src="js/sheet.js?v=f4d1354ad7"></script>
+  <script src="js/ciphers.js?v=517fef3150"></script>
+  <script src="js/stage.js?v=afe593e760"></script>
+  <script src="js/scenes/substitution.js?v=581c58d35f"></script>
+  <script src="js/scenes/tabula.js?v=c3cacba365"></script>
+  <script src="js/scenes/playfair.js?v=23084a281e"></script>
+  <script src="js/scenes/polybius.js?v=e974e61d35"></script>
+  <script src="js/scenes/railfence.js?v=b4d0d7f692"></script>
+  <script src="js/scenes/columnar.js?v=5f551bc86e"></script>
+  <script src="js/handoff.js?v=ad58c84027"></script>
+  <script src="js/lab.js?v=b07282eb61"></script>
+  <script src="js/share.js?v=ae6496ea0f"></script>
+  <script src="js/site.js?v=c274758143"></script>
+  <script src="js/pwa.js?v=5b673ad196"></script>
 </body>
 </html>

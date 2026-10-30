@@ -2,7 +2,7 @@
 
 Usage: python3 tools/serve.py <folder> <port>   (or npm start)
 """
-import http.server, json, os, re, sys
+import http.server, json, os, re, sys, urllib.parse
 
 ROOT = os.path.abspath(sys.argv[1])
 PORT = int(sys.argv[2])
@@ -17,12 +17,21 @@ def to_regex(source):
 
 RULES = [(to_regex(h['source']), h['headers']) for h in CONF.get('headers', [])]
 
+# Folders .vercelignore keeps off the live site stay off this one too.
+IGNORED = {line.strip().strip('/') for line in open(os.path.join(ROOT, '.vercelignore'))
+           if line.strip() and not line.startswith('#')}
+
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *a, **k):
         super().__init__(*a, directory=ROOT, **k)
 
     def translate_path(self, path):
+        parts = [part for part in urllib.parse.unquote(re.split(r'[?#]', path)[0]).split('/') if part]
+        # Only what Vercel would serve: no dot-files like .git, nothing
+        # .vercelignore leaves out.
+        if any(part.startswith('.') for part in parts) or (parts and parts[0] in IGNORED):
+            return os.path.join(ROOT, '.missing')
         p = super().translate_path(path)
         if CONF.get('cleanUrls') and not os.path.exists(p) and os.path.exists(p + '.html'):
             return p + '.html'
@@ -49,6 +58,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         for k, v in sent.items():
             self.send_header(k, v)
         super().end_headers()
+
+    # Vercel doesn't list folders; neither does this.
+    def list_directory(self, path):
+        self.send_error(404)
 
     def guess_type(self, path):
         if path.endswith('.webmanifest'):

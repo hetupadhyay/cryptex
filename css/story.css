@@ -20,11 +20,15 @@
   min-width: 0;
 }
 
+.sheet.enigma {
+  display: grid;
+  gap: 20px;
+}
+
 @container (min-width: 700px) {
   .sheet.enigma {
-    display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-    align-items: start;
+    align-items: center;
     gap: 28px;
   }
 }
@@ -275,7 +279,12 @@
 .otp-tiles {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 4px;
+  gap: 10px 14px;
+}
+
+.otp-word {
+  display: flex;
+  gap: 4px;
 }
 
 .otp-tiles:empty {
@@ -296,10 +305,6 @@
   margin: 2px 5px 0;
   padding-top: 2px;
   border-top: 1px solid var(--rule-strong);
-}
-
-.otp-gap {
-  width: 12px;
 }
 
 .real b:nth-child(1) { color: var(--ink); }

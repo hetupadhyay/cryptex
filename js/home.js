@@ -10,7 +10,7 @@
     history: '/learn',
     unbreakable: '/learn#enigma',
     strength: '/learn#strength',
-    today: '/learn#today',
+    today: '/learn#why-it-matters',
     lab: '/lab',
     share: '/lab#share',
     desk: '/codebreaking#desk',
@@ -18,15 +18,23 @@
     intercepts: '/codebreaking#missions',
   };
 
-  const hash = location.hash;
-  if (hash.startsWith('#secret=')) {
-    location.replace('/lab' + hash);
+  // Only the table's own keys: #constructor isn't a section.
+  function movedTo(hash) {
+    if (hash.startsWith('#secret=')) return '/lab' + hash;
+    const key = hash.slice(1);
+    return Object.prototype.hasOwnProperty.call(MOVED, key) ? MOVED[key] : '';
+  }
+
+  const target = movedTo(location.hash);
+  if (target) {
+    location.replace(target);
     return;
   }
-  if (MOVED[hash.slice(1)]) {
-    location.replace(MOVED[hash.slice(1)]);
-    return;
-  }
+  // An old link followed while already on this page.
+  window.addEventListener('hashchange', () => {
+    const to = movedTo(location.hash);
+    if (to) location.replace(to);
+  });
 
   const $ = (sel, el = document) => el.querySelector(sel);
   const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
@@ -107,7 +115,6 @@
     const solved = key in days;
     $('.strip-solved', strip).hidden = !solved;
     $('.strip-go .btn', strip).textContent = solved ? 'Look again' : 'Start';
-    strip.hidden = false;
   }
 
   if (strip) {
@@ -165,7 +172,7 @@
     go.textContent = 'Go to the desk';
     go.href = '/codebreaking#desk';
   } else if (n) {
-    note.textContent = `${MISSIONS.length - n} still to crack, each with a different attack.`;
+    note.textContent = `${MISSIONS.length - n} still to crack.`;
     go.textContent = 'Carry on with the missions';
   }
 

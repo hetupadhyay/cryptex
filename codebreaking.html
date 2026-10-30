@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Codebreaking · Cryptex</title>
-  <meta name="description" content="Crack a new intercept every day, work through eight historical missions, and break any classical cipher without the key.">
+  <title>Codebreaking: a daily cipher puzzle and eight missions · Cryptex</title>
+  <meta name="description" content="Crack a new intercept every day, work through eight historical missions, and break Caesar, affine, Vigenère and rail fence ciphers without the key.">
   <link rel="canonical" href="https://cryptex.vercel.app/codebreaking">
-  <meta name="author" content="Het Nimeshkumar Upadhyay">
+  <meta name="author" content="Het Upadhyay">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#edf0ef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0e1418" media="(prefers-color-scheme: dark)">
@@ -14,8 +14,8 @@
   <!-- Link previews -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Cryptex">
-  <meta property="og:title" content="Codebreaking · Cryptex">
-  <meta property="og:description" content="Crack a new intercept every day, work through eight historical missions, and break any classical cipher without the key.">
+  <meta property="og:title" content="Codebreaking: a daily cipher puzzle and eight missions · Cryptex">
+  <meta property="og:description" content="Crack a new intercept every day, work through eight historical missions, and break Caesar, affine, Vigenère and rail fence ciphers without the key.">
   <meta property="og:url" content="https://cryptex.vercel.app/codebreaking">
   <meta property="og:image" content="https://cryptex.vercel.app/img/og.png">
   <meta property="og:image:type" content="image/png">
@@ -23,8 +23,8 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="The Cryptex key logo and the words Every secret has a weakness, next to the brass rings of a cryptex.">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Codebreaking · Cryptex">
-  <meta name="twitter:description" content="Crack a new intercept every day, work through eight historical missions, and break any classical cipher without the key.">
+  <meta name="twitter:title" content="Codebreaking: a daily cipher puzzle and eight missions · Cryptex">
+  <meta name="twitter:description" content="Crack a new intercept every day, work through eight historical missions, and break Caesar, affine, Vigenère and rail fence ciphers without the key.">
   <meta name="twitter:image" content="https://cryptex.vercel.app/img/og.png">
   <meta name="twitter:image:alt" content="The Cryptex key logo and the words Every secret has a weakness, next to the brass rings of a cryptex.">
 
@@ -36,16 +36,17 @@
   <meta name="apple-mobile-web-app-title" content="Cryptex">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-  <script src="js/theme.js"></script>
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="stylesheet" href="css/shell.css">
-  <link rel="stylesheet" href="css/daily.css">
-  <link rel="stylesheet" href="css/desk.css">
-  <link rel="stylesheet" href="css/codebreaking.css">
+  <script src="js/theme.js?v=8626267322"></script>
+  <link rel="stylesheet" href="css/site.css?v=663543549d">
+  <link rel="stylesheet" href="css/shell.css?v=341482449c">
+  <link rel="stylesheet" href="css/daily.css?v=875309f422">
+  <link rel="stylesheet" href="css/desk.css?v=89df0a7983">
+  <link rel="stylesheet" href="css/codebreaking.css?v=01b3a75d7d">
   <link rel="icon" href="img/mark.svg" type="image/svg+xml">
 </head>
 <body data-page="codebreaking">
   <!-- shell:header -->
+  <a class="skip" href="#top">Skip to content</a>
   <header class="mast">
     <div class="mast-bar">
       <a class="brand" href="/" aria-label="Cryptex home">
@@ -63,8 +64,8 @@
       <div class="mast-right">
         <a class="today-link" href="/codebreaking#today">
           <span>Today’s intercept</span>
-          <b class="today-no">No. —</b>
-          <time class="today-left">—</time>
+          <b class="today-no"></b>
+          <time class="today-left" aria-hidden="true"></time>
         </a>
         <button class="lamp" type="button" aria-pressed="false" aria-label="Night lamp">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -80,7 +81,8 @@
     <nav class="menu-sheet" id="menu" aria-label="Main" hidden>
       <a href="/learn" data-page="learn">Learn <small>600 BC to today</small></a>
       <a href="/lab" data-page="lab">Lab <small>Ten ciphers, step by step</small></a>
-      <a href="/codebreaking" data-page="codebreaking">Codebreaking <small class="today-no">No. —</small></a>
+      <a href="/codebreaking" data-page="codebreaking">Codebreaking <small class="today-no"></small></a>
+      <div class="sheet-grip" aria-hidden="true"><i></i></div>
     </nav>
   </header>
   <!-- /shell:header -->
@@ -99,8 +101,8 @@
     <div class="case">
       <div class="file-tabs" role="tablist" aria-label="Codebreaking">
         <button class="file-tab" type="button" role="tab" id="tab-today" aria-controls="file-today" data-file="today" aria-selected="true"><b>Today</b><small class="today-no">No. —</small></button>
-        <button class="file-tab" type="button" role="tab" id="tab-missions" aria-controls="file-missions" data-file="missions" aria-selected="false" tabindex="-1"><b>Missions</b><small class="missions-count">8 intercepts</small></button>
-        <button class="file-tab" type="button" role="tab" id="tab-desk" aria-controls="file-desk" data-file="desk" aria-selected="false" tabindex="-1"><b>Desk</b><small>6 attacks</small></button>
+        <button class="file-tab" type="button" role="tab" id="tab-missions" aria-controls="file-missions" data-file="missions" aria-selected="false" tabindex="-1"><b>Missions</b><small class="missions-count">8 missions</small></button>
+        <button class="file-tab" type="button" role="tab" id="tab-desk" aria-controls="file-desk" data-file="desk" aria-selected="false" tabindex="-1"><b>Desk</b><small>5 attacks</small></button>
       </div>
 
       <div class="file-panel folder" data-file="today" id="file-today" role="tabpanel" aria-labelledby="tab-today">
@@ -151,7 +153,7 @@
             </dl>
             <ol class="daily-week" aria-label="This week"></ol>
             <p class="daily-status"></p>
-            <p class="daily-rules">A new message arrives at midnight, the same one for everyone. Monday is gentle and it gets harder towards the weekend.</p>
+            <p class="daily-rules">A new message arrives at midnight where you are. Everyone gets the same one on the same date. Monday is gentle and it gets harder towards the weekend.</p>
           </aside>
         </section>
       </div>
@@ -161,8 +163,8 @@
         <section class="missions" id="intercepts" aria-labelledby="intercepts-title">
           <div class="mission-rail">
             <div class="index-head">
-              <h2 id="intercepts-title">Eight intercepts</h2>
-              <p>Caught in transit from Rome to the Western Front, from easiest to hardest.</p>
+              <h2 id="intercepts-title">Eight missions</h2>
+              <p>Messages caught in transit, from a Roman courier to the Western Front, roughly from easiest to hardest.</p>
             </div>
             <ol class="mission-list"></ol>
           </div>
@@ -184,6 +186,7 @@
                 <button class="btn primary" type="submit">Check</button>
               </div>
               <p class="answer-feedback" role="status"></p>
+              <button type="button" class="btn file-btn next-file" hidden></button>
             </form>
             <div class="hints">
               <button type="button" class="link" data-act="hint">Show a hint</button>
@@ -203,11 +206,11 @@
           <div class="controls">
             <div class="field">
               <label for="attack-text">Ciphertext</label>
-              <textarea id="attack-text" rows="7" spellcheck="false"></textarea>
+              <textarea id="attack-text" rows="7" maxlength="20000" spellcheck="false"></textarea>
               <p class="hint">Longer text gives better results. A few sentences is plenty.</p>
             </div>
             <div class="samples">
-              <span>Load an intercepted message:</span>
+              <span>Load a sample:</span>
               <button type="button" class="sample" data-sample="caesar">Caesar</button>
               <button type="button" class="sample" data-sample="vigenere">Vigenère</button>
               <button type="button" class="sample" data-sample="railfence">Rail fence</button>
@@ -262,7 +265,8 @@
                 <p class="verdict"></p>
               </div>
               <figure class="chart freq-chart">
-                <div class="bars" role="img" aria-label="Letter frequencies of the ciphertext compared with English"></div>
+                <div class="bars" role="img" aria-label="Letter frequencies of the ciphertext compared with English" aria-describedby="freq-said"></div>
+                <p class="vh" id="freq-said"></p>
                 <figcaption class="legend">
                   <span class="key-cipher">Your text</span>
                   <span class="key-english">Typical English</span>
@@ -333,7 +337,7 @@
             <li><a href="/learn#enigma">Enigma</a></li>
             <li><a href="/learn#one-time-pad">One-time pad</a></li>
             <li><a href="/learn#strength">Key strength</a></li>
-            <li><a href="/learn#today">Why it matters</a></li>
+            <li><a href="/learn#why-it-matters">Why it matters</a></li>
           </ul>
         </div>
         <div>
@@ -363,9 +367,9 @@
       </nav>
     </div>
     <div class="foot-bar">
-      <p class="foot-who">© 2026 <b>Het Nimeshkumar Upadhyay</b></p>
-      <p>Made by <span class="signature" tabindex="0" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-label="Het Upadhyay, written in a Caesar cipher" title="Shift 3. Hover to decode.">KHW XSDGKBDB</span></p>
-      <p>Runs in your browser. Nothing you type leaves the page.</p>
+      <p class="foot-who">© 2026 <b>Het Upadhyay</b></p>
+      <p>Made by <span class="vh">Het Upadhyay</span><span class="signature" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-hidden="true" title="Shift 3. Point at it or tap it to decode.">KHW XSDGKBDB</span></p>
+      <p>Runs in your browser. Nothing you type is sent to a server.</p>
       <div class="foot-links">
         <a href="/terms">Terms</a>
         <a href="/privacy">Privacy</a>
@@ -380,15 +384,16 @@
     </div>
   </footer>
   <!-- /shell:footer -->
-  <script src="js/ciphers.js"></script>
-  <script src="js/analysis.js"></script>
-  <script src="js/stage.js"></script>
-  <script src="js/handoff.js"></script>
-  <script src="js/breaker.js"></script>
-  <script src="js/intercepts.js"></script>
-  <script src="js/daily.js"></script>
-  <script src="js/codebreaking.js"></script>
-  <script src="js/site.js"></script>
-  <script src="js/pwa.js"></script>
+  <script src="js/sheet.js?v=f4d1354ad7"></script>
+  <script src="js/ciphers.js?v=517fef3150"></script>
+  <script src="js/analysis.js?v=64f37747e0"></script>
+  <script src="js/stage.js?v=afe593e760"></script>
+  <script src="js/handoff.js?v=ad58c84027"></script>
+  <script src="js/breaker.js?v=4c906b26b7"></script>
+  <script src="js/intercepts.js?v=70f2c96bdb"></script>
+  <script src="js/daily.js?v=95d419e4d9"></script>
+  <script src="js/codebreaking.js?v=33958d9e93"></script>
+  <script src="js/site.js?v=c274758143"></script>
+  <script src="js/pwa.js?v=5b673ad196"></script>
 </body>
 </html>

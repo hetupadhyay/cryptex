@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Cryptex</title>
-  <meta name="description" content="Ten classical ciphers, animated one letter at a time, and the tricks codebreakers used to crack every one of them.">
+  <title>Cryptex: classical ciphers, animated and broken</title>
+  <meta name="description" content="Ten classical ciphers, animated one letter at a time, and the tricks codebreakers used to crack them.">
   <link rel="canonical" href="https://cryptex.vercel.app/">
-  <meta name="author" content="Het Nimeshkumar Upadhyay">
+  <meta name="author" content="Het Upadhyay">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#edf0ef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0e1418" media="(prefers-color-scheme: dark)">
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Cryptex">
   <meta property="og:title" content="Cryptex: every secret has a weakness">
-  <meta property="og:description" content="Ten classical ciphers, animated one letter at a time, and the tricks codebreakers used to crack every one of them.">
+  <meta property="og:description" content="Ten classical ciphers, animated one letter at a time, and the tricks codebreakers used to crack them.">
   <meta property="og:url" content="https://cryptex.vercel.app/">
   <meta property="og:image" content="https://cryptex.vercel.app/img/og.png">
   <meta property="og:image:type" content="image/png">
@@ -24,7 +24,7 @@
   <meta property="og:image:alt" content="The Cryptex key logo and the words Every secret has a weakness, next to the brass rings of a cryptex.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Cryptex: every secret has a weakness">
-  <meta name="twitter:description" content="Ten classical ciphers, animated one letter at a time, and the tricks codebreakers used to crack every one of them.">
+  <meta name="twitter:description" content="Ten classical ciphers, animated one letter at a time, and the tricks codebreakers used to crack them.">
   <meta name="twitter:image" content="https://cryptex.vercel.app/img/og.png">
   <meta name="twitter:image:alt" content="The Cryptex key logo and the words Every secret has a weakness, next to the brass rings of a cryptex.">
 
@@ -36,16 +36,17 @@
   <meta name="apple-mobile-web-app-title" content="Cryptex">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-  <script src="js/theme.js"></script>
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="stylesheet" href="css/shell.css">
-  <link rel="stylesheet" href="css/home.css">
+  <script src="js/theme.js?v=8626267322"></script>
+  <link rel="stylesheet" href="css/site.css?v=663543549d">
+  <link rel="stylesheet" href="css/shell.css?v=341482449c">
+  <link rel="stylesheet" href="css/home.css?v=e5d449e446">
   <link rel="icon" href="img/mark.svg" type="image/svg+xml">
 </head>
 <body data-page="home">
   <canvas class="pad" aria-hidden="true"></canvas>
 
   <!-- shell:header -->
+  <a class="skip" href="#top">Skip to content</a>
   <header class="mast">
     <div class="mast-bar">
       <a class="brand" href="/" aria-label="Cryptex home">
@@ -63,8 +64,8 @@
       <div class="mast-right">
         <a class="today-link" href="/codebreaking#today">
           <span>Today’s intercept</span>
-          <b class="today-no">No. —</b>
-          <time class="today-left">—</time>
+          <b class="today-no"></b>
+          <time class="today-left" aria-hidden="true"></time>
         </a>
         <button class="lamp" type="button" aria-pressed="false" aria-label="Night lamp">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -80,7 +81,8 @@
     <nav class="menu-sheet" id="menu" aria-label="Main" hidden>
       <a href="/learn" data-page="learn">Learn <small>600 BC to today</small></a>
       <a href="/lab" data-page="lab">Lab <small>Ten ciphers, step by step</small></a>
-      <a href="/codebreaking" data-page="codebreaking">Codebreaking <small class="today-no">No. —</small></a>
+      <a href="/codebreaking" data-page="codebreaking">Codebreaking <small class="today-no"></small></a>
+      <div class="sheet-grip" aria-hidden="true"><i></i></div>
     </nav>
   </header>
   <!-- /shell:header -->
@@ -94,15 +96,15 @@
     <section class="hero">
       <div class="hero-copy">
         <h1>Every secret has a weakness.</h1>
-        <p class="lede">Watch ten classical ciphers work, one letter at a time. Then use the same tricks real codebreakers used to crack every one of them.</p>
+        <p class="lede">Watch ten classical ciphers work, one letter at a time. Then use the tricks real codebreakers used to crack them.</p>
         <div class="hero-actions">
           <a class="btn primary" href="/lab">Open the lab</a>
-          <a class="btn glass-btn" href="/codebreaking#today">Try today’s intercept</a>
+          <a class="btn" href="/codebreaking#today">Try today’s intercept</a>
         </div>
       </div>
 
       <figure class="cryptex-stage">
-        <div class="cryptex" aria-label="A cryptex. Drag the rings up or down to shift every letter.">
+        <div class="cryptex">
           <span class="cap left" aria-hidden="true"></span>
           <div class="rings"></div>
           <span class="cap right" aria-hidden="true"></span>
@@ -112,15 +114,15 @@
           <div class="readout">
             <div>
               <span class="readout-label">Your word</span>
-              <input id="cryptex-word" class="readout-input" maxlength="6" value="CIPHER" spellcheck="false" autocomplete="off" aria-label="Word on the cryptex">
+              <input id="cryptex-word" class="readout-input" maxlength="6" value="CIPHER" spellcheck="false" autocomplete="off" aria-label="Your word">
             </div>
             <div class="readout-shift">
               <span class="readout-label">Shift</span>
-              <output class="readout-value" id="cryptex-shift">0</output>
+              <output class="readout-value" id="cryptex-shift" aria-live="off">0</output>
             </div>
             <div>
               <span class="readout-label">Reads as</span>
-              <output class="readout-value cipher" id="cryptex-out">CIPHER</output>
+              <output class="readout-value cipher" id="cryptex-out" aria-live="off">CIPHER</output>
             </div>
           </div>
           <p>A cryptex is a Caesar cipher you can hold. Drag or flick the rings: they turn together, so every letter shifts by the same amount.</p>
@@ -128,8 +130,9 @@
       </figure>
     </section>
 
-    <!-- Today's intercept, filled in by home.js once the puzzle is built -->
-    <section class="today-strip" aria-labelledby="today-strip-title" hidden>
+    <!-- Today's intercept, filled in by home.js once the puzzle is built.
+         It keeps its space from the start so nothing below it jumps. -->
+    <section class="today-strip" aria-labelledby="today-strip-title">
       <h2 class="strip-tab" id="today-strip-title">Today’s intercept <b class="strip-no"></b></h2>
       <div class="strip-file">
         <div class="strip-case">
@@ -138,7 +141,7 @@
           <dl class="strip-facts">
             <div><dt>Date</dt><dd class="strip-date"></dd></div>
             <div><dt>Difficulty</dt><dd><span class="strip-pips"></span><span class="strip-level"></span></dd></div>
-            <div><dt>New one in</dt><dd><time class="today-left">0:00:00</time></dd></div>
+            <div><dt>New one in</dt><dd><time class="today-left"></time></dd></div>
           </dl>
         </div>
         <div class="strip-slip">
@@ -159,21 +162,21 @@
       <article class="door door-learn" aria-labelledby="door-learn-title">
         <div class="door-head">
           <h3 id="door-learn-title">Learn</h3>
-          <p>Twelve ciphers in the order people trusted them, from scribes in Jerusalem to the Enigma machine, and how each one fell.</p>
+          <p>Twelve ciphers in the order they appeared, from scribes in Jerusalem to the Enigma machine, and how each one fell.</p>
           <a class="link" href="/learn">Read the story</a>
         </div>
         <ol class="years">
-          <li><a href="/learn"><time>c. 600 BC</time><span>Atbash</span></a></li>
-          <li><a href="/learn"><time>c. 150 BC</time><span>Polybius</span></a></li>
-          <li><a href="/learn"><time>c. 50 BC</time><span>Caesar</span></a></li>
-          <li class="after-gap"><a href="/learn"><time>1553</time><span>Vigenère</span></a></li>
-          <li><a href="/learn"><time>1586</time><span>Autokey</span></a></li>
-          <li><a href="/learn"><time>1801</time><span>Affine</span></a></li>
-          <li><a href="/learn"><time>1854</time><span>Playfair</span></a></li>
-          <li><a href="/learn"><time>1857</time><span>Beaufort</span></a></li>
-          <li><a href="/learn"><time>1860s</time><span>Rail fence</span></a></li>
+          <li><a href="/learn#atbash"><time>c. 600 BC</time><span>Atbash</span></a></li>
+          <li><a href="/learn#polybius"><time>c. 150 BC</time><span>Polybius</span></a></li>
+          <li><a href="/learn#caesar"><time>c. 50 BC</time><span>Caesar</span></a></li>
+          <li class="after-gap"><a href="/learn#vigenere"><time>1553</time><span>Vigenère</span></a></li>
+          <li><a href="/learn#autokey"><time>1586</time><span>Autokey</span></a></li>
+          <li><a href="/learn#affine"><time>1801</time><span>Affine</span></a></li>
+          <li><a href="/learn#playfair"><time>1854</time><span>Playfair</span></a></li>
+          <li><a href="/learn#beaufort"><time>1857</time><span>Beaufort</span></a></li>
+          <li><a href="/learn#railfence"><time>1860s</time><span>Rail fence</span></a></li>
           <li><a href="/learn#one-time-pad"><time>1882</time><span>One-time pad</span></a></li>
-          <li><a href="/learn"><time>1914</time><span>Columnar</span></a></li>
+          <li><a href="/learn#columnar"><time>1914</time><span>Columnar</span></a></li>
           <li><a href="/learn#enigma"><time>1926</time><span>Enigma</span></a></li>
         </ol>
       </article>
@@ -190,9 +193,9 @@
             <output class="lab-line-shift" id="lab-line-shift">3</output>
             <button type="button" class="step" data-step="1" aria-label="Shift one more">+</button>
           </div>
-          <label for="lab-line-in">Plain</label>
+          <label for="lab-line-in">Message</label>
           <input id="lab-line-in" type="text" value="Attack at dawn" maxlength="22" spellcheck="false" autocomplete="off">
-          <span class="lab-line-label" aria-hidden="true">Cipher</span>
+          <span class="lab-line-label" aria-hidden="true">Ciphertext</span>
           <output class="lab-line-out" for="lab-line-in lab-line-shift">DWWDFN DW GDZQ</output>
         </div>
         <a class="btn primary lab-line-open" href="/lab">Watch it in the lab</a>
@@ -204,7 +207,7 @@
         <ol class="break-tally" aria-hidden="true">
           <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
         </ol>
-        <p class="break-note">Eight intercepts are waiting, from a Roman courier to the Western Front. Each one needs a different attack.</p>
+        <p class="break-note">Eight missions are waiting, from a Roman courier to the Western Front, roughly from easiest to hardest.</p>
         <p class="break-streak" hidden>Daily streak <b></b></p>
         <a class="btn primary break-go" href="/codebreaking#missions">Start the first mission</a>
       </article>
@@ -232,7 +235,7 @@
             <li><a href="/learn#enigma">Enigma</a></li>
             <li><a href="/learn#one-time-pad">One-time pad</a></li>
             <li><a href="/learn#strength">Key strength</a></li>
-            <li><a href="/learn#today">Why it matters</a></li>
+            <li><a href="/learn#why-it-matters">Why it matters</a></li>
           </ul>
         </div>
         <div>
@@ -262,9 +265,9 @@
       </nav>
     </div>
     <div class="foot-bar">
-      <p class="foot-who">© 2026 <b>Het Nimeshkumar Upadhyay</b></p>
-      <p>Made by <span class="signature" tabindex="0" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-label="Het Upadhyay, written in a Caesar cipher" title="Shift 3. Hover to decode.">KHW XSDGKBDB</span></p>
-      <p>Runs in your browser. Nothing you type leaves the page.</p>
+      <p class="foot-who">© 2026 <b>Het Upadhyay</b></p>
+      <p>Made by <span class="vh">Het Upadhyay</span><span class="signature" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-hidden="true" title="Shift 3. Point at it or tap it to decode.">KHW XSDGKBDB</span></p>
+      <p>Runs in your browser. Nothing you type is sent to a server.</p>
       <div class="foot-links">
         <a href="/terms">Terms</a>
         <a href="/privacy">Privacy</a>
@@ -279,14 +282,15 @@
     </div>
   </footer>
   <!-- /shell:footer -->
-  <script src="js/ciphers.js"></script>
-  <script src="js/spring.js"></script>
-  <script src="js/cryptex.js"></script>
-  <script src="js/background.js"></script>
-  <script src="js/handoff.js"></script>
-  <script src="js/daily.js"></script>
-  <script src="js/home.js"></script>
-  <script src="js/site.js"></script>
-  <script src="js/pwa.js"></script>
+  <script src="js/sheet.js?v=f4d1354ad7"></script>
+  <script src="js/ciphers.js?v=517fef3150"></script>
+  <script src="js/spring.js?v=8c5f9b1865"></script>
+  <script src="js/cryptex.js?v=3db7e3361d"></script>
+  <script src="js/background.js?v=d135e07da1"></script>
+  <script src="js/handoff.js?v=ad58c84027"></script>
+  <script src="js/daily.js?v=95d419e4d9"></script>
+  <script src="js/home.js?v=a53d7e9b27"></script>
+  <script src="js/site.js?v=c274758143"></script>
+  <script src="js/pwa.js?v=5b673ad196"></script>
 </body>
 </html>

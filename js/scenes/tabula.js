@@ -4,7 +4,8 @@
  * The key is written under the message, then each pair (message letter, key
  * letter) is looked up in the 26×26 table. The path through the table is
  * drawn as a trail of cells so you can see where the answer comes from.
- * On a phone the table is magnified and the view follows each lookup.
+ * On a phone or a short window the table is magnified and the view follows
+ * each lookup.
  */
 (function () {
   'use strict';
@@ -17,8 +18,8 @@
     const autokey = cipher.id === 'autokey';
     const beaufort = cipher.id === 'beaufort';
     const keyword = lettersOnly(keys.key);
-    const source = input.toUpperCase();
-    const result = (enc ? cipher.encrypt : cipher.decrypt)(source, keys).toUpperCase();
+    const source = Ciphers.upper(input);
+    const result = Ciphers.upper((enc ? cipher.encrypt : cipher.decrypt)(source, keys));
     const plainLetters = lettersOnly(enc ? source : result);
 
     const stream = autokey
@@ -63,9 +64,7 @@
       rowHeads.push(table.appendChild(el('span', 'tt head row', ALPHABET[r])));
       grid.push([]);
       for (let c = 0; c < 26; c++) {
-        const cell = table.appendChild(el('span', 'tt', toLetter(r + c)));
-        cell.style.setProperty('--d', r + c);
-        grid[r].push(cell);
+        grid[r].push(table.appendChild(el('span', 'tt', toLetter(r + c))));
       }
     }
     const tableWrap = el('div', 'tabula-wrap');
@@ -90,6 +89,15 @@
     outTape.append(outRow);
 
     mount.replaceChildren(pairs, tableWrap, outTape);
+
+    // Magnified on a narrow stage, where the whole table is too small to
+    // read, and on a short window, where it's taller than the screen.
+    function fit() {
+      const narrow = Stage.room(mount) <= 560;
+      tableWrap.classList.toggle('zoom', narrow || innerHeight < 900);
+      tableWrap.style.setProperty('--rows', narrow ? 11 : 15);
+    }
+    fit();
 
     // --- each lookup: where the trail goes and which cell holds the answer
     const outLetters = lettersOnly(result);
@@ -164,11 +172,10 @@
       lit.push(node);
     }
 
-    // On a narrow stage the table is magnified and seen through a window
-    // (see scenes.css). The window pans so the cell where the lookup meets
-    // sits in the middle. It moves in whole cells, so the labels never sit
-    // over half a letter. On a wide stage the whole table fits and the
-    // offsets are unused.
+    // When magnified, the table is seen through a window (see scenes.css)
+    // that pans so the cell where the lookup meets sits in the middle. It
+    // moves in whole cells, so the labels never sit over half a letter.
+    // When the whole table fits, the offsets are unused.
     let at = [0, 0];
     function pan(target, ms) {
       at = target;
@@ -183,12 +190,14 @@
       table.style.setProperty('--px', offset(1) + 'px');
     }
 
-    // Turning the phone changes the window, so put the view back in place.
+    // Turning the phone or resizing the window changes the view, so check
+    // the fit and put the view back in place.
     const resize = new ResizeObserver(() => {
-      if (!tableWrap.isConnected) resize.disconnect();
-      else pan(at, 0);
+      if (!tableWrap.isConnected) return resize.disconnect();
+      fit();
+      pan(at, 0);
     });
-    resize.observe(tableWrap);
+    resize.observe(mount);
 
     function show(i, animate) {
       const step = steps[i];
@@ -224,8 +233,6 @@
       }
 
       table.classList.toggle('revealed', i >= 1);
-      if (animate && i === 1) table.classList.add('wave');
-      else table.classList.remove('wave');
 
       lookups.forEach((l, j) => {
         const stepIndex = j + 2;

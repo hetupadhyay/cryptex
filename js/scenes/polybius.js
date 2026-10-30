@@ -16,7 +16,7 @@
     let units;
     if (enc) {
       units = [];
-      for (const ch of input.toUpperCase()) {
+      for (const ch of Ciphers.upper(input)) {
         if (isLetter(ch)) units.push(ch);
         else if (/\s/.test(ch) && units.length && units[units.length - 1] !== ' ') units.push(' ');
       }

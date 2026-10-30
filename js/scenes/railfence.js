@@ -25,38 +25,49 @@
     const inTape = tape([...letters], { label: enc ? 'Message' : 'Ciphertext', cls: 'tape-in' });
     const outTape = tape([...result].map(() => ''), { label: enc ? 'Ciphertext' : 'Message', cls: 'tape-out' });
 
-    const fence = el('div', 'fence');
-    fence.style.setProperty('--n', n);
-    fence.style.setProperty('--rails', rails);
-
-    const line = document.createElementNS(SVG, 'svg');
-    line.setAttribute('class', 'zigzag');
-    line.setAttribute('viewBox', `0 0 ${n} ${rails}`);
-    line.setAttribute('preserveAspectRatio', 'none');
-    const path = document.createElementNS(SVG, 'polyline');
-    path.setAttribute('points', pattern.map((r, i) => `${i + 0.5},${r + 0.5}`).join(' '));
-    path.setAttribute('pathLength', '1');
-    path.setAttribute('vector-effect', 'non-scaling-stroke');
-    line.append(path);
-    fence.append(line);
-
-    const slots = pattern.map((r, i) => {
-      const slot = el('span', 'slot');
-      slot.style.gridRow = r + 1;
-      slot.style.gridColumn = i + 1;
-      fence.append(slot);
-      return slot;
-    });
-    const railLabels = Array.from({ length: rails }, (_, r) => {
-      const label = el('span', 'rail-label', String(r + 1));
-      label.style.gridRow = r + 1;
-      return label;
-    });
+    // A long message would make the fence wider than a phone, so it's laid
+    // out in bands, each a stretch of the zig-zag with its own rail labels,
+    // and nothing runs off the side.
+    const room = Math.max(160, Stage.room(mount) - 40);
+    const bands = Math.ceil(n / Math.max(6, Math.floor(room / 22)));
+    const per = Math.ceil(n / bands);
     const fenceWrap = el('div', 'fence-wrap');
-    const labels = el('div', 'rail-labels');
-    labels.style.setProperty('--rails', rails);
-    labels.append(...railLabels);
-    fenceWrap.append(labels, fence);
+    const fences = [];
+    const slots = [];
+    for (let start = 0; start < n; start += per) {
+      const count = Math.min(per, n - start);
+      const band = el('div', 'fence-band');
+      band.style.setProperty('--n', count);
+      band.style.setProperty('--rails', rails);
+
+      const labels = el('div', 'rail-labels');
+      for (let r = 0; r < rails; r++) {
+        const label = labels.appendChild(el('span', 'rail-label', String(r + 1)));
+        label.style.gridRow = r + 1;
+      }
+
+      const fence = el('div', 'fence');
+      const line = document.createElementNS(SVG, 'svg');
+      line.setAttribute('class', 'zigzag');
+      line.setAttribute('viewBox', `0 0 ${count} ${rails}`);
+      line.setAttribute('preserveAspectRatio', 'none');
+      const path = document.createElementNS(SVG, 'polyline');
+      path.setAttribute('points', pattern.slice(start, start + count).map((r, i) => `${i + 0.5},${r + 0.5}`).join(' '));
+      path.setAttribute('pathLength', '1');
+      path.setAttribute('vector-effect', 'non-scaling-stroke');
+      line.append(path);
+      fence.append(line);
+      for (let i = start; i < start + count; i++) {
+        const slot = fence.appendChild(el('span', 'slot'));
+        slot.style.gridRow = pattern[i] + 1;
+        slot.style.gridColumn = i - start + 1;
+        slots.push(slot);
+      }
+
+      band.append(labels, fence);
+      fenceWrap.append(band);
+      fences.push(fence);
+    }
 
     mount.replaceChildren(inTape.root, fenceWrap, outTape.root);
 
@@ -67,7 +78,9 @@
     if (enc) {
       steps.push({ caption: `Draw a zig-zag across ${rails} rails, one slot per letter.`, hold: 2200, phase: 'path' });
       steps.push({ caption: 'Write the message along the zig-zag, going down and up the rails.', hold: Math.min(1400 + n * 70, 5200), phase: 'write' });
+      // With more rails than letters, the lowest rails stay empty.
       perRail.forEach((positions, r) => {
+        if (!positions.length) return;
         steps.push({
           caption: `Read rail ${r + 1} from left to right: ${positions.map(i => plain[i]).join('')}.`,
           hold: 1400 + positions.length * 90,
@@ -77,14 +90,15 @@
       });
     } else {
       steps.push({
-        caption: `Mark the zig-zag for ${n} letters on ${rails} rails. That tells us how many letters each rail holds: ${perRail.map(p => p.length).join(', ')}.`,
+        caption: `Mark the zig-zag for ${n} ${n === 1 ? 'letter' : 'letters'} on ${rails} rails. That tells us how many letters each rail holds: ${perRail.map(p => p.length).join(', ')}.`,
         hold: 3000,
         phase: 'path',
       });
       let taken = 0;
       perRail.forEach((positions, r) => {
+        if (!positions.length) return;
         steps.push({
-          caption: `Fill rail ${r + 1} with the next ${positions.length} letters of the ciphertext.`,
+          caption: `Fill rail ${r + 1} with the next ${positions.length === 1 ? 'letter' : `${positions.length} letters`} of the ciphertext.`,
           hold: 1300 + positions.length * 90,
           phase: 'fill-rail',
           rail: r,
@@ -119,11 +133,11 @@
       const before = i > 0 ? stateAt(i - 1) : { placed: new Set(), out: 0 };
       mount.querySelectorAll('.now, .reading').forEach(x => x.classList.remove('now', 'reading'));
 
-      fence.classList.toggle('drawn', now.path);
+      fences.forEach(f => f.classList.toggle('drawn', now.path));
       if (animate && i === 0) {
-        fence.classList.remove('drawn');
-        void fence.offsetWidth;
-        fence.classList.add('drawn');
+        fences.forEach(f => f.classList.remove('drawn'));
+        void fenceWrap.offsetWidth;
+        fences.forEach(f => f.classList.add('drawn'));
       }
 
       const animPlaced = animate ? before.placed : now.placed;

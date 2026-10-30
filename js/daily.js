@@ -21,26 +21,26 @@
     { place: 'Carthage, 149 BC', plain: 'The walls will hold for a month. Send grain by the southern harbour.' },
     { place: 'Rome, 44 BC', plain: 'Do not attend the senate tomorrow. Friends of the dictator are being watched.' },
     { place: 'Hadrian’s Wall, AD 130', plain: 'Smoke seen beyond the northern ditch. Double the watch at the west gate.' },
-    { place: 'Constantinople, 1453', plain: 'The chain across the harbour is cut. Ships are being dragged over the hill.' },
+    { place: 'Constantinople, 1453', plain: 'The chain across the harbour holds, so they are dragging their ships over the hill.' },
     { place: 'Florence, 1478', plain: 'Mass on Sunday is not safe. Tell the brothers to stay away from the cathedral.' },
     { place: 'Venice, 1510', plain: 'The ambassador lies about the treaty. Watch who he dines with on Friday.' },
     { place: 'Paris, 1572', plain: 'Leave the city before the bells ring. Trust no one wearing a white cross.' },
     { place: 'Chartley, 1586', plain: 'The letters in the beer barrels are being copied before they arrive.' },
     { place: 'Plymouth, 1588', plain: 'Sails sighted off the Lizard at dawn. Light the beacons along the coast.' },
     { place: 'Amsterdam, 1665', plain: 'The fleet sails on the morning tide. Our man in the dockyard has been paid.' },
-    { place: 'Boston, 1775', plain: 'The regulars march tonight by water. Ride north and warn every farmhouse.' },
+    { place: 'Boston, 1775', plain: 'The regulars march tonight by water. Ride out and warn every farmhouse.' },
     { place: 'Philadelphia, 1777', plain: 'Howe is landing at the head of the bay. Move the printing press inland.' },
     { place: 'Versailles, 1789', plain: 'The king will not sign. Move the papers to the house on the left bank.' },
     { place: 'Toulon, 1793', plain: 'The young artillery captain has found the weak fort. Expect fire by morning.' },
     { place: 'Cadiz, 1805', plain: 'The combined fleet leaves harbour at first light. Signal the frigates.' },
     { place: 'Vienna, 1805', plain: 'The bridge over the Danube was taken without a shot. Recall the couriers.' },
-    { place: 'Moscow, 1812', plain: 'The city is empty and the fires have started. Begin the march west.' },
+    { place: 'Moscow, 1812', plain: 'The city is empty and the fires have started. Nobody has come to surrender it.' },
     { place: 'Waterloo, 1815', plain: 'Hold the farmhouse at all costs. The Prussians are coming from the east.' },
     { place: 'Edinburgh, 1828', plain: 'The body snatchers work the east kirkyard on Tuesdays. Post a guard.' },
     { place: 'Sebastopol, 1854', plain: 'The heavy guns are short of powder. Hold the redoubt until relief arrives.' },
     { place: 'Calcutta, 1857', plain: 'The telegraph line to Delhi is down. Send riders with copies of this order.' },
     { place: 'Richmond, 1862', plain: 'Federal balloons over the river again. Keep the campfires small tonight.' },
-    { place: 'Vicksburg, 1863', plain: 'Rations are down to half. The tunnel under the redan is nearly finished.' },
+    { place: 'Vicksburg, 1863', plain: 'Rations are down to half. Listen for digging under the redan.' },
     { place: 'Washington, 1864', plain: 'The courier on the Baltimore train carries two sets of papers. Check his boots.' },
     { place: 'Paris, 1870', plain: 'This letter leaves by balloon. If the wind turns, it will land behind their lines.' },
     { place: 'Dawson, 1898', plain: 'The claim on the north creek is real. Buy every mule in town before Friday.' },
@@ -48,7 +48,7 @@
     { place: 'St Petersburg, 1905', plain: 'The printing press is under the floor of the bakery. Move it before Sunday.' },
     { place: 'Antarctica, 1912', plain: 'Depot reached at last. Weather fierce and fuel short, but spirits good.' },
     { place: 'Sarajevo, 1914', plain: 'The motorcade route has changed. Our people on the quay do not know.' },
-    { place: 'Mons, 1914', plain: 'Fall back to the canal by nightfall. Blow the bridges behind the rearguard.' },
+    { place: 'Mons, 1914', plain: 'Fall back from the canal by nightfall. Blow the bridges behind the rearguard.' },
     { place: 'Gallipoli, 1915', plain: 'Leave the beach in silence. Rig the rifles to keep firing on their own.' },
     { place: 'Verdun, 1916', plain: 'The fort is cut off. Pigeons are our only link now, and we have one left.' },
     { place: 'Zurich, 1916', plain: 'The exile in the little room upstairs keeps asking about trains to the east.' },
@@ -81,7 +81,7 @@
     { place: 'Havana, 1962', plain: 'The long crates at the port are not tractors. Photograph them from the hill.' },
     { place: 'Moscow, 1962', plain: 'The colonel will leave a chalk mark on the lamp post. Check it every Sunday.' },
     { place: 'Prague, 1968', plain: 'The tanks crossed the border at midnight. Keep the radio station on the air.' },
-    { place: 'Washington, 1973', plain: 'Meet in the parking garage at two. Come alone and do not take a taxi.' },
+    { place: 'Rosslyn, 1973', plain: 'Meet in the parking garage at two. Come alone and do not take a taxi.' },
     { place: 'Helsinki, 1975', plain: 'The delegation brought a second interpreter. He is not who he says.' },
     { place: 'Moscow, 1985', plain: 'The dead drop under the bridge is blown. Use the church on Thursday.' },
     { place: 'Berlin, 1989', plain: 'The guards have opened the gate. Tell the office to hold the front page.' },
@@ -94,7 +94,7 @@
       { word: 'CROWN', clue: 'what a monarch wears' },
       { word: 'RAVEN', clue: 'a black bird that guards the Tower of London' },
       { word: 'ANCHOR', clue: 'what keeps a ship from drifting' },
-      { word: 'CANDLE', clue: 'how people read before electric light' },
+      { word: 'CANDLE', clue: 'what people read by before electric light' },
       { word: 'BRIDGE', clue: 'the way across a river' },
       { word: 'TIGER', clue: 'the largest striped cat' },
       { word: 'SHADOW', clue: 'what follows you on a sunny day' },
@@ -158,7 +158,7 @@
     },
     atbash: {
       cipher: 'atbash',
-      briefs: ['No key was found on the courier. The method is the whole secret.', 'The clerk who wrote this knew one trick, and it doesn’t need a key.'],
+      briefs: ['No key was found on the courier, and none was needed.', 'The clerk who wrote this knew one trick, and it doesn’t need a key.'],
       make() {
         return {
           keys: {},
@@ -192,18 +192,18 @@
     },
     vigenere: {
       cipher: 'vigenere',
-      briefs: ['The same letter never encrypts the same way twice running. The sender keys everything with ordinary words.', 'Several alphabets at once, picked out by a keyword. Nobody at this station ever chose a hard one.'],
+      briefs: ['The same letter comes out differently from one place to the next. The sender keys everything with ordinary words.', 'Several alphabets at once, picked out by a keyword. Nobody at this station ever chose a hard one.'],
       make(rand) {
         const w = pick(rand, WORDS.short);
         return {
           keys: { key: w.word },
-          hints: [`It’s Vigenère with a ${w.word.length}-letter keyword.`, keywordHint(w), `The keyword is ${w.word}.`],
+          hints: ['It’s Vigenère, keyed with an ordinary word.', keywordHint(w), `The keyword is ${w.word}.`],
         };
       },
     },
     vigenereLong: {
       cipher: 'vigenere',
-      briefs: ['A short message behind a long keyword. Counting letters won’t get far on this one.', 'The keyword is nearly as long as the words it hides. The desk alone won’t crack it.'],
+      briefs: ['A short message behind a long keyword. Counting letters won’t get far on this one.', 'A long keyword over a short message. The desk alone won’t crack it.'],
       make(rand) {
         const w = pick(rand, WORDS.long);
         return {
@@ -269,7 +269,8 @@
 
   const weekday = key => new Date(utc(key)).getUTCDay();
   const daysSince = key => Math.round((utc(key) - utc(EPOCH)) / DAY);
-  const numberFor = key => daysSince(key) + 1;
+  // A clock set before No. 1 still gets No. 1, never a negative number.
+  const numberFor = key => Math.max(1, daysSince(key) + 1);
 
   function longDate(key) {
     const d = new Date(utc(key));
@@ -376,7 +377,7 @@
 
   function resultText(puzzle, hints, run) {
     const used = hints ? `${hints} ${hints === 1 ? 'hint' : 'hints'}` : 'no hints';
-    return `Cryptex daily No. ${puzzle.number}: cracked with ${used}. Streak: ${run}`;
+    return `Cryptex intercept No. ${puzzle.number}: cracked with ${used}. Streak: ${run}`;
   }
 
   const api = {
@@ -449,7 +450,18 @@
 
     const state = load();
 
+    // Another tab may have saved since this one loaded. Fold that in first,
+    // so a stale tab never writes over a day cracked somewhere else.
+    function merge() {
+      const stored = load();
+      state.days = { ...stored.days, ...state.days };
+      state.best = Math.max(state.best, stored.best);
+      if (stored.hints.date === state.hints.date) state.hints.n = Math.max(state.hints.n, stored.hints.n);
+      else if (stored.hints.date > state.hints.date) state.hints = stored.hints;
+    }
+
     function save() {
+      merge();
       try {
         localStorage.setItem(STORE, JSON.stringify(state));
       } catch {}
@@ -576,7 +588,10 @@
       if (guess === right) {
         const first = !solved();
         if (first) {
-          state.days[puzzle.date] = hintsShown;
+          // Hints taken in another tab count too.
+          merge();
+          const taken = state.hints.date === puzzle.date ? Math.max(hintsShown, state.hints.n) : hintsShown;
+          state.days[puzzle.date] = taken;
           state.best = Math.max(state.best, streak(state.days, puzzle.date));
           save();
           card.classList.add('cracked');
@@ -598,14 +613,21 @@
 
     hintBtn.addEventListener('click', () => {
       if (hintsShown >= puzzle.hints.length) return;
-      hintList.append(hintItem(puzzle.hints[hintsShown++]));
+      const li = hintItem(puzzle.hints[hintsShown++]);
+      hintList.append(li);
       state.hints = { date: puzzle.date, n: hintsShown };
       save();
       renderRecord();
+      // The button goes once the hints run out; keep focus on what it showed.
+      if (hintBtn.hidden) {
+        li.tabIndex = -1;
+        li.focus();
+      }
     });
 
     $('[data-act="to-desk"]', card).addEventListener('click', () => {
-      Breaker.load(puzzle.text, Breaker.attackFor(puzzle.cipher));
+      // Starts from the letter counts: choosing the attack is part of the puzzle.
+      Breaker.load(puzzle.text, 'freq');
     });
 
     $('[data-act="to-lab"]', card).addEventListener('click', () => {
@@ -615,7 +637,7 @@
 
     $('[data-act="copy"]', card).addEventListener('click', async () => {
       try {
-        await navigator.clipboard.writeText(resultEl.textContent);
+        await navigator.clipboard.writeText(`${resultEl.textContent}\n${location.origin}/codebreaking#today`);
         copied.textContent = 'Copied.';
       } catch {
         // No clipboard (an old browser, or a page opened from a file):
@@ -645,6 +667,20 @@
 
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) tick();
+    });
+
+    // Progress made in another tab shows up here too.
+    window.addEventListener('storage', e => {
+      if (e.key !== STORE) return;
+      const was = solved();
+      merge();
+      if (solved() && !was) return show(puzzle.date);
+      // Hints taken in another tab show here too.
+      if (state.hints.date === puzzle.date && state.hints.n > hintsShown) {
+        hintsShown = Math.min(state.hints.n, puzzle.hints.length);
+        hintList.replaceChildren(...puzzle.hints.slice(0, hintsShown).map(hintItem));
+      }
+      renderRecord();
     });
 
     show(dateKey(new Date()));

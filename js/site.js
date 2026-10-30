@@ -14,20 +14,20 @@
 
   function applyTheme(theme, save) {
     root.dataset.theme = theme;
-    lamps.forEach(l => {
-      l.setAttribute('aria-pressed', theme === 'night');
-      l.setAttribute('aria-label', theme === 'night' ? 'Turn off the night lamp' : 'Turn on the night lamp');
-    });
+    // One name, "Night lamp", and pressed or not says whether it's on.
+    lamps.forEach(l => l.setAttribute('aria-pressed', theme === 'night'));
     if (save) {
       try { localStorage.setItem('cryptex-theme', theme); } catch {}
     }
     document.dispatchEvent(new CustomEvent('themechange'));
   }
 
+  // The whole page cross-fades once, rather than every element easing its
+  // own colours, which is slow on a long page.
   lamps.forEach(lamp => lamp.addEventListener('click', () => {
-    root.classList.add('theme-shift');
-    applyTheme(root.dataset.theme === 'night' ? 'day' : 'night', true);
-    setTimeout(() => root.classList.remove('theme-shift'), 420);
+    const next = root.dataset.theme === 'night' ? 'day' : 'night';
+    if (document.startViewTransition && !reduced()) document.startViewTransition(() => applyTheme(next, true));
+    else applyTheme(next, true);
   }));
   applyTheme(root.dataset.theme === 'night' ? 'night' : 'day', false);
 
@@ -48,22 +48,25 @@
 
   const menuBtn = document.querySelector('.menu-btn');
   const menu = document.getElementById('menu');
-  function setMenu(open) {
-    if (!menu) return;
+  function setMenu(open, { navigating = false } = {}) {
+    if (!menu || open === !menu.hidden) return;
     menu.hidden = !open;
     menuBtn.setAttribute('aria-expanded', open);
     menuBtn.textContent = open ? 'Close' : 'Menu';
     document.body.classList.toggle('menu-open', open);
+    if (open) Sheet.opened('menu', () => setMenu(false));
+    else Sheet.closed('menu', { navigating });
   }
   if (menuBtn && menu) {
     menuBtn.addEventListener('click', () => setMenu(menu.hidden));
+    Sheet.swipe(menu, { grip: menu.querySelector('.sheet-grip'), edge: 'top', close: () => setMenu(false) });
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape' && !menu.hidden) {
         setMenu(false);
         menuBtn.focus();
       }
     });
-    menu.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
+    menu.addEventListener('click', e => { if (Sheet.follow('menu', e)) setMenu(false, { navigating: true }); });
     window.matchMedia('(min-width: 821px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
   }
 
@@ -74,8 +77,10 @@
   const EPOCH = Date.UTC(2026, 5, 24);
   function todayNumber(now) {
     const local = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-    return Math.floor((local - EPOCH) / 86400000) + 1;
+    return Math.max(1, Math.floor((local - EPOCH) / 86400000) + 1);
   }
+  // The masthead only needs hours and minutes; the seconds tick on the
+  // Today folder itself.
   const numbers = document.querySelectorAll('.today-no');
   const lefts = document.querySelectorAll('.today-left');
   function tick() {
@@ -83,19 +88,20 @@
     numbers.forEach(n => { n.textContent = `No. ${todayNumber(now)}`; });
     const midnight = new Date(now);
     midnight.setHours(24, 0, 0, 0);
-    const s = Math.max(0, Math.floor((midnight - now) / 1000));
-    const text = `${Math.floor(s / 3600)}:${String(Math.floor(s / 60) % 60).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+    const m = Math.max(1, Math.ceil((midnight - now) / 60000));
     lefts.forEach(t => {
-      t.textContent = text;
-      t.setAttribute('datetime', `PT${Math.floor(s / 3600)}H${Math.floor(s / 60) % 60}M`);
+      t.textContent = `${Math.floor(m / 60)}h ${m % 60}m`;
+      t.setAttribute('datetime', `PT${Math.floor(m / 60)}H${m % 60}M`);
     });
+    if (lefts.length) setTimeout(tick, 60000 - (Date.now() % 60000) + 50);
   }
   tick();
-  if (lefts.length) setInterval(tick, 1000);
 
   // ---- the coded signature ------------------------------------------------------
 
-  // "Made by" is written in a Caesar shift of 3 and decodes while hovered or focused.
+  // "Made by" is written in a Caesar shift of 3. It decodes while pointed
+  // at, and a tap turns it either way on a touch screen. Screen readers get
+  // the plain name from the page instead.
   const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   document.querySelectorAll('.signature').forEach(sig => {
     let timer;
@@ -113,9 +119,14 @@
         if (n >= target.length) clearInterval(timer);
       }, 30);
     };
-    sig.addEventListener('mouseenter', () => roll('plain'));
-    sig.addEventListener('focus', () => roll('plain'));
-    sig.addEventListener('mouseleave', () => roll('coded'));
-    sig.addEventListener('blur', () => roll('coded'));
+    let plain = false;
+    const show = to => {
+      plain = to === 'plain';
+      roll(to);
+    };
+    sig.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') show('plain'); });
+    sig.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') show('coded'); });
+    // Where something can hover, pointing has already decoded it.
+    sig.addEventListener('click', () => { if (!matchMedia('(hover: hover)').matches) show(plain ? 'coded' : 'plain'); });
   });
 })();

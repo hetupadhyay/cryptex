@@ -19,7 +19,7 @@
     { name: 'Autokey', note: '5-letter keyword', keys: 26 ** 5, how: 'Guessing likely words' },
     { name: 'Polybius', note: 'keyed square', keys: factorial(25), how: 'Letter counts' },
     { name: 'Playfair', note: 'keyed square', keys: factorial(25), how: 'Counting letter pairs' },
-    { name: 'AES-128', note: 'what your browser uses', keys: 2 ** 128, how: 'No known shortcut', modern: true },
+    { name: 'AES-128', note: 'the kind your browser uses', keys: 2 ** 128, how: 'No known shortcut', modern: true },
   ];
 
   const maxLog = Math.log10(2 ** 128);
@@ -28,7 +28,7 @@
     if (n < 1e6) return Math.round(n).toLocaleString('en');
     const exp = Math.floor(Math.log10(n));
     const lead = (n / 10 ** exp).toFixed(1).replace(/\.0$/, '');
-    return `${lead} × 10<sup>${exp}</sup>`;
+    return `${lead} × 10<span class="vh"> to the power of </span><sup>${exp}</sup>`;
   }
 
   function duration(seconds) {
@@ -59,17 +59,15 @@
       <span class="st-name"></span>
       <div class="st-bar-wrap">
         <span class="st-count">${power(row.keys)} ${row.keys === 1 ? 'key' : 'keys'}</span>
-        <span class="st-bar"><i style="--w:${width.toFixed(3)}"></i></span>
+        <span class="st-bar"><i></i></span>
       </div>
       <span class="st-time">${duration(row.keys / RATE)}</span>
       <span class="st-how"></span>`;
+    // Set as a property, not a style attribute, which the CSP would block.
+    li.querySelector('.st-bar i').style.setProperty('--w', width.toFixed(3));
     li.querySelector('.st-name').innerHTML = `${row.name}<small></small>`;
     li.querySelector('.st-name small').textContent = row.note;
     li.querySelector('.st-how').textContent = (row.modern ? '' : 'Broken by: ') + row.how;
     list.append(li);
   }
-
-  // The bars are drawn at full length from the start: the chart is read,
-  // not played. (site.css still keeps them at zero until .shown is set.)
-  document.querySelector('.strength').classList.add('shown');
 })();

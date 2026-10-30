@@ -19,7 +19,7 @@
       { key: 'LANTERN' }
     ),
     railfence: () => Ciphers.byId('railfence').encrypt(
-      'Every letter of the message is still here, only the order has changed, which is exactly why the letter counts below still look like ordinary English.',
+      'Every letter of the message is still here, only the order has changed, which is exactly why its letter counts still look like ordinary English.',
       { rails: 3 }
     ),
     affine: () => Ciphers.byId('affine').encrypt(
@@ -37,13 +37,18 @@
   let vigLength = null;
   let vigMode = 'vigenere';
 
+  // The start of a long decryption, as much as a row shows. A substitution
+  // decrypts letter by letter, so the rows only need the start of the text.
+  const preview = text => (text.length > 90 ? text.slice(0, 90) + '…' : text);
+  const head = text => text.slice(0, 120) + (text.length > 120 ? '…' : '');
+
   // One row of a ranked list: the text a key gives, and how well that fits
   // English compared with the best row (0 to 1). The caller fills in the key.
   function candidateRow(text, fit, best, i, entrance) {
     const li = document.createElement('li');
     li.className = 'shift-row' + (best ? ' best' : '');
     li.innerHTML = '<span class="shift-n"></span><span class="shift-text"></span><span class="fit"><i></i></span>';
-    $('.shift-text', li).textContent = text.length > 90 ? text.slice(0, 90) + '…' : text;
+    $('.shift-text', li).textContent = preview(text);
     $('.fit i', li).style.transform = `scaleX(${Math.max(0.02, Math.min(1, fit))})`;
     if (entrance && !reduced()) {
       li.style.animationDelay = `${i * 28}ms`;
@@ -73,10 +78,11 @@
     const ordered = byScore ? rows.slice().sort((a, b) => a.chi - b.chi) : rows;
 
     shiftList.replaceChildren(...ordered.map((r, i) => {
-      const li = candidateRow(r.text, bestChi / r.chi, r === best, i, entrance);
+      const shown = Analysis.shiftBack(head(text), r.shift);
+      const li = candidateRow(shown, bestChi / r.chi, r === best, i, entrance);
       li.dataset.shift = r.shift;
       $('.shift-n', li).textContent = r.shift;
-      if (r === best) li.setAttribute('aria-label', `Shift ${r.shift}, most likely: ${r.text}`);
+      if (r === best) li.setAttribute('aria-label', `Shift ${r.shift}, most likely: ${preview(shown)}`);
       return li;
     }));
   }
@@ -109,14 +115,15 @@
     verdict.textContent = `The key a = ${best.a}, b = ${best.b} reads most like English. 312 keys tried, and these are the best 10.`;
 
     affineList.replaceChildren(...rows.slice(0, 10).map((r, i) => {
-      const li = candidateRow(r.text, best.chi / r.chi, r === best, i, entrance);
+      const shown = Ciphers.byId('affine').decrypt(head(text), { a: r.a, b: r.b });
+      const li = candidateRow(shown, best.chi / r.chi, r === best, i, entrance);
       const key = $('.shift-n', li);
       key.className = 'shift-n affine-key';
       key.innerHTML = '<small>a</small><span></span><small>b</small><span></span>';
       const [a, b] = $$('span', key);
       a.textContent = r.a;
       b.textContent = r.b;
-      li.setAttribute('aria-label', `a ${r.a}, b ${r.b}${r === best ? ', most likely' : ''}: ${r.text}`);
+      li.setAttribute('aria-label', `a ${r.a}, b ${r.b}${r === best ? ', most likely' : ''}: ${preview(shown)}`);
       return li;
     }));
   }
@@ -142,7 +149,7 @@
     railList.replaceChildren(...rows.map((r, i) => {
       const li = candidateRow(r.text, 10 ** ((r.score - best.score) * 2), r === best, i, entrance);
       $('.shift-n', li).textContent = r.rails;
-      li.setAttribute('aria-label', `${r.rails} rails${r === best ? ', most likely' : ''}: ${r.text}`);
+      li.setAttribute('aria-label', `${r.rails} rails${r === best ? ', most likely' : ''}: ${preview(r.text)}`);
       return li;
     }));
   }
@@ -178,6 +185,10 @@
       $('.bar.english', col).style.transform = `scaleY(${ENGLISH[i] / top})`;
       col.title = `${ALPHABET[i]}: ${freq[i].toFixed(1)}% here, ${ENGLISH[i].toFixed(1)}% in English`;
     });
+    // The bars in words, for anyone who can't see them.
+    $('#freq-said').textContent = letters.length
+      ? [...ALPHABET].map((ch, i) => `${ch} ${freq[i].toFixed(1)}%, English ${ENGLISH[i].toFixed(1)}%`).join('. ') + '.'
+      : '';
 
     const preview = $('.preview', freqSection);
     const tops = $('.tops', freqSection);
@@ -195,14 +206,14 @@
     const chiPlain = Analysis.chiSquared(letters);
 
     if (letters.length < 40) {
-      verdict.textContent = `Only ${letters.length} letters. Counts this small are mostly noise, so treat any pattern loosely.`;
+      verdict.textContent = `Only ${letters.length} ${letters.length === 1 ? 'letter' : 'letters'}. Counts this small are mostly noise, so treat any pattern loosely.`;
     } else if (chiPlain < 120 && ioc > 0.058) {
       verdict.textContent = 'These counts already match English. The letters haven’t been replaced, only moved around, so this is a transposition cipher. If it’s a rail fence, try every rail count.';
     } else if (ioc < 0.05) {
       verdict.textContent = 'The counts are unusually flat. That happens when several alphabets are mixed together. Try the Vigenère attack.';
     } else {
       const guess = Ciphers.mod(Ciphers.toIndex(common[0]) - 4, 26);
-      verdict.textContent = `The most common letter is ${common[0]}. In English it’s usually E, which suggests a shift of ${guess}. Slide the bars until the peaks line up.`;
+      verdict.textContent = `The most common letter is ${common[0]}. In English it’s usually E, so if this is a Caesar shift, it’s probably ${guess}. Slide the bars until the peaks line up. If no shift lines them up, the alphabet was scrambled some other way.`;
     }
 
     tops.innerHTML = '<div><dt>Most common here</dt><dd></dd></div><div><dt>Most common in English</dt><dd>E T A O I N</dd></div>';
@@ -298,6 +309,8 @@
   const attackTabs = $$('.attack-tab');
 
   function setAttack(name, focus) {
+    // A name from a hand-off or an old link might not be one of ours.
+    if (!attackTabs.some(t => t.dataset.attack === name)) name = attackTabs[0].dataset.attack;
     attack = name;
     attackTabs.forEach(t => {
       const on = t.dataset.attack === name;

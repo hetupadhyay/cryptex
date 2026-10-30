@@ -21,6 +21,42 @@ test('known textbook examples', () => {
   assert.equal(run('columnar', 'encrypt', 'WE ARE DISCOVERED FLEE AT ONCE'), 'EVLNACDTESEAROFODEECWIREE');
 });
 
+test('more known answers, both ways', () => {
+  // Beaufort is its own inverse, so a wrong formula would still round-trip:
+  // check it against working by hand (key letter minus message letter).
+  assert.equal(run('beaufort', 'encrypt', 'HELLO', { key: 'KEY' }), 'DANZQ');
+  assert.equal(run('beaufort', 'decrypt', 'DANZQ', { key: 'KEY' }), 'HELLO');
+  assert.equal(run('autokey', 'encrypt', 'ATTACKATDAWN', { key: 'QUEENLY' }), 'QNXEPVYTWTWP');
+  assert.equal(run('autokey', 'decrypt', 'QNXEPVYTWTWP', { key: 'QUEENLY' }), 'ATTACKATDAWN');
+  assert.equal(run('vigenere', 'decrypt', 'LXFOPVEFRNHR'), 'ATTACKATDAWN');
+  assert.equal(run('affine', 'decrypt', 'IHHWVC SWFRCP'), 'AFFINE CIPHER');
+  assert.equal(run('playfair', 'encrypt', 'hide the gold in the tree stump', { key: 'playfair example' }), 'BMODZBXDNABEKUDMUIXMMOUVIF');
+  assert.equal(run('railfence', 'decrypt', 'WECRLTEERDSOEEFEAOCAIVDEN'), 'WEAREDISCOVEREDFLEEATONCE');
+  assert.equal(run('columnar', 'decrypt', 'EVLNACDTESEAROFODEECWIREE'), 'WEAREDISCOVEREDFLEEATONCE');
+  assert.equal(run('polybius', 'decrypt', '23 24 / 54 34 45'), 'HI YOU');
+});
+
+test('letters outside A to Z pass through and keep their place', () => {
+  const message = 'Grüße aus der Straße, ſ ﬁne 😀 café 123';
+  for (const id of ['caesar', 'atbash', 'affine', 'vigenere', 'autokey', 'beaufort']) {
+    const enc = run(id, 'encrypt', message);
+    assert.equal(run(id, 'decrypt', enc), message, id);
+    assert.equal([...enc].length, [...message].length, id);
+  }
+  assert.equal(C.lettersOnly('Straße'), 'STRAE');
+  assert.equal(C.upper('straße 😀'), 'STRAßE 😀');
+});
+
+test('number keys must be plain whole numbers in range', () => {
+  const affine = C.byId('affine');
+  for (const b of ['', ' ', '0x3', '1e1', '2.5', '26', '-1']) assert.ok(affine.check({ a: 5, b }), JSON.stringify(b));
+  for (const b of [0, '8', ' 8 ', 25]) assert.equal(affine.check({ a: 5, b }), '', JSON.stringify(b));
+  assert.ok(C.byId('columnar').check({ key: 'ABCDEFGHIJK' }), 'a keyword longer than ten letters');
+  assert.equal(C.byId('columnar').check({ key: 'ABCDEFGHIJ' }), '');
+  assert.ok(affine.check({ a: 13, b: 0 }), 'a must have an inverse');
+  assert.ok(C.byId('vigenere').check({ key: '123' }), 'a keyword needs letters');
+});
+
 test('every cipher round-trips', () => {
   const message = 'The quick brown fox jumps over the lazy dog';
   for (const cipher of C.list) {

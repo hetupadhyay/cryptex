@@ -5,13 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Terms of use · Cryptex</title>
   <meta name="description" content="The terms for using Cryptex, an educational site about classical ciphers.">
+  <link rel="canonical" href="https://cryptex.vercel.app/terms">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#edf0ef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0e1418" media="(prefers-color-scheme: dark)">
-  <script src="js/theme.js"></script>
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="stylesheet" href="css/shell.css">
-  <link rel="stylesheet" href="css/pages.css">
+  <script src="js/theme.js?v=8626267322"></script>
+  <link rel="stylesheet" href="css/site.css?v=663543549d">
+  <link rel="stylesheet" href="css/shell.css?v=341482449c">
+  <link rel="stylesheet" href="css/pages.css?v=e75b1a6ac5">
   <link rel="icon" href="img/mark.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
@@ -19,6 +20,7 @@
 <body class="doc-page" data-page="doc">
 
   <!-- shell:header -->
+  <a class="skip" href="#top">Skip to content</a>
   <header class="mast">
     <div class="mast-bar">
       <a class="brand" href="/" aria-label="Cryptex home">
@@ -36,8 +38,8 @@
       <div class="mast-right">
         <a class="today-link" href="/codebreaking#today">
           <span>Today’s intercept</span>
-          <b class="today-no">No. —</b>
-          <time class="today-left">—</time>
+          <b class="today-no"></b>
+          <time class="today-left" aria-hidden="true"></time>
         </a>
         <button class="lamp" type="button" aria-pressed="false" aria-label="Night lamp">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -53,7 +55,8 @@
     <nav class="menu-sheet" id="menu" aria-label="Main" hidden>
       <a href="/learn" data-page="learn">Learn <small>600 BC to today</small></a>
       <a href="/lab" data-page="lab">Lab <small>Ten ciphers, step by step</small></a>
-      <a href="/codebreaking" data-page="codebreaking">Codebreaking <small class="today-no">No. —</small></a>
+      <a href="/codebreaking" data-page="codebreaking">Codebreaking <small class="today-no"></small></a>
+      <div class="sheet-grip" aria-hidden="true"><i></i></div>
     </nav>
   </header>
   <!-- /shell:header -->
@@ -61,19 +64,18 @@
   <main class="doc" id="top">
     <article class="doc-sheet" aria-labelledby="doc-title">
       <header class="doc-head">
-        <p class="doc-kicker">Legal</p>
         <h1 id="doc-title">Terms of use</h1>
-        <p class="doc-meta">Effective 29 October 2026</p>
+        <p class="doc-meta">Effective 30 October 2026</p>
       </header>
 
       <section>
         <h2>What Cryptex is</h2>
-        <p>Cryptex is a free educational website about classical ciphers, made by Het Nimeshkumar Upadhyay as a cybersecurity course project. It shows how historical ciphers work and how each one was broken. These terms cover your use of the site. By using it, you agree to them.</p>
+        <p>Cryptex is a free educational website about classical ciphers, made by Het Upadhyay as a cybersecurity course project. It shows how historical ciphers work and how each one was broken. These terms cover your use of the site. By using it, you agree to them.</p>
       </section>
 
       <section>
         <h2>Never use these ciphers for real secrets</h2>
-        <p>Every cipher on this site was broken long ago, and the site itself shows you how to break them. Don’t use them to protect passwords, personal details, money or anything else that matters. For real secrets, use modern, well reviewed encryption, like the encryption already built into your browser, phone and messaging apps.</p>
+        <p>Every cipher in the lab was broken long ago, and the site itself shows you how to break them. Don’t use them to protect passwords, personal details, money or anything else that matters. For real secrets, use modern, well-reviewed encryption, like the encryption already built into your browser, phone and messaging apps.</p>
       </section>
 
       <section>
@@ -94,13 +96,13 @@
 
       <section>
         <h2>Intellectual property</h2>
-        <p>The source code is released under the <a href="https://github.com/hetupadhyay/Cryptex/blob/main/LICENSE">MIT License</a>, so you can use, copy, change and share it under that license’s terms. The fonts, Courier Prime and Hanken Grotesk, are used under the SIL Open Font License.</p>
-        <p>The Cryptex name and the key logo are trademarks of Het Nimeshkumar Upadhyay and are not covered by the MIT License. If you publish your own version, please give it a different name and logo. The classical ciphers themselves are centuries old and belong to everyone.</p>
+        <p>The source code is released under the <a href="https://github.com/hetupadhyay/Cryptex/blob/main/LICENSE">MIT License</a>, so you can use, copy, change and share it under that licence’s terms. The fonts, Courier Prime and Hanken Grotesk, are used under the SIL Open Font License.</p>
+        <p>The Cryptex name and the key logo are trademarks of Het Upadhyay and are not covered by the MIT License. If you publish your own version, please give it a different name and logo. The classical ciphers themselves are centuries old and belong to everyone.</p>
       </section>
 
       <section>
         <h2>Other sites</h2>
-        <p>The site links to GitHub for its source code and for reporting problems. GitHub has its own terms and privacy policy.</p>
+        <p>The site links to GitHub for its source code and for reporting problems, and to LinkedIn for the author’s profile. Each has its own terms and privacy policy.</p>
       </section>
 
       <section>
@@ -136,7 +138,7 @@
             <li><a href="/learn#enigma">Enigma</a></li>
             <li><a href="/learn#one-time-pad">One-time pad</a></li>
             <li><a href="/learn#strength">Key strength</a></li>
-            <li><a href="/learn#today">Why it matters</a></li>
+            <li><a href="/learn#why-it-matters">Why it matters</a></li>
           </ul>
         </div>
         <div>
@@ -166,9 +168,9 @@
       </nav>
     </div>
     <div class="foot-bar">
-      <p class="foot-who">© 2026 <b>Het Nimeshkumar Upadhyay</b></p>
-      <p>Made by <span class="signature" tabindex="0" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-label="Het Upadhyay, written in a Caesar cipher" title="Shift 3. Hover to decode.">KHW XSDGKBDB</span></p>
-      <p>Runs in your browser. Nothing you type leaves the page.</p>
+      <p class="foot-who">© 2026 <b>Het Upadhyay</b></p>
+      <p>Made by <span class="vh">Het Upadhyay</span><span class="signature" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-hidden="true" title="Shift 3. Point at it or tap it to decode.">KHW XSDGKBDB</span></p>
+      <p>Runs in your browser. Nothing you type is sent to a server.</p>
       <div class="foot-links">
         <a href="/terms">Terms</a>
         <a href="/privacy">Privacy</a>
@@ -184,7 +186,9 @@
   </footer>
   <!-- /shell:footer -->
 
-  <script src="js/site.js"></script>
-  <script src="js/pwa.js"></script>
+  <script src="js/sheet.js?v=f4d1354ad7"></script>
+
+  <script src="js/site.js?v=c274758143"></script>
+  <script src="js/pwa.js?v=5b673ad196"></script>
 </body>
 </html>

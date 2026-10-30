@@ -14,7 +14,11 @@
   const isLetter = ch => /^[a-z]$/i.test(ch);
   const toIndex = ch => ch.toUpperCase().charCodeAt(0) - 65;
   const toLetter = i => ALPHABET[mod(i, 26)];
-  const lettersOnly = text => String(text).toUpperCase().replace(/[^A-Z]/g, '');
+  // Filtered before uppercasing: 'ß'.toUpperCase() is 'SS', which would add
+  // letters the letter-by-letter ciphers never see.
+  const lettersOnly = text => String(text).replace(/[^A-Za-z]/g, '').toUpperCase();
+  // Capitals for A to Z only, so every other character keeps its length.
+  const upper = text => String(text).replace(/[a-z]+/g, s => s.toUpperCase());
 
   // Calls fn(letterIndex, n) for every letter, where n counts letters only.
   function mapLetters(text, fn) {
@@ -274,9 +278,11 @@
   const needsLetters = (value, label) =>
     lettersOnly(value).length ? '' : `${label} needs at least one letter.`;
 
+  // Plain digits only: Number() would also take '', '0x3' and '1e1'.
   function wholeNumber(value, min, max, label) {
-    const n = Number(value);
-    if (!Number.isInteger(n) || n < min || n > max) return `${label} must be a whole number from ${min} to ${max}.`;
+    const text = String(value).trim();
+    const n = Number(text);
+    if (!/^-?\d+$/.test(text) || n < min || n > max) return `${label} must be a whole number from ${min} to ${max}.`;
     return '';
   }
 
@@ -346,7 +352,7 @@
         const ks = keyStream(k.key, lettersOnly(t).length);
         return mapLetters(t, (x, n) => x - ks[n]);
       },
-      about: 'Each letter gets its own Caesar shift, taken from the keyword, which repeats along the message. For about 300 years it was called “le chiffre indéchiffrable”.',
+      about: 'Each letter gets its own Caesar shift, taken from the keyword, which repeats along the message. It resisted codebreakers for about 300 years, earning the nickname “le chiffre indéchiffrable”.',
       weakness: 'The keyword repeats. Babbage and Kasiski found the key length from that pattern, and after that it’s just several Caesar ciphers.',
     },
     {
@@ -403,7 +409,7 @@
       check: () => '',
       encrypt: (t, k) => polybiusEncrypt(t, k.key),
       decrypt: (t, k) => polybiusDecrypt(t, k.key),
-      about: 'The Greek historian Polybius described signalling with torches: each letter becomes its row and column in a 5×5 square. Prisoners still use it as tap code.',
+      about: 'The Greek historian Polybius described signalling with torches: each letter becomes its row and column in a 5×5 square. Prisoners of war in Vietnam used a version of it as tap code.',
       weakness: 'Each letter always gives the same pair of digits, so it’s a simple substitution in disguise.',
     },
     {
@@ -424,7 +430,9 @@
       family: 'Transposition',
       scene: 'columnar',
       keys: [{ id: 'key', label: 'Keyword', type: 'text', value: 'ZEBRAS' }],
-      check: k => needsLetters(k.key, 'The keyword'),
+      // Each keyword letter is a column on the stage, and ten is as many as
+      // fit the narrowest phone at a readable size.
+      check: k => needsLetters(k.key, 'The keyword') || (lettersOnly(k.key).length > 10 ? 'Keep the keyword to 10 letters or fewer.' : ''),
       encrypt: (t, k) => columnarEncrypt(t, k.key),
       decrypt: (t, k) => columnarDecrypt(t, k.key),
       about: 'Write the message in rows under a keyword, then read the columns off in the keyword’s alphabetical order. Armies used it through both World Wars, often twice in a row.',
@@ -441,6 +449,7 @@
     toIndex,
     toLetter,
     lettersOnly,
+    upper,
     modInverse,
     keyStream,
     autokeyStream,

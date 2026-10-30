@@ -53,7 +53,7 @@
   // cancelled when the user jumps somewhere else.
   function cueSheet() {
     let timers = [];
-    let ghosts = [];
+    let flights = [];
 
     return {
       at(delay, fn) {
@@ -81,7 +81,6 @@
             fontSize: getComputedStyle(from).fontSize,
           });
           document.body.append(ghost);
-          ghosts.push(ghost);
 
           const dx = b.left + b.width / 2 - (a.left + a.width / 2);
           const dy = b.top + b.height / 2 - (a.top + a.height / 2);
@@ -95,6 +94,7 @@
             ],
             { duration: Stage.ms(duration), easing: EASE_MOVE, fill: 'forwards' }
           );
+          flights.push(flight);
           flight.finished.then(() => {
             ghost.remove();
             land();
@@ -102,13 +102,22 @@
         });
       },
 
+      // Cancelling a flight also stops it landing its letter.
       clear() {
         timers.forEach(clearTimeout);
-        ghosts.forEach(g => g.remove());
+        flights.forEach(f => f.cancel());
         timers = [];
-        ghosts = [];
+        flights = [];
       },
     };
+  }
+
+  // The width a scene has to work with. That's the stage's, since the scene
+  // itself is still hidden when the first one is built.
+  function room(mount) {
+    const stage = mount.closest('.stage') || mount;
+    const cs = getComputedStyle(stage);
+    return stage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
   }
 
   // Turns a list of elements on with a small stagger.
@@ -130,6 +139,7 @@
     const counter = root.querySelector('.step-count');
     const scrub = root.querySelector('.scrub');
     const playBtn = root.querySelector('[data-act="play"]');
+    const dock = root.querySelector('.dock');
     const cue = cueSheet();
 
     let scene = null;
@@ -142,7 +152,7 @@
       caption.textContent = text;
       if (!Stage.reduced) {
         caption.animate(
-          [{ opacity: 0, filter: 'blur(3px)', transform: 'translateY(4px)' }, { opacity: 1, filter: 'blur(0)', transform: 'none' }],
+          [{ opacity: 0, transform: 'translateY(4px)' }, { opacity: 1, transform: 'none' }],
           { duration: 260, easing: EASE_OUT }
         );
       }
@@ -154,10 +164,13 @@
       const step = scene.steps[index];
       if (animate && !Stage.reduced) scene.show(index, true);
       else instantly(mount, () => scene.show(index, false));
+      // Played faster than normal, the captions come quicker than they can
+      // be read out, so they're only announced when stepping by hand.
+      caption.setAttribute('aria-live', playing && Stage.speed > 1 ? 'off' : 'polite');
       setCaption(step.caption);
       counter.textContent = `${index + 1} / ${scene.steps.length}`;
       scrub.value = index;
-      root.classList.toggle('at-end', index === scene.steps.length - 1);
+      scrub.setAttribute('aria-valuetext', `Step ${index + 1} of ${scene.steps.length}`);
       if (index === scene.steps.length - 1) {
         setPlaying(false);
         if (onFinish) onFinish();
@@ -188,6 +201,8 @@
         scene = next;
         scrub.max = scene.steps.length - 1;
         root.classList.remove('empty');
+        // Until there's a scene the controls do nothing, so they're out of reach.
+        if (dock) dock.inert = false;
         render(0, true);
         if (autoplay) setPlaying(true);
       },
@@ -208,10 +223,13 @@
         scene = null;
         index = -1;
         root.classList.add('empty');
-        root.classList.remove('at-end');
+        if (dock) dock.inert = true;
       },
       get cue() { return cue; },
     };
+
+    // Nobody's watching a hidden tab, so playback stops there.
+    document.addEventListener('visibilitychange', () => { if (document.hidden) api.pause(); });
 
     root.querySelector('[data-act="play"]').addEventListener('click', api.toggle);
     root.querySelector('[data-act="prev"]').addEventListener('click', api.prev);
@@ -222,6 +240,6 @@
     return api;
   }
 
-  window.Stage = Object.assign(Stage, { el, tape, stagger, Player, EASE_MOVE, EASE_OUT });
+  window.Stage = Object.assign(Stage, { el, tape, stagger, room, Player, EASE_MOVE, EASE_OUT });
   window.Scenes = {};
 })();
