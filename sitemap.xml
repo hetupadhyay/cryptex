@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://cryptex.vercel.app/</loc>
+    <loc>https://cryptexciphers.vercel.app/</loc>
     <lastmod>2026-10-30</lastmod>
   </url>
   <url>
-    <loc>https://cryptex.vercel.app/learn</loc>
+    <loc>https://cryptexciphers.vercel.app/learn</loc>
     <lastmod>2026-10-30</lastmod>
   </url>
   <url>
-    <loc>https://cryptex.vercel.app/lab</loc>
+    <loc>https://cryptexciphers.vercel.app/lab</loc>
     <lastmod>2026-10-30</lastmod>
   </url>
   <url>
-    <loc>https://cryptex.vercel.app/codebreaking</loc>
+    <loc>https://cryptexciphers.vercel.app/codebreaking</loc>
     <lastmod>2026-10-30</lastmod>
   </url>
   <url>
-    <loc>https://cryptex.vercel.app/terms</loc>
+    <loc>https://cryptexciphers.vercel.app/terms</loc>
     <lastmod>2026-10-30</lastmod>
   </url>
   <url>
-    <loc>https://cryptex.vercel.app/privacy</loc>
+    <loc>https://cryptexciphers.vercel.app/privacy</loc>
     <lastmod>2026-10-30</lastmod>
   </url>
 </urlset>
