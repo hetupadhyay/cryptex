@@ -343,9 +343,11 @@ main {
     border-color: var(--ink-3);
   }
 
+  /* The dark key lightens a shade toward the page: visible in day and
+     in night, where the key is light. */
   .btn.primary:hover {
-    border-color: var(--ink);
-    filter: brightness(1.15);
+    border-color: color-mix(in srgb, var(--ink) 82%, var(--paper));
+    background: color-mix(in srgb, var(--ink) 82%, var(--paper));
   }
 }
 
@@ -1078,6 +1080,9 @@ input[type='range']::-moz-range-thumb {
 .result-text {
   display: block;
   min-height: 1.5em;
+  /* A very long result scrolls in its card instead of filling the page. */
+  max-height: 18lh;
+  overflow-y: auto;
   font: 700 20px/1.5 var(--type);
   letter-spacing: 0.04em;
   overflow-wrap: anywhere;

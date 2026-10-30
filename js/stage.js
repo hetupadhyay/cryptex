@@ -233,6 +233,9 @@
       get cue() { return cue; },
     };
 
+    // Nobody's watching a hidden tab, so playback stops there.
+    document.addEventListener('visibilitychange', () => { if (document.hidden) api.pause(); });
+
     root.querySelector('[data-act="play"]').addEventListener('click', api.toggle);
     root.querySelector('[data-act="prev"]').addEventListener('click', api.prev);
     root.querySelector('[data-act="next"]').addEventListener('click', api.next);

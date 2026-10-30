@@ -13,7 +13,7 @@
 'use strict';
 
 // stamp:start (written by tools/stamp.py)
-const VERSION = '5b21730faf';
+const VERSION = 'eaa7b2325a';
 const PRECACHE = [
   '/',
   '/learn',
@@ -30,7 +30,7 @@ const PRECACHE = [
   '/css/pages.css?v=e75b1a6ac5',
   '/css/scenes.css?v=3828524726',
   '/css/shell.css?v=341482449c',
-  '/css/site.css?v=23e132a75b',
+  '/css/site.css?v=958b9b3ac4',
   '/css/story.css?v=343044d36e',
   '/js/analysis.js?v=64f37747e0',
   '/js/background.js?v=3443079fe1',
@@ -39,11 +39,11 @@ const PRECACHE = [
   '/js/codebreaking.js?v=0bb867115c',
   '/js/cryptex.js?v=360dd66c8e',
   '/js/daily.js?v=56d0fb8391',
-  '/js/handoff.js?v=87a67e4e6d',
+  '/js/handoff.js?v=ad58c84027',
   '/js/history.js?v=849256fe01',
   '/js/home.js?v=72bd02db73',
   '/js/intercepts.js?v=77c6667feb',
-  '/js/lab.js?v=adf6895a50',
+  '/js/lab.js?v=e2d2bfaa90',
   '/js/pwa.js?v=5b673ad196',
   '/js/scenes/columnar.js?v=ea6b1ebf53',
   '/js/scenes/playfair.js?v=2b08874d0a',
@@ -55,7 +55,7 @@ const PRECACHE = [
   '/js/sheet.js?v=4151f3c65e',
   '/js/site.js?v=baf0d9e177',
   '/js/spring.js?v=8c5f9b1865',
-  '/js/stage.js?v=7c00074c23',
+  '/js/stage.js?v=288531ba18',
   '/js/story.js?v=468efee997',
   '/js/strength.js?v=cf277a4497',
   '/js/theme.js?v=8626267322',
