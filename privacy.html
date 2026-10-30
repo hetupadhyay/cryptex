@@ -10,8 +10,8 @@
   <meta name="theme-color" content="#edf0ef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0e1418" media="(prefers-color-scheme: dark)">
   <script src="js/theme.js?v=8626267322"></script>
-  <link rel="stylesheet" href="css/site.css?v=9a850c75b9">
-  <link rel="stylesheet" href="css/shell.css?v=73fe35c823">
+  <link rel="stylesheet" href="css/site.css?v=54f47ed6a5">
+  <link rel="stylesheet" href="css/shell.css?v=4cba7da85e">
   <link rel="stylesheet" href="css/pages.css?v=e75b1a6ac5">
   <link rel="icon" href="img/mark.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
@@ -41,6 +41,7 @@
           <b class="today-no"></b>
           <time class="today-left" aria-hidden="true"></time>
         </a>
+        <a class="account-link" href="/signin" data-account>Sign in</a>
         <button class="lamp" type="button" aria-pressed="false" aria-label="Night lamp">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path class="lamp-beam" d="M17.6 7.6 L13.4 11.8 L12 21 H23 Z" />
@@ -56,6 +57,7 @@
       <a href="/learn" data-page="learn"><span>Learn</span> <small>600 BC to today</small></a>
       <a href="/lab" data-page="lab"><span>Lab</span> <small>Ten ciphers, step by step</small></a>
       <a href="/codebreaking" data-page="codebreaking"><span>Codebreaking</span> <small class="today-no"></small></a>
+      <a href="/signin" data-account-menu><span>Sign in</span> <small>Keep your progress on every device</small></a>
       <div class="sheet-grip" aria-hidden="true"><i></i></div>
     </nav>
   </header>
@@ -68,16 +70,16 @@
         <p class="doc-meta">Effective 30 October 2026</p>
       </header>
 
-      <p class="doc-summary">Cryptex has no accounts, cookies, analytics, ads or server of its own. Everything happens in your browser, and nothing you type is sent to a server, unless you put it in a secret link and share it.</p>
+      <p class="doc-summary">Cryptex has no analytics, ads or tracking. The ciphers and attacks all run in your browser, and the messages you type never leave it unless you put one in a secret link and share it. An account is optional: without one, nothing about you is stored anywhere but your own device.</p>
 
       <section>
         <h2>What Cryptex doesn’t collect</h2>
-        <p>There’s nothing to sign up for, and the site sets no cookies. It has no analytics, no tracking pixels, no ads, and no scripts or fonts from other sites: every file comes from the site itself. The ciphers, the animations and the attacks all run on your device, so the messages you type into the lab, the codebreaker’s desk, the missions or today’s intercept never leave it.</p>
+        <p>The site has no analytics, no tracking pixels, no ads, and no scripts or fonts from other sites: every file comes from the site itself. Unless you sign in, it sets no cookies. The ciphers, the animations and the attacks all run on your device, so the messages you type into the lab, the codebreaker’s desk, the missions or today’s intercept never leave it, with or without an account.</p>
       </section>
 
       <section>
         <h2>What’s kept on your device</h2>
-        <p>A few small things are saved in your browser’s local storage, so they’re still there next time. They stay on your device and are never sent anywhere:</p>
+        <p>A few small things are saved in your browser’s local storage, so they’re still there next time. Unless you sign in, they stay on your device and are never sent anywhere:</p>
         <ul>
           <li>whether the night lamp is on;</li>
           <li>which of the eight missions you’ve cracked;</li>
@@ -86,6 +88,21 @@
         <p>When you send text from one page to another, with Send to the desk or Open in the lab, it waits in your browser’s session storage and is deleted as soon as the other page picks it up. If it’s never picked up, it’s thrown away after a minute or when you close the tab.</p>
         <p>Your browser also keeps a copy of the site’s files, so it opens when you’re offline.</p>
         <p>To clear all of it, delete this site’s data in your browser’s settings, usually under privacy, cookies and site data. A private window forgets everything when you close it.</p>
+      </section>
+
+      <section id="accounts">
+        <h2>If you create an account</h2>
+        <p>An account keeps your progress on every device you sign in on. It’s stored in a database run for the site by Neon, on Vercel, and holds only:</p>
+        <ul>
+          <li>your email address, whether you’ve confirmed it, and the name you give, if any;</li>
+          <li>your password, never as typed: only a scrambled version (an scrypt hash) that can check a password but can’t be turned back into one;</li>
+          <li>which Google, GitHub or Apple account you linked, by the id those services give it, and the email they shared;</li>
+          <li>your progress: the missions you’ve cracked, the days you cracked the daily intercept, the hints used and your best streak;</li>
+          <li>sign-in sessions, kept as hashes, which end after 30 days or when you sign out;</li>
+          <li>for a short while, failed sign-in attempts, keyed by a hash of your email or network address, to slow down anyone guessing passwords.</li>
+        </ul>
+        <p>Signing in sets one cookie, which keeps you signed in. It’s used for nothing else. If you sign in with Google, GitHub or Apple, that service tells Cryptex your id, your email and your name, and nothing else; what it records about the sign-in is covered by its own privacy policy. Emails to confirm your address or reset your password are sent from work.hetupadhyay@gmail.com through Gmail.</p>
+        <p>You can change your name and password, unlink an account, and delete your account at any time from your account page. Deleting it removes everything listed above straight away. Your data is never sold, shared or used for anything but your account.</p>
       </section>
 
       <section>
@@ -102,7 +119,7 @@
 
       <section>
         <h2>Links to other sites</h2>
-        <p>Links to the source code and to report a problem take you to GitHub, and the author’s profile link takes you to LinkedIn. Each has its own privacy policy.</p>
+        <p>Links to the source code and to report a problem take you to GitHub, and the author’s profile link takes you to LinkedIn. Signing in with Google, GitHub or Apple takes you to that service. Each has its own privacy policy.</p>
       </section>
 
       <section>
@@ -131,7 +148,7 @@
         <p>Every secret has a weakness. Learn how classical ciphers work, then break them.</p>
         <p class="foot-note">
           <svg viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M4.5 7V5a3.5 3.5 0 0 1 7 0v2h.5a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 12 15H4a1.5 1.5 0 0 1-1.5-1.5v-5A1.5 1.5 0 0 1 4 7Zm1.5 0h4V5a2 2 0 0 0-4 0Z" /></svg>
-          <span>Runs in your browser. Nothing you type is sent to a server.</span>
+          <span>Runs in your browser. The messages you type never leave it.</span>
         </p>
       </div>
       <nav class="foot-cols" aria-label="Footer">
@@ -190,6 +207,7 @@
   <script src="js/sheet.js?v=f4d1354ad7"></script>
 
   <script src="js/site.js?v=7443140c2c"></script>
+  <script src="js/account.js?v=42b5ee1c6d"></script>
   <script src="js/pwa.js?v=5b673ad196"></script>
 </body>
 </html>

@@ -10,7 +10,8 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-PAGES = ['index.html', 'learn.html', 'lab.html', 'codebreaking.html', 'terms.html', 'privacy.html', '404.html']
+PAGES = ['index.html', 'learn.html', 'lab.html', 'codebreaking.html', 'terms.html', 'privacy.html', '404.html',
+         'signin.html', 'account.html', 'reset.html']
 PARTS = {name: (ROOT / 'tools' / 'shell' / f'{name}.html').read_text().rstrip('\n') for name in ('header', 'footer')}
 
 

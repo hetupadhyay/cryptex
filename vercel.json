@@ -1,5 +1,16 @@
 {
   "cleanUrls": true,
+  "functions": {
+    "api/main.js": {
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/main?route=:path*"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -36,7 +47,12 @@
     },
     {
       "source": "/(css|js)/(.*)",
-      "has": [{ "type": "query", "key": "v" }],
+      "has": [
+        {
+          "type": "query",
+          "key": "v"
+        }
+      ],
       "headers": [
         {
           "key": "Cache-Control",
@@ -81,7 +97,7 @@
       ]
     },
     {
-      "source": "/(learn|lab|codebreaking|terms|privacy|404)",
+      "source": "/(learn|lab|codebreaking|terms|privacy|404|signin|account|reset)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -117,6 +133,15 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
         }
       ]
     }

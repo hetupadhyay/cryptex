@@ -13,7 +13,7 @@
 'use strict';
 
 // stamp:start (written by tools/stamp.py)
-const VERSION = '53a190ac66';
+const VERSION = '0f6436d22c';
 const PRECACHE = [
   '/',
   '/learn',
@@ -21,6 +21,9 @@ const PRECACHE = [
   '/codebreaking',
   '/terms',
   '/privacy',
+  '/signin',
+  '/account',
+  '/css/account.css?v=95fa87de1e',
   '/css/codebreaking.css?v=a31c585871',
   '/css/daily.css?v=62dd7383cc',
   '/css/desk.css?v=d9823a344e',
@@ -29,21 +32,23 @@ const PRECACHE = [
   '/css/learn.css?v=4011634be2',
   '/css/pages.css?v=e75b1a6ac5',
   '/css/scenes.css?v=74d2868e50',
-  '/css/shell.css?v=73fe35c823',
-  '/css/site.css?v=9a850c75b9',
+  '/css/shell.css?v=4cba7da85e',
+  '/css/site.css?v=54f47ed6a5',
   '/css/story.css?v=343044d36e',
+  '/js/account.js?v=42b5ee1c6d',
   '/js/analysis.js?v=64f37747e0',
+  '/js/auth.js?v=6271ab55db',
   '/js/background.js?v=d135e07da1',
   '/js/breaker.js?v=4c906b26b7',
   '/js/ciphers.js?v=517fef3150',
   '/js/codebreaking.js?v=19c1995fc0',
   '/js/cryptex.js?v=919a51ce10',
-  '/js/daily.js?v=95d419e4d9',
+  '/js/daily.js?v=915426b3ac',
   '/js/enigma.js?v=631d0b6f71',
   '/js/handoff.js?v=e1481ac238',
   '/js/history.js?v=dbef8a7c99',
   '/js/home.js?v=a53d7e9b27',
-  '/js/intercepts.js?v=23935dce4c',
+  '/js/intercepts.js?v=3cc4749c4d',
   '/js/lab.js?v=7c1a201bfa',
   '/js/pwa.js?v=5b673ad196',
   '/js/scenes/columnar.js?v=5f551bc86e',
@@ -141,7 +146,7 @@ self.addEventListener('fetch', event => {
   const { request } = event;
   if (request.method !== 'GET' || request.headers.has('range')) return;
   const url = new URL(request.url);
-  if (url.origin !== self.location.origin) return;
+  if (url.origin !== self.location.origin || url.pathname.startsWith('/api/')) return;
   if (request.mode === 'navigate') event.respondWith(page(event));
   else if (url.searchParams.has('v') || url.pathname.startsWith('/fonts/')) event.respondWith(file(event));
   // Anything else (the manifest, icons, speculation rules) goes to the

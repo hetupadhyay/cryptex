@@ -1,0 +1,434 @@
+/* ------------------------------------------------------------------
+   Sign in, your account and resetting a password. They sit on the
+   paper like the terms, with the forms kept to a comfortable width.
+------------------------------------------------------------------- */
+
+.auth input {
+  font-family: var(--sans);
+}
+
+.auth .doc-summary {
+  font-size: 17px;
+}
+
+.auth-notice {
+  margin-top: 28px;
+  padding: 14px 16px;
+  border-left: 3px solid var(--carbon);
+  border-radius: 0 6px 6px 0;
+  background: var(--carbon-wash);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.auth-body {
+  display: grid;
+  gap: 26px;
+  max-width: 420px;
+  margin-top: 30px;
+}
+
+/* Sign in, or create an account: the chosen one is underlined in pencil. */
+.auth-modes {
+  display: flex;
+  gap: 26px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.auth-modes button {
+  position: relative;
+  padding: 8px 0 12px;
+  border: 0;
+  background: none;
+  color: var(--ink-3);
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.auth-modes button[aria-pressed='true'] {
+  color: var(--ink);
+}
+
+.auth-modes button[aria-pressed='true']::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -3px;
+  bottom: -1.5px;
+  height: 2.5px;
+  border-radius: 2px;
+  background: var(--pencil);
+  transform: rotate(-1deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .auth-modes button:hover {
+    color: var(--ink);
+  }
+}
+
+.providers {
+  display: grid;
+  gap: 12px;
+}
+
+.providers:not(:has(.provider:not([hidden]))) {
+  display: none;
+}
+
+.btn.provider {
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.provider svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+/* A rule across the form with the words sitting on it. */
+.auth-or {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 14px;
+  color: var(--ink-3);
+  font-size: 14px;
+}
+
+.auth-or::before,
+.auth-or::after {
+  content: '';
+  height: 1px;
+  background: var(--rule-strong);
+}
+
+.auth-form {
+  display: grid;
+  gap: 18px;
+}
+
+.auth-form h2 {
+  font-size: 21px;
+}
+
+.auth-help,
+.auth-form .hint {
+  color: var(--ink-3);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.optional {
+  color: var(--ink-3);
+  font-weight: 400;
+}
+
+.auth-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+}
+
+.auth-small {
+  color: var(--ink-3);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.auth .doc-sheet .auth-small a,
+.auth .doc-sheet .auth-small a:visited {
+  font-weight: 600;
+}
+
+/* ---------------- your account ---------------- */
+
+/* The page is wider than the terms: a card on top, then two columns. */
+.doc.account {
+  max-width: 880px;
+}
+
+.account-body .auth-form {
+  max-width: 420px;
+  margin-top: 14px;
+}
+
+/* The card: your initial on a key, who you are, and the eight missions. */
+.doc-sheet .account-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 22px 24px;
+  margin-top: 8px;
+  padding: 28px;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: var(--sheet);
+  box-shadow: var(--shadow-s);
+}
+
+.account-key {
+  --edge: 4px;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  margin-bottom: var(--edge);
+  border: 1px solid var(--rule-strong);
+  border-radius: 12px;
+  background: var(--key-face);
+  box-shadow: inset 0 1px 0 var(--key-light), 0 var(--edge) 0 var(--key-side);
+  color: var(--ink);
+  font: 700 34px/1 var(--type);
+}
+
+.doc-sheet .account-card p {
+  margin-top: 0;
+}
+
+.doc-sheet .account-who {
+  color: var(--ink);
+  font-size: clamp(26px, 4vw, 34px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+
+.doc-sheet .account-email {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin-top: 8px;
+}
+
+.account-email span {
+  color: var(--ink-2);
+  font: 400 16px var(--type);
+  overflow-wrap: anywhere;
+}
+
+/* Confirmed or not, as a rubber stamp. */
+.badge {
+  padding: 1px 8px;
+  border: 1.5px solid currentColor;
+  border-radius: 4px;
+  color: var(--pencil);
+  font: 700 12px/1.5 var(--type);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transform: rotate(-2deg);
+}
+
+.badge.ok {
+  color: var(--carbon);
+}
+
+.doc-sheet .account-card .account-line {
+  margin-top: 6px;
+  font-size: 15px;
+}
+
+.account-tally {
+  grid-column: 1 / -1;
+  padding-top: 20px;
+  border-top: 1px dashed var(--rule-strong);
+}
+
+/* One square per mission, filled in carbon once it's cracked. */
+.mission-marks {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 44px));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.doc-sheet .mission-marks li {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  margin: 0;
+  border: 1.5px dashed var(--rule-strong);
+  border-radius: 7px;
+  color: var(--ink-3);
+  font: 700 15px/1 var(--type);
+  transition: background-color 360ms var(--ease-out), border-color 360ms var(--ease-out), color 360ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 45ms);
+}
+
+.doc-sheet .mission-marks li.done {
+  border-style: solid;
+  border-color: var(--carbon);
+  background: var(--carbon);
+  color: var(--on-solid);
+}
+
+.doc-sheet .account-tally .account-progress {
+  margin-top: 14px;
+  color: var(--ink-2);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .doc-sheet .mission-marks li {
+    transition: none;
+  }
+}
+
+/* The settings, side by side when there's room. */
+.account-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 48px;
+  align-items: start;
+}
+
+.doc-sheet .account-grid section {
+  margin-top: 34px;
+  padding-top: 22px;
+  border-top: 1px solid var(--rule);
+}
+
+.doc-sheet .account-grid h2 {
+  font-size: 18px;
+}
+
+.doc-sheet section .section-note {
+  margin-top: 4px;
+  color: var(--ink-3);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .account-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .doc-sheet .account-card {
+    gap: 18px 16px;
+    padding: 20px 18px;
+  }
+
+  .account-key {
+    width: 56px;
+    height: 56px;
+    font-size: 26px;
+  }
+
+  .mission-marks {
+    gap: 6px;
+  }
+}
+
+.account-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+}
+
+.inline-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  margin-top: 12px;
+}
+
+.inline-form input {
+  flex: 1 1 220px;
+  max-width: 320px;
+}
+
+.inline-form .btn {
+  margin-top: 0;
+}
+
+.inline-form label {
+  flex-basis: 100%;
+  color: var(--ink-2);
+  font-size: 14.5px;
+}
+
+.doc-sheet .methods {
+  display: grid;
+  gap: 0;
+  margin-top: 12px;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+  list-style: none;
+}
+
+.doc-sheet .methods li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 16px;
+  min-height: 52px;
+  margin: 0;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.method-name {
+  flex: 1 1 auto;
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.method-state {
+  color: var(--ink-3);
+  font: 400 14px var(--type);
+}
+
+.methods li.on .method-state {
+  color: var(--carbon);
+  font-weight: 700;
+}
+
+/* Deleting the account is set apart, in red pencil. */
+.danger {
+  padding-top: 26px;
+  border-top: 1px dashed var(--rule-strong);
+}
+
+.danger h2 {
+  color: var(--pencil);
+}
+
+.btn.danger-btn {
+  border-color: var(--pencil);
+  color: var(--pencil);
+}
+
+@media (max-width: 640px) {
+  .auth-body {
+    max-width: none;
+  }
+
+  .inline-form input {
+    max-width: none;
+  }
+}
+
+/* Keys stay keys, not underlined links, on the paper. */
+.doc-sheet a.btn {
+  color: var(--ink);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.doc-sheet section > .auth-actions {
+  margin-top: 14px;
+}

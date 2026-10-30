@@ -370,6 +370,8 @@ main {
 textarea,
 input[type='text'],
 input[type='number'],
+input[type='email'],
+input[type='password'],
 select {
   width: 100%;
   min-height: 44px;

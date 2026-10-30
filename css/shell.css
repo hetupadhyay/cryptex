@@ -168,6 +168,41 @@
   }
 }
 
+/* Sign in, or once signed in, a round tab with your initial. */
+.account-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 4px;
+  color: var(--ink-2);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.account-link.signed-in {
+  width: 42px;
+  padding: 0;
+  border: 1px solid var(--rule-strong);
+  border-radius: 50%;
+  background: var(--sheet);
+  color: var(--ink);
+  font: 700 17px/1 var(--type);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .account-link:hover {
+    color: var(--ink);
+  }
+
+  .account-link.signed-in:hover {
+    border-color: var(--ink);
+  }
+}
+
 /* The lamp: night is the same desk with the lamp switched on. */
 .mast .lamp {
   display: grid;
@@ -278,7 +313,8 @@
   }
 
   .mast-links,
-  .today-link {
+  .today-link,
+  .account-link {
     display: none;
   }
 

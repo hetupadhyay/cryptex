@@ -4,12 +4,14 @@ Classical ciphers, worked through one letter at a time, and the attacks that bre
 
 Live at https://cryptexciphers.vercel.app. A personal project by Het Upadhyay.
 
-Four main pages, plus terms, privacy and a 404 page:
+Four main pages, optional accounts, and terms, privacy and a 404 page:
 
 - **Home.** A brass cryptex you can drag, flick or tap (its rings turn together, which is exactly a Caesar cipher), today's intercept, and the way into the rest.
 - **Learn.** Twenty-six centuries of secret writing as one essay, with a year rail beside it: all ten ciphers in the order they entered history and how each one fell, a working Enigma, the one-time pad, how long a brute-force search would take, and why it matters for the padlock in your browser.
 - **Lab.** Pick a cipher from the codebook, type a message, and watch every step: the Caesar alphabet sliding into place, a path through the tabula recta, a Playfair rectangle, the rail fence zig-zag, columns sorting themselves under a keyword. Pause, step, scrub, change the speed, or send the result as a secret link.
 - **Codebreaking.** Three folders: today's intercept (a new message every day, with streaks), eight missions from a Roman courier to the Western Front, and the desk, which breaks Caesar, affine, rail fence, Vigenère and Beaufort without the key.
+
+- **Accounts (optional).** Sign up with an email and password, or with Google, GitHub or Apple, and your cracked missions and daily streak follow you to every device. Everything else works without one.
 
 | Family | Ciphers |
 | --- | --- |
@@ -20,19 +22,34 @@ Four main pages, plus terms, privacy and a 404 page:
 
 ## Running it
 
-There's no build step and nothing to install. Serve the folder the way Vercel does, with clean URLs and the security headers from `vercel.json`:
+There's no build step. Install the account code's packages once, then serve the site the way Vercel does, with clean URLs, the security headers from `vercel.json` and the account API:
 
 ```sh
-npm start        # python3 tools/serve.py . 8000
+npm install
+npm start        # node tools/dev.js 8000
 ```
 
-Then open http://127.0.0.1:8000.
+Then open http://127.0.0.1:8000. Locally, accounts live in an in-memory Postgres that starts empty each time, and emails are printed in the terminal instead of being sent.
 
-Everything runs in the page, and nothing is loaded from other sites. The fonts, Courier Prime and Hanken Grotesk, are in `fonts/` with their SIL Open Font License files.
+The ciphers and everything else run in the page, and nothing is loaded from other sites. The fonts, Courier Prime and Hanken Grotesk, are in `fonts/` with their SIL Open Font License files.
+
+## Accounts
+
+The pages call one serverless function, `api/main.js` (`vercel.json` sends every `/api/*` request to it). It keeps accounts in Postgres and creates its tables on first use.
+
+| Variable | What it's for | Needed |
+| --- | --- | --- |
+| `DATABASE_URL` | The Postgres database. Vercel sets it when you add a Neon database to the project. | Yes, for accounts |
+| `SMTP_URL`, `MAIL_FROM` | Sends the emails that confirm an address and reset a password, e.g. `smtps://you%40gmail.com:app-password@smtp.gmail.com:465` | For those two emails |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Continue with Google | For that button |
+| `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` | Continue with GitHub | For that button |
+| `APPLE_CLIENT_ID`, `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY` | Continue with Apple (needs an Apple Developer membership) | For that button |
+
+Each sign-in button only appears once its keys are set. The address to give each provider as the callback is `https://<your site>/api/auth/<google|github|apple>/callback`. Without a database the site works as before and the sign-in page says accounts aren't switched on yet.
 
 ## Tests
 
-The ciphers, the attacks, the Enigma machine and the daily puzzle are checked against worked examples and round trips:
+The ciphers, the attacks, the Enigma machine and the daily puzzle are checked against worked examples and round trips, and the account API is tested over HTTP against a real Postgres (in memory), with Google, GitHub and Apple stood in for:
 
 ```sh
 npm test
@@ -48,9 +65,10 @@ CI also checks that no page loads anything from another site, that the shared ma
 - all ten ciphers there and back;
 - a mission cracked and kept;
 - the desk, secret links and the phone menu;
-- opening offline.
+- opening offline;
+- accounts: signing up and in, progress following you to a second browser, deleting an account, and no account requests at all from a visitor who never signs in.
 
-It has its own `package.json`, so the site itself still has nothing to install:
+It has its own `package.json`:
 
 ```sh
 cd tests/browser
@@ -75,7 +93,9 @@ terms.html privacy.html 404.html                   the standalone pages
 tools/shell/          the masthead and footer every page shares
 tools/sync-shell.py   copies them into each page
 tools/stamp.py        file stamps and the offline file list
-tools/serve.py        a local server that behaves like Vercel
+tools/dev.js          a local server that behaves like Vercel, account API included
+api/main.js           the account API: sign-up, sign-in, sessions, progress
+api/_lib/             its parts: database, passwords, providers, email, limits
 tools/check-external.js  CI check: nothing loaded from other sites
 tools/render-images.js   redraws the icons and the sharing image
 sw.js                 the offline cache, one release at a time
@@ -100,6 +120,8 @@ js/intercepts.js      the missions
 js/daily.js           the daily intercept (the puzzle part runs in Node too)
 js/codebreaking.js    the folder tabs
 js/home.js            Home: today's strip, the doors, old links
+js/account.js         the masthead's sign-in state and syncing progress
+js/auth.js            the sign-in, account and reset-password pages
 js/cryptex.js         the cryptex on Home
 js/spring.js          the spring the cryptex rings turn on
 js/background.js      the cipher pad behind Home

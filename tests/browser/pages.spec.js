@@ -2,7 +2,7 @@
 const { test, expect } = require('@playwright/test');
 const { watch } = require('./helpers');
 
-const PAGES = ['/', '/learn', '/lab', '/codebreaking', '/terms', '/privacy', '/no-such-page'];
+const PAGES = ['/', '/learn', '/lab', '/codebreaking', '/terms', '/privacy', '/signin', '/reset', '/no-such-page'];
 const SIZES = [{ width: 1280, height: 900 }, { width: 390, height: 844 }, { width: 320, height: 640 }];
 
 for (const size of SIZES) {

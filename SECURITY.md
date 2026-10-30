@@ -11,7 +11,7 @@ Please say what you found, how to reproduce it, and which browser you used. Repo
 
 ## What the site stores
 
-There are no accounts, cookies, analytics, ads or server code. Everything runs in the browser.
+There are no analytics or ads. The ciphers and attacks run in the browser, and accounts are optional.
 
 Kept on your device, in `localStorage`:
 
@@ -20,12 +20,38 @@ Kept on your device, in `localStorage`:
 | `cryptex-theme` | Whether the night lamp is on | So the look you picked sticks |
 | `cryptex-cracked` | Ids of the missions you've cracked | Your progress through the eight missions |
 | `cryptex-daily` | The dates you cracked today's intercept, the hints used on each, hints used today, and your best streak | Your streak and record |
+| `cryptex-account` | The name and email of the account signed in here | So the masthead shows it at once, and so a browser that was never signed in makes no account requests |
 
 Kept for a moment, in `sessionStorage`: `cryptex-handoff`, the text (up to 20,000 characters) and settings you send from one page to another with Send to the desk or Open in the lab. The page it's for deletes it as soon as it reads it, and it's ignored after a minute.
 
 The service worker also keeps a cache of the site's own files, so it opens offline. Clearing the site's data in your browser removes all of it.
 
 Secret links carry the ciphertext, and the key if you choose to include it, in the URL fragment (after the `#`). Browsers don't send the fragment to servers, so the host never sees it, but anyone with the link does.
+
+## Accounts
+
+`api/main.js` is the only server code. It keeps, in Postgres:
+
+- **users:** email (lowercased), whether it's confirmed, a name, and the password as an scrypt hash (N=16384, r=8, p=1, a 16-byte random salt);
+- **identities:** the Google, GitHub or Apple account linked, by the provider's id;
+- **sessions:** a SHA-256 hash of each session token, never the token itself. They expire after 30 days;
+- **tokens:** hashes of the emailed confirm and reset links (48 hours and 1 hour, single use);
+- **progress:** the missions and daily record, checked and merged on the server;
+- **attempts:** recent failed sign-ins, keyed by hashed email or network address, kept for a day.
+
+How it's protected:
+
+- **The session cookie** is `__Host-` prefixed, `HttpOnly`, `Secure` and `SameSite=Lax`.
+- **Requests that change anything** must carry the site's own `Origin` header and a JSON body, so another site can't make them.
+- **Signing in with Google, GitHub or Apple** uses a random, single-use `state` tied to a cookie in the browser that started it, and PKCE with Google. A verified email that matches an account whose address was never confirmed takes it over and removes its password, since whoever set that password may not own the address.
+- **Guessing is slowed:**
+  - 10 failed sign-ins per email and 50 per network address every 15 minutes;
+  - 10 sign-ups per network address an hour;
+  - 5 reset emails per address an hour.
+- **No account enumeration through reset:** asking for a reset gets the same answer whether or not an account exists.
+- **Changing or resetting a password** signs out every other session.
+- **Deleting an account** removes every row about it at once.
+- **Passwords:** 8 to 128 characters, with no other rules.
 
 The host, Vercel, keeps standard request logs under its own privacy policy. Because of `speculation-rules.json`, a browser may load a page in the background when you point at a link to it, so that request can appear in those logs too.
 
@@ -48,7 +74,7 @@ Stylesheets and scripts are linked with a hash of their contents (`?v=...`, writ
 The last review was on 30 October 2026. It covered every script on the site:
 
 - **No inline script.** The theme is picked by `js/theme.js` rather than an inline `<script>`. No page uses inline event handlers, `javascript:` URLs, `eval` or `new Function`.
-- **No external requests.** Every script, stylesheet and font is served from the site. CI fails if a page loads one from anywhere else (`tools/check-external.js`).
+- **No external requests.** Every script, stylesheet and font is served from the site, and the account API is on the same site, so the policy's `connect-src 'self'` still holds. CI fails if a page loads one from anywhere else (`tools/check-external.js`).
 - **`innerHTML`.** Used only with fixed markup written in the scripts. Anything from the user, a link or storage goes in with `textContent`.
 - **Secret links.** Treated as untrusted. A link is refused if its fragment is over 8 KB, isn't base64url, or isn't a JSON object with a known cipher and a string ciphertext of at most 4,000 characters. A key that is missing, too long, not a string or not valid for the cipher is dropped. The link is cleared from the address bar once it's read. Links that would be too long to open are refused when you make them.
 - **Local storage.** Every read is wrapped in `try`, so blocked or broken storage falls back to defaults. Saved values are checked (the theme must be `day` or `night`; cracked missions must be known mission ids; daily records must be dates and small whole numbers) before they're used. Hand-offs between pages are checked for size and age, and an unknown desk attack falls back to the first one.
