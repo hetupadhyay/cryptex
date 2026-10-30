@@ -13,7 +13,7 @@
 'use strict';
 
 // stamp:start (written by tools/stamp.py)
-const VERSION = 'f426764311';
+const VERSION = '53a190ac66';
 const PRECACHE = [
   '/',
   '/learn',
@@ -30,7 +30,7 @@ const PRECACHE = [
   '/css/pages.css?v=e75b1a6ac5',
   '/css/scenes.css?v=74d2868e50',
   '/css/shell.css?v=73fe35c823',
-  '/css/site.css?v=a951b7d72a',
+  '/css/site.css?v=9a850c75b9',
   '/css/story.css?v=343044d36e',
   '/js/analysis.js?v=64f37747e0',
   '/js/background.js?v=d135e07da1',
