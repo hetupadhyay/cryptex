@@ -455,6 +455,11 @@ select:focus {
   opacity: 1;
 }
 
+/* A field with a problem gets a red pencil edge; the message says why. */
+[aria-invalid='true']:not(:focus) {
+  border-color: var(--pencil);
+}
+
 .keys input[type='text'],
 #share-key,
 #answer-input {
@@ -1953,6 +1958,8 @@ input[type='range']::-moz-range-thumb {
     grid-template-columns: minmax(0, 1fr);
     gap: 22px;
     padding-top: 28px;
+    /* Tab follows the order on screen, where browsers support it. */
+    reading-flow: grid-order;
   }
 
   .hero-copy {
@@ -2162,5 +2169,32 @@ input[type='range']::-moz-range-thumb {
   .stamp.landing,
   .secret-dialog[open] {
     animation: none;
+  }
+}
+
+/* ---------------- high-contrast modes ---------------- */
+
+/* Forced colours drop backgrounds, which is all a chart bar is. Draw
+   them in system colours instead so the charts stay readable. */
+@media (forced-colors: active) {
+  .bar,
+  .fit i,
+  .st-bar i,
+  .key-cipher::before,
+  .key-english::before {
+    forced-color-adjust: none;
+  }
+
+  .bar.cipher,
+  .key-cipher::before,
+  .shift-row.best .fit i {
+    background: Highlight;
+  }
+
+  .bar.english,
+  .key-english::before,
+  .fit i,
+  .st-bar i {
+    background: CanvasText;
   }
 }

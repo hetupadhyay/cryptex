@@ -37,8 +37,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <script src="js/theme.js?v=8626267322"></script>
-  <link rel="stylesheet" href="css/site.css?v=bd4eac637f">
-  <link rel="stylesheet" href="css/shell.css?v=165af077c5">
+  <link rel="stylesheet" href="css/site.css?v=9091529800">
+  <link rel="stylesheet" href="css/shell.css?v=341482449c">
   <link rel="stylesheet" href="css/daily.css?v=875309f422">
   <link rel="stylesheet" href="css/desk.css?v=89df0a7983">
   <link rel="stylesheet" href="css/codebreaking.css?v=747a85efb5">
@@ -46,6 +46,7 @@
 </head>
 <body data-page="codebreaking">
   <!-- shell:header -->
+  <a class="skip" href="#top">Skip to content</a>
   <header class="mast">
     <div class="mast-bar">
       <a class="brand" href="/" aria-label="Cryptex home">
@@ -263,7 +264,8 @@
                 <p class="verdict"></p>
               </div>
               <figure class="chart freq-chart">
-                <div class="bars" role="img" aria-label="Letter frequencies of the ciphertext compared with English"></div>
+                <div class="bars" role="img" aria-label="Letter frequencies of the ciphertext compared with English" aria-describedby="freq-said"></div>
+                <p class="vh" id="freq-said"></p>
                 <figcaption class="legend">
                   <span class="key-cipher">Your text</span>
                   <span class="key-english">Typical English</span>
@@ -365,7 +367,7 @@
     </div>
     <div class="foot-bar">
       <p class="foot-who">© 2026 <b>Het Nimeshkumar Upadhyay</b></p>
-      <p>Made by <span class="signature" tabindex="0" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-label="Het Upadhyay, written in a Caesar cipher" title="Shift 3. Hover to decode.">KHW XSDGKBDB</span></p>
+      <p>Made by <span class="vh">Het Upadhyay</span><span class="signature" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-hidden="true" title="Shift 3. Point at it or tap it to decode.">KHW XSDGKBDB</span></p>
       <p>Runs in your browser. Nothing you type is sent to a server.</p>
       <div class="foot-links">
         <a href="/terms">Terms</a>
@@ -386,11 +388,11 @@
   <script src="js/analysis.js?v=64f37747e0"></script>
   <script src="js/stage.js?v=7c00074c23"></script>
   <script src="js/handoff.js?v=87a67e4e6d"></script>
-  <script src="js/breaker.js?v=c889a61949"></script>
+  <script src="js/breaker.js?v=4a129132ff"></script>
   <script src="js/intercepts.js?v=77c6667feb"></script>
   <script src="js/daily.js?v=56d0fb8391"></script>
-  <script src="js/codebreaking.js?v=a27435444e"></script>
-  <script src="js/site.js?v=315fff37f5"></script>
+  <script src="js/codebreaking.js?v=0bb867115c"></script>
+  <script src="js/site.js?v=baf0d9e177"></script>
   <script src="js/pwa.js?v=5b673ad196"></script>
 </body>
 </html>

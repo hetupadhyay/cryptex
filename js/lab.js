@@ -19,8 +19,8 @@
   // shortcut: the counts mirror the rows in js/strength.js; keep the two in step.
   const RATE = 1e9;
   const factorial = n => (n <= 1 ? 1 : n * factorial(n - 1));
-  const KEYWORD_5 = { keys: 26 ** 5, count: '26<sup>5</sup> = 11,881,376', note: 'for a 5-letter keyword' };
-  const SQUARE = { keys: factorial(25), count: '25! ≈ 1.6 × 10<sup>25</sup>', note: 'ways to fill a keyed square' };
+  const KEYWORD_5 = { keys: 26 ** 5, count: '26<span class="vh"> to the power of </span><sup>5</sup> = 11,881,376', note: 'for a 5-letter keyword' };
+  const SQUARE = { keys: factorial(25), count: '25! ≈ 1.6 × 10<span class="vh"> to the power of </span><sup>25</sup>', note: 'ways to fill a keyed square' };
   const KEYSPACE = {
     caesar: { keys: 25, count: '25', note: 'shifts from 1 to 25' },
     atbash: { keys: 1, count: '1', note: 'there is nothing to choose' },
@@ -91,7 +91,7 @@
         entry.className = 'cb-entry';
         entry.dataset.id = c.id;
         entry.setAttribute('role', 'radio');
-        entry.innerHTML = `<span class="cb-name"></span><span class="cb-spec">${SPECIMEN}<span aria-hidden="true"> → </span><span class="sr"> becomes </span><b></b></span>`;
+        entry.innerHTML = `<span class="cb-name"></span><span class="cb-spec">${SPECIMEN}<span aria-hidden="true"> → </span><span class="vh"> becomes </span><b></b></span>`;
         $('.cb-name', entry).textContent = c.name;
         $('.cb-spec b', entry).textContent = c.encrypt(SPECIMEN, defaults);
         group.append(entry);
@@ -216,6 +216,7 @@
         input.value = values[k.id];
       }
       input.id = id;
+      input.setAttribute('aria-describedby', 'lab-error');
       input.addEventListener('input', () => {
         values[k.id] = input.value;
         markStale();
@@ -316,18 +317,26 @@
     updateHint();
   }
 
+  // A problem is marked on the field it's about, which takes focus.
+  function flag(fields, problem) {
+    errorBox.textContent = problem;
+    for (const f of fields) f.setAttribute('aria-invalid', Boolean(problem));
+    if (problem) fields[0]?.focus();
+  }
+
   function run() {
     const c = state.cipher;
     const keys = state.keys[c.id];
+    const keyFields = $$('input, select', keysBox);
     const problem = c.check(keys);
-    errorBox.textContent = problem;
+    flag(keyFields, problem);
+    message.setAttribute('aria-invalid', false);
     if (problem) return;
 
     const text = message.value;
     const hasContent = c.id === 'polybius' && state.mode === 'decrypt' ? /[1-5]/.test(text) : /[a-z]/i.test(text);
     if (!hasContent) {
-      errorBox.textContent = state.mode === 'encrypt' ? 'Type a message with at least one letter.' : 'Paste some ciphertext to decrypt.';
-      message.focus();
+      flag([message], state.mode === 'encrypt' ? 'Type a message with at least one letter.' : 'Paste some ciphertext to decrypt.');
       return;
     }
 
@@ -462,13 +471,18 @@
   $('[data-act="copy"]').addEventListener('click', async e => {
     if (!state.last) return;
     const btn = e.currentTarget;
+    const said = $('#copy-said');
     try {
       await navigator.clipboard.writeText(state.last.output);
-      btn.textContent = 'Copied';
+      btn.textContent = said.textContent = 'Copied';
     } catch {
-      btn.textContent = 'Select the text to copy';
+      getSelection().selectAllChildren(resultText);
+      btn.textContent = said.textContent = 'Selected. Copy it from here';
     }
-    setTimeout(() => { btn.textContent = 'Copy'; }, 1600);
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      said.textContent = '';
+    }, 1600);
   });
 
   $('[data-act="attack"]').addEventListener('click', () => {

@@ -14,10 +14,8 @@
 
   function applyTheme(theme, save) {
     root.dataset.theme = theme;
-    lamps.forEach(l => {
-      l.setAttribute('aria-pressed', theme === 'night');
-      l.setAttribute('aria-label', theme === 'night' ? 'Turn off the night lamp' : 'Turn on the night lamp');
-    });
+    // One name, "Night lamp", and pressed or not says whether it's on.
+    lamps.forEach(l => l.setAttribute('aria-pressed', theme === 'night'));
     if (save) {
       try { localStorage.setItem('cryptex-theme', theme); } catch {}
     }
@@ -101,7 +99,9 @@
 
   // ---- the coded signature ------------------------------------------------------
 
-  // "Made by" is written in a Caesar shift of 3 and decodes while hovered or focused.
+  // "Made by" is written in a Caesar shift of 3. It decodes while pointed
+  // at, and a tap turns it either way on a touch screen. Screen readers get
+  // the plain name from the page instead.
   const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   document.querySelectorAll('.signature').forEach(sig => {
     let timer;
@@ -119,9 +119,13 @@
         if (n >= target.length) clearInterval(timer);
       }, 30);
     };
-    sig.addEventListener('mouseenter', () => roll('plain'));
-    sig.addEventListener('focus', () => roll('plain'));
-    sig.addEventListener('mouseleave', () => roll('coded'));
-    sig.addEventListener('blur', () => roll('coded'));
+    let plain = false;
+    const show = to => {
+      plain = to === 'plain';
+      roll(to);
+    };
+    sig.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') show('plain'); });
+    sig.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') show('coded'); });
+    sig.addEventListener('click', e => { if (e.pointerType !== 'mouse') show(plain ? 'coded' : 'plain'); });
   });
 })();

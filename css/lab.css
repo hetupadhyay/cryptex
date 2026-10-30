@@ -5,15 +5,6 @@
    Sheets for the tools, paper for the reading, glass only on the bar.
 ------------------------------------------------------------------- */
 
-/* Read aloud, not shown. */
-.sr {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
 
 /* ---------------- page head ---------------- */
 

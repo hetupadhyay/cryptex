@@ -331,22 +331,36 @@
     return [...text].map(ch => (ch === ' ' ? ' ' : ALPHABET[letters[n++]])).join('');
   }
 
-  // One column per character: the rows stacked for a letter, a gap for a space.
-  function renderTiles(el, rows) {
-    el.replaceChildren(...[...rows[0]].map((ch, i) => {
-      const col = document.createElement('span');
-      if (ch === ' ') {
-        col.className = 'otp-gap';
-        return col;
+  // Spelled out a letter at a time, word by word, for a screen reader.
+  const spell = row => row.split(' ').map(word => [...word].join(' ')).join(', ');
+
+  // One column per letter with the rows stacked, grouped into words so a
+  // word never splits across lines. Read top to bottom the columns make no
+  // sense aloud, so a screen reader gets each row whole, with its name.
+  function renderTiles(el, rows, names) {
+    const said = document.createElement('p');
+    said.className = 'vh';
+    said.textContent = rows.map((row, i) => `${names[i]}: ${spell(row)}.`).join(' ');
+    const words = [];
+    let at = 0;
+    for (const word of rows[0].split(' ')) {
+      const group = document.createElement('span');
+      group.className = 'otp-word';
+      group.setAttribute('aria-hidden', 'true');
+      for (let i = at; i < at + word.length; i++) {
+        const col = document.createElement('span');
+        col.className = 'otp-col';
+        for (const row of rows) {
+          const b = document.createElement('b');
+          b.textContent = row[i];
+          col.append(b);
+        }
+        group.append(col);
       }
-      col.className = 'otp-col';
-      for (const row of rows) {
-        const b = document.createElement('b');
-        b.textContent = row[i];
-        col.append(b);
-      }
-      return col;
-    }));
+      at += word.length + 1;
+      words.push(group);
+    }
+    el.replaceChildren(said, ...words);
   }
 
   const padPanel = $('.otp');
@@ -366,7 +380,7 @@
     if (pad.length < m.length) pad = pad.concat(randomLetters(m.length - pad.length));
     const key = pad.slice(0, m.length);
     cipher = m.map((x, i) => mod(x + key[i], 26));
-    renderTiles(padTiles, [msg, shape(msg, key), shape(msg, cipher)]);
+    renderTiles(padTiles, [msg, shape(msg, key), shape(msg, cipher)], ['Message', 'Pad', 'Ciphertext']);
     renderAlt();
   }
 
@@ -385,7 +399,7 @@
     altHint.textContent = '';
     // The pad that turns this ciphertext into this message: ciphertext minus message.
     const key = a.map((x, i) => mod(cipher[i] - x, 26));
-    renderTiles(altTiles, [shape(alt, cipher), shape(alt, key), alt]);
+    renderTiles(altTiles, [shape(alt, cipher), shape(alt, key), alt], ['Ciphertext', 'This pad', 'Your message']);
   }
 
   padText.addEventListener('input', renderPad);

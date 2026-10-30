@@ -185,6 +185,10 @@
       $('.bar.english', col).style.transform = `scaleY(${ENGLISH[i] / top})`;
       col.title = `${ALPHABET[i]}: ${freq[i].toFixed(1)}% here, ${ENGLISH[i].toFixed(1)}% in English`;
     });
+    // The bars in words, for anyone who can't see them.
+    $('#freq-said').textContent = letters.length
+      ? [...ALPHABET].map((ch, i) => `${ch} ${freq[i].toFixed(1)}%, English ${ENGLISH[i].toFixed(1)}%`).join('. ') + '.'
+      : '';
 
     const preview = $('.preview', freqSection);
     const tops = $('.tops', freqSection);

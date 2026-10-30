@@ -28,7 +28,7 @@
     if (n < 1e6) return Math.round(n).toLocaleString('en');
     const exp = Math.floor(Math.log10(n));
     const lead = (n / 10 ** exp).toFixed(1).replace(/\.0$/, '');
-    return `${lead} × 10<sup>${exp}</sup>`;
+    return `${lead} × 10<span class="vh"> to the power of </span><sup>${exp}</sup>`;
   }
 
   function duration(seconds) {

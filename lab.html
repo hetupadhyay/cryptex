@@ -37,14 +37,15 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <script src="js/theme.js?v=8626267322"></script>
-  <link rel="stylesheet" href="css/site.css?v=bd4eac637f">
-  <link rel="stylesheet" href="css/shell.css?v=165af077c5">
+  <link rel="stylesheet" href="css/site.css?v=9091529800">
+  <link rel="stylesheet" href="css/shell.css?v=341482449c">
   <link rel="stylesheet" href="css/scenes.css?v=3828524726">
-  <link rel="stylesheet" href="css/lab.css?v=7eb12ba74b">
+  <link rel="stylesheet" href="css/lab.css?v=c5c6805ed5">
   <link rel="icon" href="img/mark.svg" type="image/svg+xml">
 </head>
 <body data-page="lab">
   <!-- shell:header -->
+  <a class="skip" href="#top">Skip to content</a>
   <header class="mast">
     <div class="mast-bar">
       <a class="brand" href="/" aria-label="Cryptex home">
@@ -113,7 +114,7 @@
             </button>
             <div class="field message-field">
               <label for="message">Message</label>
-              <textarea id="message" rows="1" spellcheck="false">Meet me at the old bridge</textarea>
+              <textarea id="message" rows="1" spellcheck="false" aria-describedby="message-hint lab-error">Meet me at the old bridge</textarea>
             </div>
             <div class="toolbar-row">
               <!-- Caesar's key, as js/lab.js draws it, so the form doesn't jump when it loads. -->
@@ -136,7 +137,7 @@
               <button class="btn primary run" type="submit">Encrypt</button>
             </div>
             <p class="hint" id="message-hint"></p>
-            <p class="error" role="alert"></p>
+            <p class="error" id="lab-error" role="alert"></p>
           </form>
 
           <section class="stage empty" aria-label="Step by step">
@@ -182,6 +183,7 @@
                 <h2 id="result-title">Ciphertext</h2>
                 <div class="result-actions">
                   <button type="button" class="link" data-act="copy">Copy</button>
+                  <span class="vh" id="copy-said" role="status"></span>
                   <button type="button" class="link" data-act="attack">Try to break it</button>
                   <button type="button" class="link" data-act="send">Send this as a secret</button>
                 </div>
@@ -240,7 +242,7 @@
         <p class="hint share-from" hidden>Filled in from your last run in the lab. Check it over, then create the link.</p>
         <div class="field">
           <label for="share-text">Your message</label>
-          <textarea id="share-text" rows="3" spellcheck="false">Lunch is on me if you can read this</textarea>
+          <textarea id="share-text" rows="3" spellcheck="false" aria-describedby="share-error">Lunch is on me if you can read this</textarea>
         </div>
         <div class="share-row">
           <div class="field">
@@ -249,7 +251,7 @@
           </div>
           <div class="field" id="share-key-field">
             <label for="share-key">Key</label>
-            <input id="share-key" type="text" spellcheck="false">
+            <input id="share-key" type="text" spellcheck="false" aria-describedby="share-error">
           </div>
           <label class="check">
             <input type="checkbox" id="share-include-key">
@@ -261,6 +263,7 @@
         <div class="share-out" hidden>
           <input id="share-link" type="text" readonly aria-label="Link to your secret">
           <button type="button" class="btn small" data-act="copy-link">Copy link</button>
+          <span class="vh" id="copy-link-said" role="status"></span>
           <p class="share-preview"></p>
         </div>
       </form>
@@ -333,7 +336,7 @@
     </div>
     <div class="foot-bar">
       <p class="foot-who">© 2026 <b>Het Nimeshkumar Upadhyay</b></p>
-      <p>Made by <span class="signature" tabindex="0" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-label="Het Upadhyay, written in a Caesar cipher" title="Shift 3. Hover to decode.">KHW XSDGKBDB</span></p>
+      <p>Made by <span class="vh">Het Upadhyay</span><span class="signature" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-hidden="true" title="Shift 3. Point at it or tap it to decode.">KHW XSDGKBDB</span></p>
       <p>Runs in your browser. Nothing you type is sent to a server.</p>
       <div class="foot-links">
         <a href="/terms">Terms</a>
@@ -359,9 +362,9 @@
   <script src="js/scenes/railfence.js?v=69c6b00337"></script>
   <script src="js/scenes/columnar.js?v=5d961719e6"></script>
   <script src="js/handoff.js?v=87a67e4e6d"></script>
-  <script src="js/lab.js?v=eba9402966"></script>
-  <script src="js/share.js?v=c6cb68012d"></script>
-  <script src="js/site.js?v=315fff37f5"></script>
+  <script src="js/lab.js?v=adf6895a50"></script>
+  <script src="js/share.js?v=ae6496ea0f"></script>
+  <script src="js/site.js?v=baf0d9e177"></script>
   <script src="js/pwa.js?v=5b673ad196"></script>
 </body>
 </html>
