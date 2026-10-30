@@ -17,7 +17,10 @@ jobs:
         with:
           node-version: 22
 
-      - name: Cipher and analysis tests
+      - name: Install the account code's packages
+        run: npm ci
+
+      - name: Cipher, analysis and account tests
         run: npm test
 
       # The site promises no external requests.
@@ -33,7 +36,7 @@ jobs:
 
   # The site in a real browser, served with the headers from vercel.json:
   # every page in both themes and three widths, all ten ciphers, missions,
-  # the desk, secret links, the phone menu and offline.
+  # the desk, secret links, the phone menu, offline and accounts.
   browser:
     runs-on: ubuntu-latest
     defaults:
@@ -45,6 +48,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - name: Install the site's packages
+        working-directory: .
+        run: npm ci
 
       - name: Install Playwright and Chromium
         run: npm ci && npx playwright install --with-deps chromium
