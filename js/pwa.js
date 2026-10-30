@@ -11,6 +11,6 @@
   if (location.protocol !== 'https:' && !(location.protocol === 'http:' && local)) return;
 
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
   });
 })();
