@@ -77,9 +77,6 @@
   --shadow-s: 0 1px 2px rgba(22, 33, 42, 0.05), 0 6px 16px -8px rgba(22, 33, 42, 0.18);
   --shadow-l: 0 2px 4px rgba(22, 33, 42, 0.04), 0 24px 48px -20px rgba(22, 33, 42, 0.28);
 
-  --glow-brass: rgba(201, 166, 90, 0.26);
-  --glow-carbon: rgba(43, 76, 126, 0.14);
-  --glow-pencil: rgba(180, 71, 58, 0.08);
   --pad-ink: rgba(22, 33, 42, 0.04);
   --pad-ink-strong: rgba(180, 71, 58, 0.5);
 
@@ -120,9 +117,6 @@
   --shadow-s: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 18px -8px rgba(0, 0, 0, 0.5);
   --shadow-l: 0 2px 4px rgba(0, 0, 0, 0.25), 0 28px 56px -20px rgba(0, 0, 0, 0.7);
 
-  --glow-brass: rgba(214, 179, 107, 0.13);
-  --glow-carbon: rgba(147, 179, 220, 0.12);
-  --glow-pencil: rgba(229, 131, 111, 0.07);
   --pad-ink: rgba(227, 232, 229, 0.04);
   --pad-ink-strong: rgba(229, 131, 111, 0.45);
   color-scheme: dark;
@@ -248,11 +242,6 @@ main {
   box-shadow: var(--shadow-s);
 }
 
-.round-btn {
-  background: var(--sheet);
-  border: 1px solid var(--rule-strong);
-}
-
 .brand {
   display: inline-flex;
   align-items: center;
@@ -363,17 +352,6 @@ main {
   text-underline-offset: 3px;
 }
 
-.round-btn {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border-radius: 50%;
-  transition: transform 140ms var(--ease-out), opacity 160ms ease;
-}
-
-.round-btn svg,
 .tb svg {
   width: 18px;
   height: 18px;
@@ -382,30 +360,6 @@ main {
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
-}
-
-.round-btn:active {
-  transform: scale(0.94);
-}
-
-.round-btn:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-
-.chip {
-  padding: 6px 12px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 4px;
-  background: var(--sheet);
-  color: var(--ink);
-  font-size: 13.5px;
-  font-weight: 600;
-  transition: transform 140ms var(--ease-out), border-color 160ms ease;
-}
-
-.chip:active {
-  transform: scale(0.96);
 }
 
 /* ---------------- form bits ---------------- */
@@ -825,8 +779,6 @@ input[type='range']::-moz-range-thumb {
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------------- history ---------------- */
-
 /* ---------------- lab ---------------- */
 
 .toolbar {
@@ -845,22 +797,9 @@ input[type='range']::-moz-range-thumb {
   gap: 14px;
 }
 
-.toolbar-row .grow {
-  flex: 1 1 280px;
-}
-
-.toolbar-row textarea {
-  min-height: 46px;
-  height: 46px;
-}
-
 .keys {
   display: flex;
   gap: 12px;
-}
-
-.keys:empty {
-  display: none;
 }
 
 .keys .field {
@@ -1061,11 +1000,6 @@ input[type='range']::-moz-range-thumb {
   margin-bottom: 8px;
 }
 
-.result-head h3 {
-  color: var(--ink-2);
-  font-size: 14px;
-}
-
 .result-actions {
   display: flex;
   gap: 16px;
@@ -1114,12 +1048,6 @@ input[type='range']::-moz-range-thumb {
 .notes p {
   color: var(--ink-2);
   font-size: 15.5px;
-}
-
-.weak span:first-child {
-  margin-right: 4px;
-  color: var(--pencil);
-  font-weight: 700;
 }
 
 /* ---------------- key strength ---------------- */
@@ -1181,10 +1109,6 @@ input[type='range']::-moz-range-thumb {
   transform-origin: left;
   transform: scaleX(var(--w, 0));
   transition: transform 1100ms var(--ease-out);
-}
-
-.strength:not(.shown) .st-bar i {
-  transform: scaleX(0.002);
 }
 
 .strength-row.modern .st-bar i {
@@ -1310,10 +1234,6 @@ input[type='range']::-moz-range-thumb {
   padding-left: 16px;
   border-left: 2.5px solid var(--pencil);
   font-size: 16.5px;
-}
-
-.sort-toggle {
-  justify-self: start;
 }
 
 .shifts {
@@ -1643,16 +1563,6 @@ input[type='range']::-moz-range-thumb {
   gap: 12px;
 }
 
-.mission-progress {
-  color: var(--ink-2);
-  font-size: 14.5px;
-  font-weight: 650;
-}
-
-.mission-progress b {
-  color: var(--ink);
-}
-
 .mission-list {
   display: grid;
   gap: 6px;
@@ -1941,13 +1851,8 @@ input[type='range']::-moz-range-thumb {
   letter-spacing: -0.02em;
 }
 
-.secret-meta,
-.secret-hint {
+.secret-meta {
   color: var(--ink-2);
-}
-
-.secret-hint:empty {
-  display: none;
 }
 
 .secret-actions {
@@ -2122,10 +2027,6 @@ input[type='range']::-moz-range-thumb {
     flex-basis: 100%;
     height: 44px;
     margin: -6px 6px;
-  }
-
-  .dock .speed {
-    margin-left: auto;
   }
 
   

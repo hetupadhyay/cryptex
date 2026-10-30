@@ -118,7 +118,6 @@
       mount.querySelectorAll('.now, .src, .dst').forEach(n => n.classList.remove('now', 'src', 'dst'));
       box.classList.remove('on');
 
-      grid.classList.toggle('built', i >= 0);
       if (animate && i === 0) {
         cells.forEach(c => c.classList.remove('in'));
         stagger(cue, cells, 'in', { gap: 55 });
