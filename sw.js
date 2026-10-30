@@ -13,7 +13,7 @@
 'use strict';
 
 // stamp:start (written by tools/stamp.py)
-const VERSION = '73e2606954';
+const VERSION = '44eb5fd14c';
 const PRECACHE = [
   '/',
   '/learn',
@@ -22,15 +22,15 @@ const PRECACHE = [
   '/terms',
   '/privacy',
   '/css/codebreaking.css?v=dc9e4528a0',
-  '/css/daily.css?v=9a0b68fb6f',
+  '/css/daily.css?v=875309f422',
   '/css/desk.css?v=89df0a7983',
-  '/css/home.css?v=d6a1d7dc36',
+  '/css/home.css?v=a1a699ce96',
   '/css/lab.css?v=fbea155d0c',
   '/css/learn.css?v=8c0a610d60',
   '/css/pages.css?v=4adfaea274',
   '/css/scenes.css?v=3828524726',
   '/css/shell.css?v=86cb6c2055',
-  '/css/site.css?v=7c5622e6aa',
+  '/css/site.css?v=bd4eac637f',
   '/css/story.css?v=1e29ccb1a7',
   '/js/analysis.js?v=64f37747e0',
   '/js/background.js?v=3443079fe1',
@@ -41,7 +41,7 @@ const PRECACHE = [
   '/js/daily.js?v=56d0fb8391',
   '/js/handoff.js?v=87a67e4e6d',
   '/js/history.js?v=849256fe01',
-  '/js/home.js?v=9c0b0acdfd',
+  '/js/home.js?v=72bd02db73',
   '/js/intercepts.js?v=77c6667feb',
   '/js/lab.js?v=eba9402966',
   '/js/pwa.js?v=5b673ad196',

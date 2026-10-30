@@ -115,7 +115,6 @@
     const solved = key in days;
     $('.strip-solved', strip).hidden = !solved;
     $('.strip-go .btn', strip).textContent = solved ? 'Look again' : 'Start';
-    strip.hidden = false;
   }
 
   if (strip) {

@@ -634,3 +634,35 @@
     flex-wrap: wrap;
   }
 }
+
+/* Today's strip and the cryptex are filled in by script. They hold
+   roughly their finished size from the first paint, so the page below
+   doesn't jump when they arrive, and the strip is left out entirely
+   when scripts can't run. */
+.rings:empty {
+  width: calc(var(--ring-w) * 6 + 28px);
+}
+
+.strip-place,
+.strip-facts dd {
+  min-height: 1lh;
+}
+
+.strip-brief,
+.strip-text {
+  min-height: 2lh;
+}
+
+@media (max-width: 640px) {
+  .strip-brief,
+  .strip-text {
+    min-height: 3lh;
+  }
+}
+
+@media (scripting: none) {
+  .today-strip {
+    display: none;
+  }
+}
+

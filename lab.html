@@ -37,7 +37,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <script src="js/theme.js?v=8626267322"></script>
-  <link rel="stylesheet" href="css/site.css?v=7c5622e6aa">
+  <link rel="stylesheet" href="css/site.css?v=bd4eac637f">
   <link rel="stylesheet" href="css/shell.css?v=86cb6c2055">
   <link rel="stylesheet" href="css/scenes.css?v=3828524726">
   <link rel="stylesheet" href="css/lab.css?v=fbea155d0c">
@@ -116,7 +116,13 @@
               <textarea id="message" rows="1" spellcheck="false">Meet me at the old bridge</textarea>
             </div>
             <div class="toolbar-row">
-              <div class="keys"></div>
+              <!-- Caesar's key, as js/lab.js draws it, so the form doesn't jump when it loads. -->
+              <div class="keys">
+                <div class="field narrow">
+                  <label for="key-caesar-shift">Shift</label>
+                  <input type="number" min="1" max="25" inputmode="numeric" value="3" id="key-caesar-shift">
+                </div>
+              </div>
               <div class="field">
                 <span class="field-label" id="mode-label">Direction</span>
                 <div class="lever" role="group" aria-labelledby="mode-label" data-mode="encrypt">

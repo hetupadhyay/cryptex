@@ -1,9 +1,9 @@
 /* ------------------------------------------------------------------
-   Cryptex
-   A single scrolling page through two thousand years of secret writing.
-   Glass for the floating layers (nav, toolbar, dock, cards), solid
-   sheets for anything you read closely. Slate ink, carbon-copy blue,
-   red pencil for findings, brass for keys and the cryptex itself.
+   Cryptex: what every page shares. The look is a codebreaker's room:
+   paper, sheets for anything read closely, manila folders for case
+   files, and glass only where something floats over moving content.
+   Slate ink, carbon-copy blue, red pencil for ciphertext and findings,
+   brass for keys and the cryptex itself.
 ------------------------------------------------------------------- */
 
 @font-face {
@@ -23,6 +23,26 @@
   src: url('../fonts/hanken-grotesk.woff2') format('woff2');
   font-weight: 400 800;
   font-display: swap;
+}
+
+/* Local fonts adjusted to take the same space as the real ones, so text
+   doesn't move when the real fonts arrive. Worked out from each font's
+   average letter width and its ascent and descent. */
+@font-face {
+  font-family: 'Hanken Grotesk fallback';
+  src: local('Arial'), local('Liberation Sans'), local('Helvetica');
+  size-adjust: 101.5%;
+  ascent-override: 98.5%;
+  descent-override: 29.9%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Courier Prime fallback';
+  src: local('Courier New'), local('Liberation Mono'), local('Courier');
+  size-adjust: 99.9%;
+  ascent-override: 78.1%;
+  descent-override: 34.2%;
+  line-gap-override: 0%;
 }
 
 :root {
@@ -66,8 +86,8 @@
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-move: cubic-bezier(0.77, 0, 0.175, 1);
 
-  --sans: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --type: 'Courier Prime', 'Courier New', ui-monospace, monospace;
+  --sans: 'Hanken Grotesk', 'Hanken Grotesk fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --type: 'Courier Prime', 'Courier Prime fallback', 'Courier New', ui-monospace, monospace;
 
   --page: 1200px;
   --gutter: max(20px, env(safe-area-inset-left, 0px));
