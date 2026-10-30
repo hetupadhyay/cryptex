@@ -9,20 +9,27 @@
   const KEY = 'cryptex-handoff';
   const PAGES = { lab: '/lab', desk: '/codebreaking#desk' };
   const MAX_TEXT = 20000;
+  // Long enough for a slow page to load, short enough that a hand-off for
+  // a page the reader never reached doesn't turn up on a later visit.
+  const FRESH = 60000;
 
   function go(to, payload) {
     try {
-      sessionStorage.setItem(KEY, JSON.stringify({ to, ...payload }));
+      sessionStorage.setItem(KEY, JSON.stringify({ to, at: Date.now(), ...payload }));
     } catch {}
     location.href = PAGES[to];
   }
 
-  // What was sent to this page, if anything. It's only handed over once.
+  // What was sent to this page, if anything. It's only handed over once,
+  // and one that has waited too long is thrown away.
   function take(to) {
     try {
       const data = JSON.parse(sessionStorage.getItem(KEY));
-      if (!data || data.to !== to) return null;
+      if (!data) return null;
+      const fresh = typeof data.at === 'number' && Date.now() - data.at < FRESH;
+      if (data.to !== to && fresh) return null;
       sessionStorage.removeItem(KEY);
+      if (data.to !== to || !fresh) return null;
       if (data.text !== undefined && (typeof data.text !== 'string' || data.text.length > MAX_TEXT)) return null;
       return data;
     } catch {

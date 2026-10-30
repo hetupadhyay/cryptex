@@ -277,6 +277,11 @@
         break;
       }
     }
+    // End on the last space nearby rather than in the middle of a word.
+    if (cut < text.length && !countDigits && !LETTERS_ONLY.includes(c.scene)) {
+      const space = text.lastIndexOf(' ', cut);
+      if (space > 0 && space > cut - 14) cut = space;
+    }
     return { text: text.slice(0, cut), cut: cut < text.length };
   }
 
@@ -286,7 +291,7 @@
     if (LETTERS_ONLY.includes(c.scene)) notes.push(`${c.name} works on letters only, so spaces and punctuation are dropped.`);
     if (c.id === 'polybius' && state.mode === 'decrypt') notes.push('Enter digit pairs; a slash marks a word break.');
     if (sceneInput(message.value).cut) {
-      notes.push(`The animation covers the first ${SCENE_LIMIT[c.scene]} letters. The result covers everything.`);
+      notes.push(`The animation covers about the first ${SCENE_LIMIT[c.scene]} letters. The result covers everything.`);
     }
     hint.textContent = notes.join(' ');
   }
@@ -334,9 +339,16 @@
     if (problem) return;
 
     const text = message.value;
-    const hasContent = c.id === 'polybius' && state.mode === 'decrypt' ? /[1-5]/.test(text) : /[a-z]/i.test(text);
+    const digits = c.id === 'polybius' && state.mode === 'decrypt';
+    const hasContent = digits ? /[1-5]/.test(text) : /[a-z]/i.test(text);
     if (!hasContent) {
       flag([message], state.mode === 'encrypt' ? 'Type a message with at least one letter.' : 'Paste some ciphertext to decrypt.');
+      return;
+    }
+    // Polybius reads pairs of digits from 1 to 5; anything else would be
+    // dropped without a word, so say so instead.
+    if (digits && text.split(/[\s/]+/).filter(Boolean).some(g => !/^(?:[1-5]{2})+$/.test(g))) {
+      flag([message], 'Polybius ciphertext is pairs of digits from 1 to 5, like 23 15 / 41 11.');
       return;
     }
 
