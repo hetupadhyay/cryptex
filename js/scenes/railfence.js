@@ -66,7 +66,9 @@
     if (enc) {
       steps.push({ caption: `Draw a zig-zag across ${rails} rails, one slot per letter.`, hold: 2200, phase: 'path' });
       steps.push({ caption: 'Write the message along the zig-zag, going down and up the rails.', hold: Math.min(1400 + n * 70, 5200), phase: 'write' });
+      // With more rails than letters, the lowest rails stay empty.
       perRail.forEach((positions, r) => {
+        if (!positions.length) return;
         steps.push({
           caption: `Read rail ${r + 1} from left to right: ${positions.map(i => plain[i]).join('')}.`,
           hold: 1400 + positions.length * 90,
@@ -76,14 +78,15 @@
       });
     } else {
       steps.push({
-        caption: `Mark the zig-zag for ${n} letters on ${rails} rails. That tells us how many letters each rail holds: ${perRail.map(p => p.length).join(', ')}.`,
+        caption: `Mark the zig-zag for ${n} ${n === 1 ? 'letter' : 'letters'} on ${rails} rails. That tells us how many letters each rail holds: ${perRail.map(p => p.length).join(', ')}.`,
         hold: 3000,
         phase: 'path',
       });
       let taken = 0;
       perRail.forEach((positions, r) => {
+        if (!positions.length) return;
         steps.push({
-          caption: `Fill rail ${r + 1} with the next ${positions.length} letters of the ciphertext.`,
+          caption: `Fill rail ${r + 1} with the next ${positions.length === 1 ? 'letter' : `${positions.length} letters`} of the ciphertext.`,
           hold: 1300 + positions.length * 90,
           phase: 'fill-rail',
           rail: r,

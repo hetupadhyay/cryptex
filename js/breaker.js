@@ -19,7 +19,7 @@
       { key: 'LANTERN' }
     ),
     railfence: () => Ciphers.byId('railfence').encrypt(
-      'Every letter of the message is still here, only the order has changed, which is exactly why the letter counts below still look like ordinary English.',
+      'Every letter of the message is still here, only the order has changed, which is exactly why its letter counts still look like ordinary English.',
       { rails: 3 }
     ),
     affine: () => Ciphers.byId('affine').encrypt(

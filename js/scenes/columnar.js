@@ -45,24 +45,31 @@
     const cipherCells = [];
     order.forEach(c => { for (let r = 0; r < heights[c]; r++) cipherCells.push({ c, r }); });
 
+    const many = k => `${k} ${k === 1 ? 'letter' : 'letters'}`;
     const steps = [
       { caption: `Write ${key} across the top and number its letters in alphabetical order.`, hold: 2600, phase: 'key' },
     ];
     if (enc) {
       steps.push({ caption: `Write the message underneath, ${cols} letters to a row.`, hold: Math.min(1400 + n * 60, 5000), phase: 'write' });
       steps.push({ caption: 'Slide the columns into number order.', hold: 2400, phase: 'sort' });
+      // A message shorter than the keyword leaves some columns empty:
+      // there's nothing to read from them.
       order.forEach((c, k) => {
+        if (!heights[c]) return;
         const text = columns[c].cells.map((_, r) => letterAt(c, r)).join('');
         steps.push({ caption: `Read column ${k + 1} (${key[c]}) top to bottom: ${text}.`, hold: 1300 + heights[c] * 110, phase: 'read-col', col: c, k });
       });
     } else {
       const long = n % cols;
-      const split = long
-        ? `${n} letters over ${cols} columns: the first ${long} keyword column${long === 1 ? ' gets' : 's get'} ${rows} letters, the rest ${rows - 1}.`
-        : `${n} letters over ${cols} columns: ${rows} letters each.`;
+      const split = n < cols
+        ? `${many(n)} over ${cols} columns: the first ${n === 1 ? 'keyword column gets one' : `${n} keyword columns get one each`}, the rest none.`
+        : long
+          ? `${many(n)} over ${cols} columns: the first ${long} keyword column${long === 1 ? ' gets' : 's get'} ${many(rows)}, the rest ${rows - 1}.`
+          : `${many(n)} over ${cols} columns: ${many(rows)} each.`;
       steps.push({ caption: `${split} Lay the columns out in number order.`, hold: 3200, phase: 'sort' });
       order.forEach((c, k) => {
-        steps.push({ caption: `Column ${k + 1} (${key[c]}) takes the next ${heights[c]} letters.`, hold: 1200 + heights[c] * 110, phase: 'fill-col', col: c, k });
+        if (!heights[c]) return;
+        steps.push({ caption: `Column ${k + 1} (${key[c]}) takes the next ${heights[c] === 1 ? 'letter' : `${heights[c]} letters`}.`, hold: 1200 + heights[c] * 110, phase: 'fill-col', col: c, k });
       });
       steps.push({ caption: 'Put the columns back in keyword order.', hold: 2400, phase: 'unsort' });
       steps.push({ caption: 'Read across the rows.', hold: Math.min(1400 + n * 60, 5000), phase: 'read-rows' });

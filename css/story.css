@@ -20,11 +20,15 @@
   min-width: 0;
 }
 
+.sheet.enigma {
+  display: grid;
+  gap: 20px;
+}
+
 @container (min-width: 700px) {
   .sheet.enigma {
-    display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-    align-items: start;
+    align-items: center;
     gap: 28px;
   }
 }
