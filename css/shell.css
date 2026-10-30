@@ -28,6 +28,25 @@
 
 /* ---------------- masthead ---------------- */
 
+/* For keyboards: the first Tab offers a way past the masthead. */
+.skip {
+  position: fixed;
+  z-index: 100;
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  left: var(--gutter);
+  padding: 10px 14px;
+  border-radius: 5px;
+  background: var(--ink);
+  color: var(--on-solid);
+  font-weight: 650;
+  text-decoration: none;
+  transform: translateY(-160%);
+}
+
+.skip:focus {
+  transform: none;
+}
+
 .mast {
   position: sticky;
   top: 0;
@@ -453,12 +472,6 @@
   font: 700 13.5px var(--type);
   letter-spacing: 0.06em;
   cursor: help;
-}
-
-.signature:focus-visible {
-  outline: 2px solid var(--slab-ink);
-  outline-offset: 3px;
-  border-radius: 2px;
 }
 
 .foot-links {

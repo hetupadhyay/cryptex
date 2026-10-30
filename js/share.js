@@ -83,8 +83,11 @@
     const problem = c.check(keys);
     const text = $('#share-text').value;
     error.textContent = problem || (/[a-z]/i.test(text) ? '' : 'Type a message with at least one letter.');
+    keyInput.setAttribute('aria-invalid', Boolean(problem));
+    $('#share-text').setAttribute('aria-invalid', !problem && Boolean(error.textContent));
     if (error.textContent) {
       out.hidden = true;
+      (problem ? keyInput : $('#share-text')).focus();
       return;
     }
 
@@ -107,14 +110,18 @@
 
   $('[data-act="copy-link"]', form).addEventListener('click', async e => {
     const btn = e.currentTarget;
+    const said = $('#copy-link-said');
     try {
       await navigator.clipboard.writeText(linkInput.value);
-      btn.textContent = 'Copied';
+      btn.textContent = said.textContent = 'Copied';
     } catch {
       linkInput.select();
-      btn.textContent = 'Selected. Copy it from here';
+      btn.textContent = said.textContent = 'Selected. Copy it from here';
     }
-    setTimeout(() => { btn.textContent = 'Copy link'; }, 1800);
+    setTimeout(() => {
+      btn.textContent = 'Copy link';
+      said.textContent = '';
+    }, 1800);
   });
 
   syncKey();

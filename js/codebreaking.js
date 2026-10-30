@@ -41,8 +41,11 @@
     });
   });
 
+  // Only a folder's own name opens it: #top, from the skip link, isn't one.
   window.addEventListener('hashchange', () => {
-    show(location.hash.slice(1), { push: false });
+    const file = location.hash.slice(1);
+    if (!files.includes(file)) return;
+    show(file, { push: false });
     reveal();
   });
 
