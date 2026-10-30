@@ -201,20 +201,26 @@
 /* ---------------- substitution board ---------------- */
 
 .alpha-board {
-  /* Never smaller than 22px a letter: on a phone the board scrolls
-     sideways instead, following the letter being worked on. */
-  --cell: max(22px, min(30px, calc((100cqw - 2px) / 26)));
+  /* --span is 26 letters a row, or 13 when a narrow stage splits the board
+     into two halves (substitution.js), so letters stay readable and
+     nothing ever runs off the side. */
+  --cell: min(30px, calc((100cqw - 2px) / var(--span, 26)));
   display: grid;
-  justify-content: safe center;
-  max-width: 100%;
-  overflow-x: auto;
-  scrollbar-width: none;
+  justify-content: center;
+}
+
+.alpha-board.split {
+  gap: 16px;
+}
+
+.alpha-half {
+  display: grid;
 }
 
 .alpha-row {
   position: relative;
   display: flex;
-  width: calc(var(--cell) * 26);
+  width: calc(var(--cell) * var(--span, 26));
   height: calc(var(--cell) * 1.3);
   overflow: hidden;
   border: 1px solid var(--rule-strong);
@@ -234,6 +240,12 @@
   display: flex;
   flex: none;
   transition: transform 1200ms var(--ease-move);
+}
+
+/* Caesar: each half's track starts at its own first letter and slides
+   left by the shift. */
+.intro-slide .alpha-track {
+  transform: translateX(calc(var(--cell) * -1 * (var(--base, 0) + var(--shift, 0))));
 }
 
 .tile {
@@ -267,7 +279,7 @@
 
 /* Mirror: each tile placed by its index so it can travel across. */
 .intro-mirror .alpha-track {
-  width: calc(var(--cell) * 26);
+  width: calc(var(--cell) * var(--span, 26));
   height: 100%;
 }
 
@@ -309,7 +321,7 @@
 
 .alpha-beams {
   display: flex;
-  width: calc(var(--cell) * 26);
+  width: calc(var(--cell) * var(--span, 26));
   height: 30px;
 }
 
@@ -368,7 +380,6 @@
 .tabula-wrap {
   display: grid;
   justify-content: center;
-  overflow-x: auto;
 }
 
 .tabula {
@@ -576,14 +587,18 @@
 /* ---------------- rail fence ---------------- */
 
 .fence-wrap {
-  --fc: max(22px, min(26px, calc((100cqw - 32px) / var(--n))));
+  display: grid;
+  justify-content: center;
+  gap: 18px;
+}
+
+/* One stretch of the zig-zag. A long message is laid out in several
+   (railfence.js), so the cells stay readable without leaving the stage. */
+.fence-band {
+  --fc: min(26px, calc((100cqw - 32px) / var(--n)));
   --fh: calc(var(--fc) * 1.35);
   display: flex;
-  justify-content: safe center;
   gap: 8px;
-  max-width: 100%;
-  overflow-x: auto;
-  scrollbar-width: none;
 }
 
 .fence {
@@ -596,13 +611,8 @@
 }
 
 .rail-labels {
-  position: sticky;
-  left: 0;
-  z-index: 2;
   display: grid;
   grid-template-rows: repeat(var(--rails), var(--fh));
-  padding-right: 4px;
-  background: var(--sheet);
 }
 
 .rail-label {
@@ -681,16 +691,13 @@
 
 .columns-wrap {
   display: grid;
-  justify-content: safe center;
-  max-width: 100%;
-  overflow-x: auto;
-  scrollbar-width: none;
+  justify-content: center;
 }
 
-/* A long keyword makes more columns than fit a phone; they keep a
-   readable width and the grid scrolls sideways. */
+/* The keyword is at most 10 letters (ciphers.js), so the columns always
+   fit the stage at a readable width. */
 .columns {
-  --cw: max(26px, min(42px, calc((100cqw - 4px) / var(--cols))));
+  --cw: min(42px, calc((100cqw - 4px) / var(--cols)));
   position: relative;
   width: calc(var(--cw) * var(--cols));
   height: calc(var(--cw) * 1.4 + 22px + var(--rows) * (var(--cw) - 4px + 4px));

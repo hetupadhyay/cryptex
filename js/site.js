@@ -126,6 +126,7 @@
     };
     sig.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') show('plain'); });
     sig.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') show('coded'); });
-    sig.addEventListener('click', e => { if (e.pointerType !== 'mouse') show(plain ? 'coded' : 'plain'); });
+    // Where something can hover, pointing has already decoded it.
+    sig.addEventListener('click', () => { if (!matchMedia('(hover: hover)').matches) show(plain ? 'coded' : 'plain'); });
   });
 })();

@@ -588,7 +588,10 @@
       if (guess === right) {
         const first = !solved();
         if (first) {
-          state.days[puzzle.date] = hintsShown;
+          // Hints taken in another tab count too.
+          merge();
+          const taken = state.hints.date === puzzle.date ? Math.max(hintsShown, state.hints.n) : hintsShown;
+          state.days[puzzle.date] = taken;
           state.best = Math.max(state.best, streak(state.days, puzzle.date));
           save();
           card.classList.add('cracked');
@@ -671,8 +674,13 @@
       if (e.key !== STORE) return;
       const was = solved();
       merge();
-      if (solved() && !was) show(puzzle.date);
-      else renderRecord();
+      if (solved() && !was) return show(puzzle.date);
+      // Hints taken in another tab show here too.
+      if (state.hints.date === puzzle.date && state.hints.n > hintsShown) {
+        hintsShown = Math.min(state.hints.n, puzzle.hints.length);
+        hintList.replaceChildren(...puzzle.hints.slice(0, hintsShown).map(hintItem));
+      }
+      renderRecord();
     });
 
     show(dateKey(new Date()));

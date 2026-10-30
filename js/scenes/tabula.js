@@ -93,7 +93,7 @@
     // Magnified on a narrow stage, where the whole table is too small to
     // read, and on a short window, where it's taller than the screen.
     function fit() {
-      const narrow = mount.clientWidth <= 560;
+      const narrow = Stage.room(mount) <= 560;
       tableWrap.classList.toggle('zoom', narrow || innerHeight < 900);
       tableWrap.style.setProperty('--rows', narrow ? 11 : 15);
     }

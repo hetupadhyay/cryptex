@@ -22,7 +22,7 @@
   function movedTo(hash) {
     if (hash.startsWith('#secret=')) return '/lab' + hash;
     const key = hash.slice(1);
-    return Object.hasOwn(MOVED, key) ? MOVED[key] : '';
+    return Object.prototype.hasOwnProperty.call(MOVED, key) ? MOVED[key] : '';
   }
 
   const target = movedTo(location.hash);

@@ -110,6 +110,9 @@
   let startY = 0;
   let startValue = 0;
   let samples = [];
+  // When the pointer went down and the furthest it has moved since, to
+  // tell a tap from a drag.
+  let press = { t: 0, moved: 0 };
 
   function faceHeight() {
     return parts[0] ? parts[0].turn.offsetHeight : 28;
@@ -124,6 +127,7 @@
     startY = e.clientY;
     startValue = current();
     samples = [{ y: e.clientY, t: e.timeStamp }];
+    press = { t: e.timeStamp, moved: 0 };
     animate();
   });
 
@@ -137,6 +141,7 @@
     }
     samples.push({ y: e.clientY, t: e.timeStamp });
     if (samples.length > 6) samples.shift();
+    press.moved = Math.max(press.moved, Math.abs(e.clientY - startY));
     paint();
   });
 
@@ -148,7 +153,7 @@
     rings.classList.remove('dragging');
     const first = samples[0];
     const lastSample = samples[samples.length - 1];
-    if (e.type === 'pointerup' && Math.abs(lastSample.y - startY) < 5 && e.timeStamp - first.t < 400) {
+    if (e.type === 'pointerup' && press.moved < 5 && e.timeStamp - press.t < 400) {
       const r = rings.getBoundingClientRect();
       goTo(shift + (e.clientY > r.top + r.height / 2 ? 1 : -1));
       return;

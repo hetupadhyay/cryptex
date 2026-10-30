@@ -66,41 +66,65 @@
     const inTape = tape([...source], { label: enc ? 'Message' : 'Ciphertext', cls: 'tape-in' });
     const outTape = tape(result.map(ch => (isLetter(ch) ? '' : ch)), { label: enc ? 'Ciphertext' : 'Message', cls: 'tape-out' });
 
-    const board = el('div', 'alpha-board follow intro-' + cipher.intro);
-    const top = el('div', 'alpha-row plain');
-    const topCells = [...ALPHABET].map(ch => top.appendChild(el('span', 'tile', ch)));
+    // On a narrow stage 26 letters to a row would be too small to read, so
+    // the board is cut in two: A to M above N to Z, each half with its own
+    // pair of rows. The Atbash mirror can't carry tiles from one half to the
+    // other, so there its tiles turn over in place, like the affine ones.
+    const split = Stage.room(mount) < 580;
+    const style = split && cipher.intro === 'mirror' ? 'compute' : cipher.intro;
+    const span = split ? 13 : 26;
+    const board = el('div', 'alpha-board intro-' + style + (split ? ' split' : ''));
+    board.style.setProperty('--span', span);
 
-    const beams = el('div', 'alpha-beams' + (enc ? '' : ' up'));
-    const beamCells = [...ALPHABET].map(() => beams.appendChild(el('span', 'beam')));
+    const topCells = [];
+    const beamCells = [];
+    const halves = [];
+    for (let base = 0; base < 26; base += span) {
+      const half = el('div', 'alpha-half');
+      const top = el('div', 'alpha-row plain');
+      const beams = el('div', 'alpha-beams' + (enc ? '' : ' up'));
+      for (let p = base; p < base + span; p++) {
+        topCells.push(top.appendChild(el('span', 'tile', ALPHABET[p])));
+        beamCells.push(beams.appendChild(el('span', 'beam')));
+      }
+      const bottom = el('div', 'alpha-row cipher');
+      const track = el('div', 'alpha-track');
+      bottom.append(track);
+      half.append(top, beams, bottom);
+      board.append(half);
+      halves.push({ base, track, tiles: [] });
+    }
+    const halfOf = p => halves[Math.floor(p / span)];
 
-    const bottom = el('div', 'alpha-row cipher');
-    const track = el('div', 'alpha-track');
-    bottom.append(track);
-
-    let tiles;
     let bottomCell;
-    if (cipher.intro === 'slide') {
-      // Two alphabets end to end, so sliding left never shows a gap.
-      tiles = [...ALPHABET + ALPHABET].map(ch => track.appendChild(el('span', 'tile', ch)));
-      bottomCell = p => tiles[p + shift];
-    } else if (cipher.intro === 'mirror') {
-      tiles = [...ALPHABET].map((ch, i) => {
-        const t = track.appendChild(el('span', 'tile placed', ch));
+    if (style === 'slide') {
+      // Two alphabets end to end, so sliding left never shows a gap. Each
+      // half's track starts at its own first letter.
+      for (const h of halves) {
+        h.tiles = [...ALPHABET + ALPHABET].map(ch => h.track.appendChild(el('span', 'tile', ch)));
+        h.track.style.setProperty('--base', h.base);
+      }
+      bottomCell = p => halfOf(p).tiles[p + shift];
+    } else if (style === 'mirror') {
+      const h = halves[0];
+      h.tiles = [...ALPHABET].map((ch, i) => {
+        const t = h.track.appendChild(el('span', 'tile placed', ch));
         t.style.setProperty('--i', i);
         return t;
       });
-      bottomCell = p => tiles[25 - p];
+      bottomCell = p => h.tiles[25 - p];
     } else {
-      tiles = [...ALPHABET].map(ch => {
-        const t = track.appendChild(el('span', 'tile flip'));
-        t.append(el('span', 'face front', ch), el('span', 'face back', ''));
-        return t;
-      });
-      tiles.forEach((t, p) => { t.lastChild.textContent = row[p]; });
-      bottomCell = p => tiles[p];
+      for (const h of halves) {
+        h.tiles = [...ALPHABET.slice(h.base, h.base + span)].map((ch, i) => {
+          const t = h.track.appendChild(el('span', 'tile flip'));
+          t.append(el('span', 'face front', ch), el('span', 'face back', row[h.base + i]));
+          return t;
+        });
+      }
+      bottomCell = p => halfOf(p).tiles[p % span];
     }
+    const tiles = halves.flatMap(h => h.tiles);
 
-    board.append(top, beams, bottom);
     mount.replaceChildren(inTape.root, board, outTape.root);
 
     // --- steps
@@ -127,17 +151,19 @@
     ];
 
     function setAlphabet(on, animate) {
-      if (cipher.intro === 'slide') {
-        track.style.transform = on ? `translateX(calc(var(--cell) * ${-shift}))` : '';
-        tiles.forEach((t, j) => t.classList.toggle('wrapped', on && j >= 26 && j < 26 + shift));
-      } else if (cipher.intro === 'mirror') {
+      if (style === 'slide') {
+        for (const h of halves) {
+          h.track.style.setProperty('--shift', on ? shift : 0);
+          h.tiles.forEach((t, j) => t.classList.toggle('wrapped', on && j >= 26 && j < 26 + shift));
+        }
+      } else if (style === 'mirror') {
         tiles.forEach((t, i) => {
           t.style.setProperty('--i', on ? 25 - i : i);
           t.style.transitionDelay = animate ? `${Math.abs(12.5 - i) * 18}ms` : '';
         });
       } else {
         tiles.forEach((t, i) => {
-          t.style.transitionDelay = animate ? `${i * 45}ms` : '';
+          t.style.transitionDelay = animate ? `${(i % 26) * 45}ms` : '';
           t.classList.toggle('turned', on);
         });
       }
@@ -172,7 +198,6 @@
       const outCell = outTape.cells[l.pos];
       const first = enc ? topCells[l.p] : bottomCell(l.p);
       const second = enc ? bottomCell(l.p) : topCells[l.p];
-      Stage.follow(topCells[l.p], animate);
 
       inCell.classList.add('now');
       if (!animate) {

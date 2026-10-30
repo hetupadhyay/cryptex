@@ -235,7 +235,7 @@
     $('.about').textContent = c.about;
     $('.weak-text').textContent = c.weakness;
     showKeyspace(c);
-    errorBox.textContent = '';
+    flag([message], '');
     clearStage();
     updateHint();
   }
@@ -260,6 +260,7 @@
     if (swap && last && last.mode === prev && last.cipherId === state.cipher.id && message.value === last.input) {
       message.value = last.output;
     }
+    flag([message, ...$$('input, select', keysBox)], '');
     clearStage();
     updateHint();
   }
