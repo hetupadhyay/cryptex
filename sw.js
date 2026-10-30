@@ -13,7 +13,7 @@
 'use strict';
 
 // stamp:start (written by tools/stamp.py)
-const VERSION = 'c1ec7772d4';
+const VERSION = '5b21730faf';
 const PRECACHE = [
   '/',
   '/learn',
@@ -24,18 +24,18 @@ const PRECACHE = [
   '/css/codebreaking.css?v=747a85efb5',
   '/css/daily.css?v=875309f422',
   '/css/desk.css?v=89df0a7983',
-  '/css/home.css?v=a1a699ce96',
+  '/css/home.css?v=6e815e2cd5',
   '/css/lab.css?v=c5c6805ed5',
   '/css/learn.css?v=4011634be2',
   '/css/pages.css?v=e75b1a6ac5',
   '/css/scenes.css?v=3828524726',
   '/css/shell.css?v=341482449c',
-  '/css/site.css?v=9091529800',
-  '/css/story.css?v=fc1b74d7c8',
+  '/css/site.css?v=23e132a75b',
+  '/css/story.css?v=343044d36e',
   '/js/analysis.js?v=64f37747e0',
   '/js/background.js?v=3443079fe1',
-  '/js/breaker.js?v=4a129132ff',
-  '/js/ciphers.js?v=612b2eab7a',
+  '/js/breaker.js?v=4c906b26b7',
+  '/js/ciphers.js?v=1bfec5b0c6',
   '/js/codebreaking.js?v=0bb867115c',
   '/js/cryptex.js?v=360dd66c8e',
   '/js/daily.js?v=56d0fb8391',
@@ -45,10 +45,10 @@ const PRECACHE = [
   '/js/intercepts.js?v=77c6667feb',
   '/js/lab.js?v=adf6895a50',
   '/js/pwa.js?v=5b673ad196',
-  '/js/scenes/columnar.js?v=5d961719e6',
-  '/js/scenes/playfair.js?v=bcec07a8f7',
+  '/js/scenes/columnar.js?v=ea6b1ebf53',
+  '/js/scenes/playfair.js?v=2b08874d0a',
   '/js/scenes/polybius.js?v=e974e61d35',
-  '/js/scenes/railfence.js?v=69c6b00337',
+  '/js/scenes/railfence.js?v=dd94fb627d',
   '/js/scenes/substitution.js?v=57cb744904',
   '/js/scenes/tabula.js?v=926bb806c3',
   '/js/share.js?v=ae6496ea0f',

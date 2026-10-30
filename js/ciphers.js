@@ -352,7 +352,7 @@
         const ks = keyStream(k.key, lettersOnly(t).length);
         return mapLetters(t, (x, n) => x - ks[n]);
       },
-      about: 'Each letter gets its own Caesar shift, taken from the keyword, which repeats along the message. For about 300 years it was called “le chiffre indéchiffrable”.',
+      about: 'Each letter gets its own Caesar shift, taken from the keyword, which repeats along the message. It resisted codebreakers for about 300 years, earning the nickname “le chiffre indéchiffrable”.',
       weakness: 'The keyword repeats. Babbage and Kasiski found the key length from that pattern, and after that it’s just several Caesar ciphers.',
     },
     {
@@ -409,7 +409,7 @@
       check: () => '',
       encrypt: (t, k) => polybiusEncrypt(t, k.key),
       decrypt: (t, k) => polybiusDecrypt(t, k.key),
-      about: 'The Greek historian Polybius described signalling with torches: each letter becomes its row and column in a 5×5 square. Prisoners still use it as tap code.',
+      about: 'The Greek historian Polybius described signalling with torches: each letter becomes its row and column in a 5×5 square. Prisoners of war in Vietnam used a version of it as tap code.',
       weakness: 'Each letter always gives the same pair of digits, so it’s a simple substitution in disguise.',
     },
     {

@@ -69,8 +69,13 @@
     let prepCaption;
     if (enc) {
       const notes = [];
-      if (doubled) notes.push(`${doubled === 1 ? 'a doubled pair gets' : 'doubled pairs get'} an X between them`);
-      if (padded) notes.push('the odd letter at the end gets an X');
+      // The filler is X, or Q when the letter it pads is itself an X.
+      const filler = kind => {
+        const used = new Set(pairs.filter(p => p.pad === kind).map(p => p.b));
+        return used.size === 1 ? `a ${[...used][0]}` : 'an X, or a Q next to an X';
+      };
+      if (doubled) notes.push(`${doubled === 1 ? 'a doubled pair gets' : 'doubled pairs get'} ${filler('double')} between them`);
+      if (padded) notes.push(`the odd letter at the end gets ${filler('end')}`);
       prepCaption = 'Split the message into pairs, with J written as I' + (notes.length ? ': ' + notes.join(', and ') + '.' : '.');
     } else {
       prepCaption = 'Split the ciphertext into pairs. Every pair is decrypted on its own.';

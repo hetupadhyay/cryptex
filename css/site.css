@@ -193,11 +193,14 @@ button {
 h1, h2, h3, h4 {
   margin: 0;
   font-weight: 700;
+  line-height: 1.2;
   text-wrap: balance;
 }
 
+/* No single word left alone on a paragraph's last line. */
 p {
   margin: 0;
+  text-wrap: pretty;
 }
 
 canvas.pad {
@@ -909,7 +912,7 @@ input[type='range']::-moz-range-thumb {
 }
 
 .stale .stage-head::after {
-  content: 'Inputs changed. Run it again to update.';
+  content: 'Inputs changed. Press Encrypt or Decrypt again to update.';
   margin-left: auto;
   color: var(--brass);
   font-size: 13.5px;
