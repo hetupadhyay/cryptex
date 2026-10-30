@@ -42,7 +42,9 @@
   }
 
   function layout() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Drawn at the screen's full density, so the letters are sharp on a
+    // 3x phone too.
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
     width = window.innerWidth;
     height = window.innerHeight;
     canvas.width = width * dpr;

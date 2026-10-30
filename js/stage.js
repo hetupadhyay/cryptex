@@ -152,7 +152,7 @@
       caption.textContent = text;
       if (!Stage.reduced) {
         caption.animate(
-          [{ opacity: 0, filter: 'blur(3px)', transform: 'translateY(4px)' }, { opacity: 1, filter: 'blur(0)', transform: 'none' }],
+          [{ opacity: 0, transform: 'translateY(4px)' }, { opacity: 1, transform: 'none' }],
           { duration: 260, easing: EASE_OUT }
         );
       }

@@ -13,7 +13,7 @@
 'use strict';
 
 // stamp:start (written by tools/stamp.py)
-const VERSION = 'b6c8b7d8af';
+const VERSION = '143f8af958';
 const PRECACHE = [
   '/',
   '/learn',
@@ -21,19 +21,19 @@ const PRECACHE = [
   '/codebreaking',
   '/terms',
   '/privacy',
-  '/css/codebreaking.css?v=747a85efb5',
+  '/css/codebreaking.css?v=01b3a75d7d',
   '/css/daily.css?v=875309f422',
   '/css/desk.css?v=89df0a7983',
   '/css/home.css?v=e5d449e446',
-  '/css/lab.css?v=c5c6805ed5',
+  '/css/lab.css?v=cc3ce4751c',
   '/css/learn.css?v=4011634be2',
   '/css/pages.css?v=e75b1a6ac5',
   '/css/scenes.css?v=80f816938d',
   '/css/shell.css?v=341482449c',
-  '/css/site.css?v=cf842b4605',
+  '/css/site.css?v=663543549d',
   '/css/story.css?v=343044d36e',
   '/js/analysis.js?v=64f37747e0',
-  '/js/background.js?v=d6dcf426f7',
+  '/js/background.js?v=d135e07da1',
   '/js/breaker.js?v=4c906b26b7',
   '/js/ciphers.js?v=517fef3150',
   '/js/codebreaking.js?v=33958d9e93',
@@ -43,8 +43,8 @@ const PRECACHE = [
   '/js/handoff.js?v=ad58c84027',
   '/js/history.js?v=849256fe01',
   '/js/home.js?v=a53d7e9b27',
-  '/js/intercepts.js?v=b8d6123d15',
-  '/js/lab.js?v=952c36fcad',
+  '/js/intercepts.js?v=70f2c96bdb',
+  '/js/lab.js?v=b07282eb61',
   '/js/pwa.js?v=5b673ad196',
   '/js/scenes/columnar.js?v=5f551bc86e',
   '/js/scenes/playfair.js?v=23084a281e',
@@ -56,7 +56,7 @@ const PRECACHE = [
   '/js/sheet.js?v=f4d1354ad7',
   '/js/site.js?v=c274758143',
   '/js/spring.js?v=8c5f9b1865',
-  '/js/stage.js?v=b1dc342ce9',
+  '/js/stage.js?v=afe593e760',
   '/js/story.js?v=965d3d9299',
   '/js/strength.js?v=eeb194b85b',
   '/js/theme.js?v=8626267322',
