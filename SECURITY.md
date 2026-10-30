@@ -4,7 +4,7 @@ Cryptex is a static, educational site about classical ciphers. The ciphers it te
 
 ## Reporting a problem
 
-- **Something sensitive** (a way to run script on the page, to read someone else's data, or anything you'd rather not post in public): open a private report from the repository's [Security tab](https://github.com/hetupadhyay/Cryptex/security/advisories/new). Only the maintainer can see it.
+- **Something sensitive** (a way to run script on the page, to read someone else's data, or anything you'd rather not post in public): email [work.hetupadhyay@gmail.com](mailto:work.hetupadhyay@gmail.com), or open a private report from the repository's [Security tab](https://github.com/hetupadhyay/Cryptex/security/advisories/new). Only the maintainer can see either.
 - **Anything else**: [open an issue](https://github.com/hetupadhyay/Cryptex/issues).
 
 Please say what you found, how to reproduce it, and which browser you used. Reports are read and answered as soon as possible. Please don't test against other people's devices or try to disrupt the hosted site.

@@ -30,3 +30,32 @@ jobs:
 
       - name: File stamps are up to date
         run: python3 tools/stamp.py --check
+
+  # The site in a real browser, served with the headers from vercel.json:
+  # every page in both themes and three widths, all ten ciphers, missions,
+  # the desk, secret links, the phone menu and offline.
+  browser:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/browser
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Playwright and Chromium
+        run: npm ci && npx playwright install --with-deps chromium
+
+      - name: Browser tests
+        run: npx playwright test
+
+      - name: Keep the traces of anything that failed
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-test-traces
+          path: tests/browser/test-results
+          retention-days: 7
