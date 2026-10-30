@@ -373,6 +373,7 @@
 
 .tabula {
   --tt: min(21px, calc((100cqw - 2px) / 27));
+  position: relative;
   display: grid;
   grid-template-columns: repeat(27, var(--tt));
   grid-auto-rows: var(--tt);
@@ -383,26 +384,36 @@
   display: grid;
   place-items: center;
   color: var(--ink-2);
-  opacity: 0.18;
-  transition: opacity 360ms var(--ease-out), background-color 150ms ease, color 150ms ease;
+  transition: background-color 150ms ease, color 150ms ease;
 }
 
-.tabula.revealed .tt {
-  opacity: 1;
+/* Until it's needed the table sits faint behind a veil, which lifts as
+   one piece. Fading 676 cells one by one costs hundreds of layers. */
+.tabula::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--sheet);
+  opacity: 0.82;
+  pointer-events: none;
+  transition: opacity 520ms var(--ease-out);
 }
 
-.tabula.wave .tt {
-  transition-delay: calc(var(--d, 0) * 16ms);
+.tabula.revealed::after {
+  opacity: 0;
 }
 
 .tt.head {
-  opacity: 1;
+  position: relative;
+  z-index: 2;
   background: var(--well);
   color: var(--ink);
 }
 
 .tt.corner {
-  opacity: 1;
+  position: relative;
+  z-index: 2;
   background: transparent;
 }
 
@@ -736,7 +747,8 @@
 
 /* Scenes drawn without motion when jumping to a step. */
 .instant,
-.instant * {
+.instant *,
+.instant *::after {
   transition: none !important;
 }
 

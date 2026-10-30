@@ -64,9 +64,7 @@
       rowHeads.push(table.appendChild(el('span', 'tt head row', ALPHABET[r])));
       grid.push([]);
       for (let c = 0; c < 26; c++) {
-        const cell = table.appendChild(el('span', 'tt', toLetter(r + c)));
-        cell.style.setProperty('--d', r + c);
-        grid[r].push(cell);
+        grid[r].push(table.appendChild(el('span', 'tt', toLetter(r + c))));
       }
     }
     const tableWrap = el('div', 'tabula-wrap');
@@ -235,8 +233,6 @@
       }
 
       table.classList.toggle('revealed', i >= 1);
-      if (animate && i === 1) table.classList.add('wave');
-      else table.classList.remove('wave');
 
       lookups.forEach((l, j) => {
         const stepIndex = j + 2;
