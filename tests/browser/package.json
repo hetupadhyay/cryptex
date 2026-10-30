@@ -1,0 +1,11 @@
+{
+  "name": "cryptex-browser-tests",
+  "private": true,
+  "description": "Checks the site in a real browser, served the way Vercel serves it.",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
+}

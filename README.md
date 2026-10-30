@@ -40,6 +40,28 @@ npm test
 
 CI also checks that no page loads anything from another site, that the shared masthead and footer are in sync, and that the file stamps are current.
 
+### In a browser
+
+`tests/browser/` checks the site in Chromium, served with the headers from `vercel.json`. It covers:
+
+- every page in day and night at three widths, with no script errors, blocked requests, requests to other sites, or sideways scrolling;
+- all ten ciphers there and back;
+- a mission cracked and kept;
+- the desk, secret links and the phone menu;
+- opening offline.
+
+It has its own `package.json`, so the site itself still has nothing to install:
+
+```sh
+cd tests/browser
+npm ci
+npx playwright install chromium   # once
+cd ../..
+npm run test:browser
+```
+
+These tests run on every push and pull request too.
+
 ## After changing a file
 
 - **The masthead or footer** (`tools/shell/`): run `python3 tools/sync-shell.py` to copy them into every page.
