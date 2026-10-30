@@ -13,7 +13,7 @@
 'use strict';
 
 // stamp:start (written by tools/stamp.py)
-const VERSION = 'b5c62aea46';
+const VERSION = '9d7d5970c4';
 const PRECACHE = [
   '/',
   '/learn',

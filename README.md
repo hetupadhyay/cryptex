@@ -2,7 +2,7 @@
 
 Classical ciphers, worked through one letter at a time, and the attacks that break them.
 
-Live at https://cryptex.vercel.app. Made by Het Upadhyay as a cybersecurity course project.
+Live at https://cryptex.vercel.app. A personal project by Het Upadhyay.
 
 Four main pages, plus terms, privacy and a 404 page:
 
