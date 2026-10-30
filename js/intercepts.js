@@ -106,6 +106,7 @@
   const hintList = $('.hint-list', card);
   const hintBtn = $('[data-act="hint"]', card);
   const interceptEl = $('.intercept', card);
+  const nextBtn = $('.next-file', card);
 
   let index = MISSIONS.findIndex(m => !cracked.has(m.id));
   if (index < 0) index = 0;
@@ -157,6 +158,7 @@
     feedback.textContent = '';
     feedback.className = 'answer-feedback';
     hintList.replaceChildren();
+    nextBtn.hidden = true;
     hintBtn.hidden = false;
     hintBtn.textContent = 'Show a hint';
     card.classList.toggle('cracked', cracked.has(m.id));
@@ -240,6 +242,14 @@
       const next = MISSIONS.findIndex(x => !cracked.has(x.id));
       feedback.textContent = next < 0 ? 'Cracked. That’s every mission. Not bad at all.' : `Cracked. Next up: ${MISSIONS[next].title}.`;
       feedback.className = 'answer-feedback right';
+      nextBtn.hidden = next < 0;
+      if (next >= 0) {
+        nextBtn.textContent = `Open file ${fileNo(next)}`;
+        nextBtn.onclick = () => {
+          open(next);
+          input.focus({ preventScroll: true });
+        };
+      }
       renderList();
       return;
     }

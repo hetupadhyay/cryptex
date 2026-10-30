@@ -13,7 +13,7 @@
 'use strict';
 
 // stamp:start (written by tools/stamp.py)
-const VERSION = 'eaa7b2325a';
+const VERSION = '55f27f34af';
 const PRECACHE = [
   '/',
   '/learn',
@@ -28,7 +28,7 @@ const PRECACHE = [
   '/css/lab.css?v=c5c6805ed5',
   '/css/learn.css?v=4011634be2',
   '/css/pages.css?v=e75b1a6ac5',
-  '/css/scenes.css?v=3828524726',
+  '/css/scenes.css?v=ffe2a3c3c7',
   '/css/shell.css?v=341482449c',
   '/css/site.css?v=958b9b3ac4',
   '/css/story.css?v=343044d36e',
@@ -42,7 +42,7 @@ const PRECACHE = [
   '/js/handoff.js?v=ad58c84027',
   '/js/history.js?v=849256fe01',
   '/js/home.js?v=72bd02db73',
-  '/js/intercepts.js?v=77c6667feb',
+  '/js/intercepts.js?v=b8d6123d15',
   '/js/lab.js?v=e2d2bfaa90',
   '/js/pwa.js?v=5b673ad196',
   '/js/scenes/columnar.js?v=ea6b1ebf53',
@@ -50,7 +50,7 @@ const PRECACHE = [
   '/js/scenes/polybius.js?v=e974e61d35',
   '/js/scenes/railfence.js?v=dd94fb627d',
   '/js/scenes/substitution.js?v=57cb744904',
-  '/js/scenes/tabula.js?v=926bb806c3',
+  '/js/scenes/tabula.js?v=61001aa52a',
   '/js/share.js?v=ae6496ea0f',
   '/js/sheet.js?v=4151f3c65e',
   '/js/site.js?v=baf0d9e177',
