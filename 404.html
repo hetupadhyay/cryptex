@@ -9,8 +9,8 @@
   <meta name="theme-color" content="#edf0ef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0e1418" media="(prefers-color-scheme: dark)">
   <script src="/js/theme.js?v=8626267322"></script>
-  <link rel="stylesheet" href="/css/site.css?v=663543549d">
-  <link rel="stylesheet" href="/css/shell.css?v=341482449c">
+  <link rel="stylesheet" href="/css/site.css?v=a951b7d72a">
+  <link rel="stylesheet" href="/css/shell.css?v=73fe35c823">
   <link rel="stylesheet" href="/css/pages.css?v=e75b1a6ac5">
   <link rel="icon" href="/img/mark.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
@@ -52,9 +52,9 @@
       </div>
     </div>
     <nav class="menu-sheet" id="menu" aria-label="Main" hidden>
-      <a href="/learn" data-page="learn">Learn <small>600 BC to today</small></a>
-      <a href="/lab" data-page="lab">Lab <small>Ten ciphers, step by step</small></a>
-      <a href="/codebreaking" data-page="codebreaking">Codebreaking <small class="today-no"></small></a>
+      <a href="/learn" data-page="learn"><span>Learn</span> <small>600 BC to today</small></a>
+      <a href="/lab" data-page="lab"><span>Lab</span> <small>Ten ciphers, step by step</small></a>
+      <a href="/codebreaking" data-page="codebreaking"><span>Codebreaking</span> <small class="today-no"></small></a>
       <div class="sheet-grip" aria-hidden="true"><i></i></div>
     </nav>
   </header>
@@ -88,6 +88,10 @@
           <span class="wordmark">Cryptex</span>
         </a>
         <p>Every secret has a weakness. Learn how classical ciphers work, then break them.</p>
+        <p class="foot-note">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M4.5 7V5a3.5 3.5 0 0 1 7 0v2h.5a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 12 15H4a1.5 1.5 0 0 1-1.5-1.5v-5A1.5 1.5 0 0 1 4 7Zm1.5 0h4V5a2 2 0 0 0-4 0Z" /></svg>
+          <span>Runs in your browser. Nothing you type is sent to a server.</span>
+        </p>
       </div>
       <nav class="foot-cols" aria-label="Footer">
         <div>
@@ -127,9 +131,7 @@
       </nav>
     </div>
     <div class="foot-bar">
-      <p class="foot-who">© 2026 <b>Het Upadhyay</b></p>
-      <p>Made by <span class="vh">Het Upadhyay</span><span class="signature" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-hidden="true" title="Shift 3. Point at it or tap it to decode.">KHW XSDGKBDB</span></p>
-      <p>Runs in your browser. Nothing you type is sent to a server.</p>
+      <p class="foot-who">© 2026 Cryptex™<span class="foot-sep" aria-hidden="true">·</span>Made by <span class="vh">Het Upadhyay</span><span class="signature" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-hidden="true" title="Shift 3. Point at it or tap it to decode.">KHW XSDGKBDB</span></p>
       <div class="foot-links">
         <a href="/terms">Terms</a>
         <a href="/privacy">Privacy</a>
@@ -139,7 +141,6 @@
         <a class="foot-icon" href="https://www.linkedin.com/in/hetupadhyay/" aria-label="LinkedIn">
           <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.6 0H2.4A2.4 2.4 0 0 0 0 2.4v11.2A2.4 2.4 0 0 0 2.4 16h11.2a2.4 2.4 0 0 0 2.4-2.4V2.4A2.4 2.4 0 0 0 13.6 0ZM4.9 13.4H2.6V6h2.3v7.4ZM3.8 5a1.3 1.3 0 1 1 0-2.7 1.3 1.3 0 0 1 0 2.7Zm9.7 8.4h-2.3V9.8c0-.9 0-2-1.2-2s-1.4.9-1.4 1.9v3.7H6.3V6h2.2v1h.1c.3-.6 1.1-1.2 2.2-1.2 2.4 0 2.8 1.6 2.8 3.6v4Z" /></svg>
         </a>
-        <span>Cryptex™</span>
       </div>
     </div>
   </footer>
@@ -147,7 +148,7 @@
 
   <script src="/js/sheet.js?v=f4d1354ad7"></script>
 
-  <script src="/js/site.js?v=c274758143"></script>
+  <script src="/js/site.js?v=7443140c2c"></script>
   <script src="/js/pwa.js?v=5b673ad196"></script>
 </body>
 </html>

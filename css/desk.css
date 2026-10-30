@@ -302,3 +302,20 @@
     transition: none;
   }
 }
+
+/* Forced colours drop the pencil mark beside the chosen attack and paint
+   every option's hidden underline, so both are redrawn. */
+@media (forced-colors: active) {
+  .case .attack-tab[aria-selected='true']::after {
+    forced-color-adjust: none;
+    background: Highlight;
+  }
+
+  .options span {
+    text-decoration-line: none;
+  }
+
+  .options input:checked + span {
+    text-decoration-line: underline;
+  }
+}

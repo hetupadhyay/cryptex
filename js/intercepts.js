@@ -157,6 +157,7 @@
     input.placeholder = m.answer ? 'Type the keyword' : 'Type the decrypted message';
     feedback.textContent = '';
     feedback.className = 'answer-feedback';
+    input.setAttribute('aria-invalid', false);
     hintList.replaceChildren();
     nextBtn.hidden = true;
     hintBtn.hidden = false;
@@ -168,7 +169,8 @@
   }
 
   // Picked from the index. Where the file sits below the index (on a
-  // phone), bring it up so the choice visibly did something.
+  // phone), bring it up so the choice visibly did something; where its
+  // heading has scrolled off the top, bring that back.
   function open(i) {
     const changed = i !== index;
     show(i);
@@ -177,7 +179,8 @@
     if (changed && !Stage.reduced) {
       card.animate([{ opacity: 0.4, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
     }
-    if (card.getBoundingClientRect().top > innerHeight * 0.7) {
+    const top = card.getBoundingClientRect().top;
+    if (top > innerHeight * 0.7 || top < 0) {
       card.scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
     }
   }
@@ -234,6 +237,7 @@
     if (!guess) {
       feedback.textContent = m.answer ? 'Type the keyword you found.' : 'Type the message you decrypted.';
       feedback.className = 'answer-feedback wrong';
+      input.setAttribute('aria-invalid', true);
       return;
     }
     if (guess === right) {
@@ -248,6 +252,7 @@
       const next = MISSIONS.findIndex(x => !cracked.has(x.id));
       feedback.textContent = next < 0 ? 'Cracked. That’s every mission. Not bad at all.' : `Cracked. Next up: ${MISSIONS[next].title}.`;
       feedback.className = 'answer-feedback right';
+      input.setAttribute('aria-invalid', false);
       nextBtn.hidden = next < 0;
       if (next >= 0) {
         nextBtn.textContent = `Open file ${fileNo(next)}`;
@@ -265,6 +270,7 @@
       ? `Very close. ${off} ${off === 1 ? 'letter is' : 'letters are'} off.`
       : 'Not quite. Check your work, or take a hint.';
     feedback.className = 'answer-feedback wrong';
+    input.setAttribute('aria-invalid', true);
   });
 
   hintBtn.addEventListener('click', () => {

@@ -105,6 +105,10 @@
     arrival.scrollIntoView();
     window.addEventListener('load', () => requestAnimationFrame(() => { html.style.scrollBehavior = ''; }), { once: true });
   });
+  // The same old link followed from this page.
+  window.addEventListener('hashchange', () => {
+    if (location.hash === '#today') location.replace('#why-it-matters');
+  });
 
   // On narrow screens the rail folds into a bar that names the current
   // chapter and opens the full list.
@@ -118,6 +122,11 @@
   nowBtn.addEventListener('click', () => setOpen(!rail.classList.contains('open')));
   railList.addEventListener('click', e => { if (Sheet.follow('chapters', e)) setOpen(false, { navigating: true }); });
   document.addEventListener('click', e => { if (!rail.contains(e.target)) setOpen(false); });
+  // Tabbing out of the open list closes it too, so focus never lands on
+  // something it covers.
+  rail.addEventListener('focusout', e => {
+    if (e.relatedTarget && !rail.contains(e.relatedTarget)) setOpen(false);
+  });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && rail.classList.contains('open')) {
       setOpen(false);

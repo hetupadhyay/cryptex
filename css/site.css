@@ -391,9 +391,12 @@ select:focus {
   border-color: var(--carbon);
 }
 
+/* Hints read as sentences, even in fields that type in capitals. */
 ::placeholder {
   color: var(--ink-3);
   opacity: 1;
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 /* A field with a problem gets a red pencil edge; the message says why. */
@@ -744,7 +747,7 @@ input[type='range']::-moz-range-thumb {
 }
 
 .readout-input {
-  border-bottom: 1.5px dashed var(--rule-strong);
+  border-bottom: 1.5px dashed var(--control-edge);
 }
 
 .readout-input:focus {
@@ -931,14 +934,15 @@ input[type='range']::-moz-range-thumb {
   height: 44px;
   border-radius: 50%;
   background: var(--ink);
+  color: var(--on-solid);
 }
 
 .tb.play svg {
-  stroke: var(--on-solid);
+  stroke: currentColor;
 }
 
 .tb.play .i-play {
-  fill: var(--on-solid);
+  fill: currentColor;
 }
 
 .tb.play .i-pause,
@@ -2079,5 +2083,23 @@ input[type='range']::-moz-range-thumb {
   .fit i,
   .st-bar i {
     background: CanvasText;
+  }
+
+  /* Slider tracks and thumbs are drawn with backgrounds and shadows too,
+     so they're outlined. */
+  input[type='range']::-webkit-slider-runnable-track {
+    border: 1px solid CanvasText;
+  }
+
+  input[type='range']::-moz-range-track {
+    border: 1px solid CanvasText;
+  }
+
+  input[type='range']::-webkit-slider-thumb {
+    border: 2px solid ButtonText;
+  }
+
+  input[type='range']::-moz-range-thumb {
+    border: 2px solid ButtonText;
   }
 }

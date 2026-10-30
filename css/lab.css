@@ -745,3 +745,16 @@
     display: block;
   }
 }
+
+/* Forced colours drop the sheet and shadow that mark the chosen cipher
+   and speed, so the system's highlight colour marks them instead. */
+@media (forced-colors: active) {
+  .cb-entry {
+    border-color: Canvas;
+  }
+
+  .cb-entry[aria-checked='true'],
+  .speed-key {
+    border-color: Highlight;
+  }
+}

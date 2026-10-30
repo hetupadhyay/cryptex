@@ -443,7 +443,7 @@
 
 .lab-line input[type='text'] {
   border: 0;
-  border-bottom: 1.5px dashed var(--rule-strong);
+  border-bottom: 1.5px dashed var(--control-edge);
   border-radius: 0;
   background: none;
 }
@@ -694,3 +694,15 @@
   }
 }
 
+
+@media (forced-colors: active) {
+  .strip-pips i {
+    forced-color-adjust: none;
+    border-color: CanvasText;
+    background: Canvas;
+  }
+
+  .strip-pips i.on {
+    background: CanvasText;
+  }
+}

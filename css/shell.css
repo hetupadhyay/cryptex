@@ -247,23 +247,28 @@
 }
 
 .menu-sheet a small {
-  /* Inline-block, so the current page's underline stops at its name. */
-  display: inline-block;
   color: var(--ink-3);
   font: 400 13.5px var(--type);
   letter-spacing: 0;
 }
 
-.menu-sheet a[aria-current='page'] {
+/* Only the page's name is underlined, not the line under it. */
+.menu-sheet a[aria-current='page'] > span {
   text-decoration: underline;
   text-decoration-color: var(--pencil);
   text-decoration-thickness: 2.5px;
   text-underline-offset: 7px;
 }
 
+/* Out of sight where room is short, but still part of the link's name. */
 @media (max-width: 1040px) {
   .today-link span {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 }
 
@@ -404,6 +409,24 @@
   line-height: 1.55;
 }
 
+/* The privacy promise: small print under the blurb, with a padlock. */
+.foot-brand .foot-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 34ch;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.foot-note svg {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  margin-top: 3px;
+  fill: currentColor;
+}
+
 .foot-cols {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -462,8 +485,9 @@
   color: var(--slab-ink);
 }
 
-.foot-who b {
-  font-weight: 650;
+.foot-sep {
+  margin: 0 10px;
+  color: var(--slab-mute);
 }
 
 /* "Made by", in a Caesar shift of 3 until you look closer. */

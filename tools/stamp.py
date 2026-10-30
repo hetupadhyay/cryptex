@@ -18,7 +18,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 PAGES = sorted(p.name for p in ROOT.glob('*.html'))
 # The addresses the pages are served at, cached for reading offline.
 ROUTES = ['/', '/learn', '/lab', '/codebreaking', '/terms', '/privacy']
-EXTRA = ['manifest.webmanifest', 'img/mark.svg', 'img/icon-192.png', 'img/apple-touch-icon.png']
+EXTRA = ['manifest.webmanifest', 'speculation-rules.json', 'img/mark.svg', 'img/icon-192.png', 'img/apple-touch-icon.png']
 LINK = re.compile(r'((?:href|src)=")(/?)((?:css|js)/[\w/.-]+\.(?:css|js))(?:\?v=[0-9a-f]+)?(")')
 
 

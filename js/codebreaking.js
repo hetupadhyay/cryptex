@@ -42,10 +42,15 @@
   });
 
   // A folder's own name opens it, and no name at all (Back to the bare
-  // address) opens the first. #top, from the skip link, is neither.
+  // address) opens the first. #top, from the skip link, is neither: the
+  // open folder goes back in the address, so a reload still opens it.
   window.addEventListener('hashchange', () => {
     const file = location.hash.slice(1);
-    if (file && !files.includes(file)) return;
+    if (file && !files.includes(file)) {
+      const open = tabs.find(t => t.getAttribute('aria-selected') === 'true');
+      history.replaceState(history.state, '', '#' + open.dataset.file);
+      return;
+    }
     show(file || files[0], { push: false });
     reveal();
   });

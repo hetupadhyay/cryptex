@@ -308,6 +308,7 @@
     const a = indexes(alt);
     const fits = cipher.length > 0 && a.length === cipher.length;
     verdict.hidden = !fits;
+    padAlt.setAttribute('aria-invalid', cipher.length > 0 && !fits);
     if (!fits) {
       altTiles.replaceChildren();
       altHint.textContent = !cipher.length
