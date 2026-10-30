@@ -346,6 +346,11 @@
     const mount = $('.scene', stageEl);
     const mode = state.mode;
     const id = ++runs;
+    // What comes out decides its colour: ciphertext in red pencil, a
+    // message read back in carbon.
+    const out = mode === 'encrypt' ? 'cipher' : 'plain';
+    stageEl.dataset.out = out;
+    $('.result').dataset.out = out;
     const build = () => {
       if (id !== runs) return;
       const scene = Scenes[c.scene]({ cipher: c, keys, mode, input: sceneInput(text).text, mount, cue: player.cue });

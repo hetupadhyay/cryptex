@@ -158,7 +158,7 @@
 }
 
 .cb-entry[aria-checked='true'] .cb-spec b {
-  color: var(--carbon);
+  color: var(--pencil);
 }
 
 @media (hover: hover) and (pointer: fine) {

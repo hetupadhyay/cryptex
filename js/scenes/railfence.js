@@ -26,8 +26,6 @@
     const outTape = tape([...result].map(() => ''), { label: enc ? 'Ciphertext' : 'Message', cls: 'tape-out' });
 
     const fence = el('div', 'fence');
-    fence.style.setProperty('--n', n);
-    fence.style.setProperty('--rails', rails);
 
     const line = document.createElementNS(SVG, 'svg');
     line.setAttribute('class', 'zigzag');
@@ -52,9 +50,10 @@
       label.style.gridRow = r + 1;
       return label;
     });
-    const fenceWrap = el('div', 'fence-wrap');
+    const fenceWrap = el('div', 'fence-wrap follow');
+    fenceWrap.style.setProperty('--n', n);
+    fenceWrap.style.setProperty('--rails', rails);
     const labels = el('div', 'rail-labels');
-    labels.style.setProperty('--rails', rails);
     labels.append(...railLabels);
     fenceWrap.append(labels, fence);
 
@@ -146,18 +145,29 @@
       });
 
       if (!animate) {
-        if (step.rail !== undefined) perRail[step.rail].forEach(p => slots[p].classList.add('reading'));
+        if (step.rail !== undefined) {
+          perRail[step.rail].forEach(p => slots[p].classList.add('reading'));
+          Stage.follow(slots[perRail[step.rail][0]]);
+        }
         return;
       }
 
-      const place = (p, from, delay) => cue.fly(from, slots[p], letterAt(p), {
-        delay,
-        duration: 520,
-        done: () => { slots[p].textContent = letterAt(p); slots[p].classList.add('filled', 'landed'); },
-      });
+      // Each letter is brought into view just before it moves, so a long
+      // fence on a phone scrolls along with the work.
+      const place = (p, from, delay) => {
+        cue.at(Math.max(0, delay - 10), () => Stage.follow(slots[p]));
+        cue.fly(from, slots[p], letterAt(p), {
+          delay,
+          duration: 520,
+          done: () => { slots[p].textContent = letterAt(p); slots[p].classList.add('filled', 'landed'); },
+        });
+      };
       const emit = (p, k, delay) => {
         const cell = outTape.cells[k];
-        cue.at(delay, () => slots[p].classList.add('reading'));
+        cue.at(delay, () => {
+          Stage.follow(slots[p]);
+          slots[p].classList.add('reading');
+        });
         cue.fly(slots[p], cell, result[k], {
           delay: delay + 120,
           duration: 520,

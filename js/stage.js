@@ -112,6 +112,19 @@
     };
   }
 
+  // On a narrow stage some scenes are wider than the screen and scroll
+  // sideways inside a .follow box. This brings el into view there, without
+  // moving the page, and only when it's out of sight.
+  function follow(el, smooth) {
+    const box = el && el.closest('.follow');
+    if (!box || box.scrollWidth <= box.clientWidth) return;
+    const a = el.getBoundingClientRect();
+    const b = box.getBoundingClientRect();
+    if (a.left >= b.left + 8 && a.right <= b.right - 8) return;
+    const left = box.scrollLeft + a.left - b.left + a.width / 2 - box.clientWidth / 2;
+    box.scrollTo({ left, behavior: smooth && !Stage.reduced ? 'smooth' : 'auto' });
+  }
+
   // Turns a list of elements on with a small stagger.
   function stagger(cue, nodes, cls, { gap = 40, delay = 0 } = {}) {
     nodes.forEach((node, i) => cue.at(delay + i * gap, () => node.classList.add(cls)));
@@ -229,6 +242,6 @@
     return api;
   }
 
-  window.Stage = Object.assign(Stage, { el, tape, stagger, Player, EASE_MOVE, EASE_OUT });
+  window.Stage = Object.assign(Stage, { el, tape, stagger, follow, Player, EASE_MOVE, EASE_OUT });
   window.Scenes = {};
 })();
