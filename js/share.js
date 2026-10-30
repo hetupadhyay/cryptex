@@ -69,7 +69,7 @@
     // all needs none, so it counts as sent. An empty key can be real too:
     // Polybius without a keyword.
     let k = def ? null : '';
-    if (def && typeof raw.k === 'string' && raw.k.length <= MAX_KEY && !c.check({ [def.id]: raw.k })) k = raw.k;
+    if (def && typeof raw.k === 'string' && raw.k.length <= MAX_KEY && !c.check({ [def.id]: raw.k })) k = raw.k.trim();
     return { c, t: raw.t, k };
   }
 
@@ -182,6 +182,17 @@
     history.replaceState(null, '', location.href.split('#')[0]);
     if (typeof dialog.showModal === 'function' && !dialog.open) dialog.showModal();
   }
+
+  // The dialog opens from a link, not a button, so when it closes there's
+  // nothing to hand focus back to. The page's content takes it instead.
+  // Focus settles after the close event, so this waits a frame.
+  dialog.addEventListener('close', () => requestAnimationFrame(() => {
+    const at = document.activeElement;
+    if (at && at !== document.body && !dialog.contains(at)) return;
+    const main = document.getElementById('top');
+    main.tabIndex = -1;
+    main.focus({ preventScroll: true });
+  }));
 
   openSecret();
   window.addEventListener('hashchange', openSecret);

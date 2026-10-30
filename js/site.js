@@ -14,6 +14,9 @@
 
   function applyTheme(theme, save) {
     root.dataset.theme = theme;
+    // The browser's own bar follows the lamp, not just the system setting.
+    const paper = getComputedStyle(root).getPropertyValue('--paper').trim();
+    document.querySelectorAll('meta[name="theme-color"]').forEach(m => { m.content = paper; });
     // One name, "Night lamp", and pressed or not says whether it's on.
     lamps.forEach(l => l.setAttribute('aria-pressed', theme === 'night'));
     if (save) {
@@ -67,6 +70,11 @@
       }
     });
     menu.addEventListener('click', e => { if (Sheet.follow('menu', e)) setMenu(false, { navigating: true }); });
+    // Tabbing out of the open menu closes it, so focus never lands on
+    // something the menu covers.
+    menu.addEventListener('focusout', e => {
+      if (e.relatedTarget && !menu.contains(e.relatedTarget) && e.relatedTarget !== menuBtn) setMenu(false);
+    });
     window.matchMedia('(min-width: 821px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
   }
 

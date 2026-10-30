@@ -309,3 +309,16 @@
   }
 }
 
+
+/* Forced colours drop the fill that shows how hard the day is. */
+@media (forced-colors: active) {
+  .pips i {
+    forced-color-adjust: none;
+    border: 1px solid CanvasText;
+    background: Canvas;
+  }
+
+  .pips i.on {
+    background: CanvasText;
+  }
+}

@@ -191,13 +191,20 @@
     }
 
     // Turning the phone or resizing the window changes the view, so check
-    // the fit and put the view back in place.
-    const resize = new ResizeObserver(() => {
-      if (!tableWrap.isConnected) return resize.disconnect();
+    // the fit and put the view back in place. The window can change height
+    // without the stage changing size, so that's watched too.
+    const refit = () => {
+      if (!tableWrap.isConnected) {
+        resize.disconnect();
+        removeEventListener('resize', refit);
+        return;
+      }
       fit();
       pan(at, 0);
-    });
+    };
+    const resize = new ResizeObserver(refit);
     resize.observe(mount);
+    addEventListener('resize', refit);
 
     function show(i, animate) {
       const step = steps[i];

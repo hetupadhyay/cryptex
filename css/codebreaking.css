@@ -22,7 +22,7 @@
   --ink-3: #929da4;
   --brass: inherit;
   --pencil: inherit;
-  --control-edge: var(--folder-rule);
+  --control-edge: #7d7e76;
 }
 
 /* ---------------- head ---------------- */

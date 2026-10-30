@@ -14,6 +14,9 @@
   const FRESH = 60000;
 
   function go(to, payload) {
+    // The desk's box holds 20,000 characters, so a longer text arrives
+    // cut to that rather than not at all.
+    if (typeof payload.text === 'string') payload = { ...payload, text: payload.text.slice(0, MAX_TEXT) };
     try {
       sessionStorage.setItem(KEY, JSON.stringify({ to, at: Date.now(), ...payload }));
     } catch {}

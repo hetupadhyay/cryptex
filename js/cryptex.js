@@ -53,6 +53,7 @@
       return { turn, base, spring };
     });
     paint();
+    announce();
   }
 
   function current() {
@@ -64,8 +65,15 @@
     const s = mod(Math.round(current()), 26);
     shiftOut.textContent = s;
     textOut.textContent = [...word].map(ch => ALPHABET[mod(toIndex(ch) + s, 26)]).join('');
+  }
+
+  // What a screen reader hears: the shift the rings are turning to, set
+  // once per turn rather than on every frame of it.
+  function announce() {
+    const s = mod(shift, 26);
+    const out = [...word].map(ch => ALPHABET[mod(toIndex(ch) + s, 26)]).join('');
     rings.setAttribute('aria-valuenow', s);
-    rings.setAttribute('aria-valuetext', `Shift ${s}: ${word} reads as ${textOut.textContent}`);
+    rings.setAttribute('aria-valuetext', `Shift ${s}: ${word} reads as ${out}`);
   }
 
   function tick(t) {
@@ -101,6 +109,7 @@
       p.spring.target = p.base + s;
       p.spring.velocity = velocity;
     }
+    announce();
     animate();
   }
 

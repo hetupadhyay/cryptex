@@ -336,7 +336,11 @@
     const keys = state.keys[c.id];
     const keyFields = $$('input, select', keysBox);
     const problem = c.check(keys);
-    flag(keyFields, problem);
+    flag(keyFields, '');
+    // With two keys (affine) the problem is marked on the one that passes
+    // once it's put back to its starting value.
+    const faulty = c.keys.filter(k => c.keys.length === 1 || !c.check({ ...keys, [k.id]: k.value }));
+    flag(faulty.length ? faulty.map(k => $(`#key-${c.id}-${k.id}`)) : keyFields, problem);
     message.setAttribute('aria-invalid', false);
     if (problem) return;
 
@@ -450,12 +454,13 @@
   // The bar sticks to the bottom of the window only once there is room for
   // it and a good stretch of the scene above it. While the stage is just
   // peeking in, a stuck bar would sit over its heading, so it waits at the
-  // end of the stage instead.
+  // end of the stage instead. On a very short window (a phone on its side,
+  // or a big zoom) it never sticks, since it would cover most of the scene.
   const stageBody = $('.stage-body', stageEl);
   const dock = $('.dock', stageEl);
   function placeDock() {
     const box = stageBody.getBoundingClientRect();
-    const docked = innerHeight - box.top > dock.offsetHeight + 160;
+    const docked = innerHeight >= 560 && innerHeight - box.top > dock.offsetHeight + 160;
     if (docked === stageEl.classList.contains('docked')) return;
     stageEl.classList.toggle('docked', docked);
     // Coming up from below the window reads better than appearing from nowhere.

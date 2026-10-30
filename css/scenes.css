@@ -82,6 +82,25 @@
   background: var(--carbon);
 }
 
+.stage[data-out='plain'] .sq.src {
+  background: var(--pencil);
+}
+
+.stage[data-out='plain'] .sq.dst,
+.stage[data-out='plain'] .tt.hit {
+  background: var(--carbon);
+}
+
+/* In the Polybius square the letters are always the message and the
+   numbers round the edge the ciphertext, whichever way it runs. */
+.square.numbered .sq.hit {
+  background: var(--carbon);
+}
+
+.square.numbered .sq.head.lit {
+  background: var(--pencil);
+}
+
 .cell.landed {
   animation: land 320ms var(--ease-out);
 }
@@ -167,7 +186,8 @@
 .cell.key.now {
   background: var(--brass-wash);
   border-bottom-color: var(--brass);
-  color: var(--brass);
+  /* A shade towards ink, to read clearly on its wash. */
+  color: color-mix(in srgb, var(--brass) 80%, var(--ink));
 }
 
 /* Playfair pairs. */
