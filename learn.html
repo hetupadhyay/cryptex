@@ -299,7 +299,7 @@
           <li><b>Cribs.</b> Weather reports went out at the same times in the same words, so codebreakers could guess a stretch of plaintext, like <span lang="de">WETTERVORHERSAGE</span>, weather forecast.</li>
           <li><b>A letter never encrypts to itself.</b> The reflector makes sure of it. A guessed word can only sit where none of its letters lines up with the same letter, which rules out most positions at once.</li>
           <li><b>Operator habits.</b> Lazy start positions like AAA, the same greetings, the same sign-offs, day after day.</li>
-          <li><b>The bombe.</b> Alan Turing and Gordon Welchman built on the Polish bomba: a machine that ran through rotor positions against a crib and threw out every one that led to a contradiction.</li>
+          <li><b>The bombe.</b> Alan Turing and Gordon Welchman designed the bombe, named after the Polish bomba: a machine that ran through rotor positions against a crib and threw out every one that led to a contradiction.</li>
         </ul>
       </section>
 
@@ -344,7 +344,7 @@
           <figcaption>The same ciphertext as above, read with a different pad.</figcaption>
         </figure>
 
-        <p class="otp-verdict">Both pads look just as random. Without the real one there’s no way to tell which message was sent, because every message of this length is equally possible. In 1949 the Bell Labs mathematician Shannon proved what that means: the ciphertext says nothing at all.</p>
+        <p class="otp-verdict">Both pads look just as random. Without the real one there’s no way to tell which message was sent, because every message of this length is equally possible. In 1949 the Bell Labs mathematician Claude Shannon proved what that means: the ciphertext says nothing at all.</p>
 
         <h3>Three rules, no exceptions</h3>
         <ul class="facts">
@@ -382,7 +382,7 @@
           <div class="sheet strength">
             <ol class="strength-list"></ol>
           </div>
-          <figcaption>Bars are on a log scale: a bar twice as long means a key count with twice as many digits. AES-128, the cipher your browser uses, is at the bottom for comparison.</figcaption>
+          <figcaption>Bars are on a log scale: a bar twice as long means a key count with twice as many digits. AES-128, the kind of cipher your browser uses, is at the bottom for comparison.</figcaption>
         </figure>
 
         <p>Playfair has more keys than there are grains of sand on Earth, and a codebreaker with a pencil could still read it by counting letter pairs.</p>
@@ -412,13 +412,13 @@
               </li>
               <li class="hs-step">
                 <span class="hs-dir">Site <i aria-hidden="true">→</i> browser</span>
-                <h4>Proof</h4>
-                <p>The site sends its half and a certificate signed by an authority your browser already trusts. Then it signs the conversation so far with a private key only the real site holds, proving it really is the address in the bar.</p>
+                <h4>Shared key</h4>
+                <p>The site answers with its half. From the two halves, each side works out the same secret key. Anyone listening sees both halves but can’t work it out.</p>
               </li>
               <li class="hs-step">
-                <span class="hs-dir">Each side alone</span>
-                <h4>Shared key</h4>
-                <p>Both sides combine the two halves into the same secret key. The key itself never crosses the network.</p>
+                <span class="hs-dir">Site <i aria-hidden="true">→</i> browser</span>
+                <h4>Proof</h4>
+                <p>Already encrypted, the site sends a certificate signed by an authority your browser trusts, then signs the conversation so far with a private key only the real site holds. That proves it really is the address in the bar.</p>
               </li>
               <li class="hs-step">
                 <span class="hs-dir">Browser <i aria-hidden="true">↔</i> site</span>
@@ -506,15 +506,15 @@
     </div>
   </footer>
   <!-- /shell:footer -->
-  <script src="js/sheet.js?v=4151f3c65e"></script>
-  <script src="js/ciphers.js?v=1bfec5b0c6"></script>
-  <script src="js/stage.js?v=288531ba18"></script>
+  <script src="js/sheet.js?v=f4d1354ad7"></script>
+  <script src="js/ciphers.js?v=517fef3150"></script>
+  <script src="js/stage.js?v=b1dc342ce9"></script>
   <script src="js/handoff.js?v=ad58c84027"></script>
   <script src="js/history.js?v=849256fe01"></script>
   <script src="js/enigma.js?v=631d0b6f71"></script>
   <script src="js/story.js?v=965d3d9299"></script>
-  <script src="js/strength.js?v=5c6db1e9d6"></script>
-  <script src="js/site.js?v=baf0d9e177"></script>
+  <script src="js/strength.js?v=eeb194b85b"></script>
+  <script src="js/site.js?v=c274758143"></script>
   <script src="js/pwa.js?v=5b673ad196"></script>
 </body>
 </html>

@@ -430,7 +430,9 @@
       family: 'Transposition',
       scene: 'columnar',
       keys: [{ id: 'key', label: 'Keyword', type: 'text', value: 'ZEBRAS' }],
-      check: k => needsLetters(k.key, 'The keyword'),
+      // Each keyword letter is a column on the stage, and ten is as many as
+      // fit the narrowest phone at a readable size.
+      check: k => needsLetters(k.key, 'The keyword') || (lettersOnly(k.key).length > 10 ? 'Keep the keyword to 10 letters or fewer.' : ''),
       encrypt: (t, k) => columnarEncrypt(t, k.key),
       decrypt: (t, k) => columnarDecrypt(t, k.key),
       about: 'Write the message in rows under a keyword, then read the columns off in the keyword’s alphabetical order. Armies used it through both World Wars, often twice in a row.',

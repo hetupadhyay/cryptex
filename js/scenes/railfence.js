@@ -25,37 +25,49 @@
     const inTape = tape([...letters], { label: enc ? 'Message' : 'Ciphertext', cls: 'tape-in' });
     const outTape = tape([...result].map(() => ''), { label: enc ? 'Ciphertext' : 'Message', cls: 'tape-out' });
 
-    const fence = el('div', 'fence');
+    // A long message would make the fence wider than a phone, so it's laid
+    // out in bands, each a stretch of the zig-zag with its own rail labels,
+    // and nothing runs off the side.
+    const room = Math.max(160, Stage.room(mount) - 40);
+    const bands = Math.ceil(n / Math.max(6, Math.floor(room / 22)));
+    const per = Math.ceil(n / bands);
+    const fenceWrap = el('div', 'fence-wrap');
+    const fences = [];
+    const slots = [];
+    for (let start = 0; start < n; start += per) {
+      const count = Math.min(per, n - start);
+      const band = el('div', 'fence-band');
+      band.style.setProperty('--n', count);
+      band.style.setProperty('--rails', rails);
 
-    const line = document.createElementNS(SVG, 'svg');
-    line.setAttribute('class', 'zigzag');
-    line.setAttribute('viewBox', `0 0 ${n} ${rails}`);
-    line.setAttribute('preserveAspectRatio', 'none');
-    const path = document.createElementNS(SVG, 'polyline');
-    path.setAttribute('points', pattern.map((r, i) => `${i + 0.5},${r + 0.5}`).join(' '));
-    path.setAttribute('pathLength', '1');
-    path.setAttribute('vector-effect', 'non-scaling-stroke');
-    line.append(path);
-    fence.append(line);
+      const labels = el('div', 'rail-labels');
+      for (let r = 0; r < rails; r++) {
+        const label = labels.appendChild(el('span', 'rail-label', String(r + 1)));
+        label.style.gridRow = r + 1;
+      }
 
-    const slots = pattern.map((r, i) => {
-      const slot = el('span', 'slot');
-      slot.style.gridRow = r + 1;
-      slot.style.gridColumn = i + 1;
-      fence.append(slot);
-      return slot;
-    });
-    const railLabels = Array.from({ length: rails }, (_, r) => {
-      const label = el('span', 'rail-label', String(r + 1));
-      label.style.gridRow = r + 1;
-      return label;
-    });
-    const fenceWrap = el('div', 'fence-wrap follow');
-    fenceWrap.style.setProperty('--n', n);
-    fenceWrap.style.setProperty('--rails', rails);
-    const labels = el('div', 'rail-labels');
-    labels.append(...railLabels);
-    fenceWrap.append(labels, fence);
+      const fence = el('div', 'fence');
+      const line = document.createElementNS(SVG, 'svg');
+      line.setAttribute('class', 'zigzag');
+      line.setAttribute('viewBox', `0 0 ${count} ${rails}`);
+      line.setAttribute('preserveAspectRatio', 'none');
+      const path = document.createElementNS(SVG, 'polyline');
+      path.setAttribute('points', pattern.slice(start, start + count).map((r, i) => `${i + 0.5},${r + 0.5}`).join(' '));
+      path.setAttribute('pathLength', '1');
+      path.setAttribute('vector-effect', 'non-scaling-stroke');
+      line.append(path);
+      fence.append(line);
+      for (let i = start; i < start + count; i++) {
+        const slot = fence.appendChild(el('span', 'slot'));
+        slot.style.gridRow = pattern[i] + 1;
+        slot.style.gridColumn = i - start + 1;
+        slots.push(slot);
+      }
+
+      band.append(labels, fence);
+      fenceWrap.append(band);
+      fences.push(fence);
+    }
 
     mount.replaceChildren(inTape.root, fenceWrap, outTape.root);
 
@@ -121,11 +133,11 @@
       const before = i > 0 ? stateAt(i - 1) : { placed: new Set(), out: 0 };
       mount.querySelectorAll('.now, .reading').forEach(x => x.classList.remove('now', 'reading'));
 
-      fence.classList.toggle('drawn', now.path);
+      fences.forEach(f => f.classList.toggle('drawn', now.path));
       if (animate && i === 0) {
-        fence.classList.remove('drawn');
-        void fence.offsetWidth;
-        fence.classList.add('drawn');
+        fences.forEach(f => f.classList.remove('drawn'));
+        void fenceWrap.offsetWidth;
+        fences.forEach(f => f.classList.add('drawn'));
       }
 
       const animPlaced = animate ? before.placed : now.placed;
@@ -148,29 +160,18 @@
       });
 
       if (!animate) {
-        if (step.rail !== undefined) {
-          perRail[step.rail].forEach(p => slots[p].classList.add('reading'));
-          Stage.follow(slots[perRail[step.rail][0]]);
-        }
+        if (step.rail !== undefined) perRail[step.rail].forEach(p => slots[p].classList.add('reading'));
         return;
       }
 
-      // Each letter is brought into view just before it moves, so a long
-      // fence on a phone scrolls along with the work.
-      const place = (p, from, delay) => {
-        cue.at(Math.max(0, delay - 10), () => Stage.follow(slots[p]));
-        cue.fly(from, slots[p], letterAt(p), {
-          delay,
-          duration: 520,
-          done: () => { slots[p].textContent = letterAt(p); slots[p].classList.add('filled', 'landed'); },
-        });
-      };
+      const place = (p, from, delay) => cue.fly(from, slots[p], letterAt(p), {
+        delay,
+        duration: 520,
+        done: () => { slots[p].textContent = letterAt(p); slots[p].classList.add('filled', 'landed'); },
+      });
       const emit = (p, k, delay) => {
         const cell = outTape.cells[k];
-        cue.at(delay, () => {
-          Stage.follow(slots[p]);
-          slots[p].classList.add('reading');
-        });
+        cue.at(delay, () => slots[p].classList.add('reading'));
         cue.fly(slots[p], cell, result[k], {
           delay: delay + 120,
           duration: 520,

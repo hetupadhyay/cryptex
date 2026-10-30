@@ -1,8 +1,9 @@
 /*
  * The page sits on a faint cipher pad: rows of five-letter code groups,
  * the way enciphered telegrams were written out. For a few seconds after
- * the page opens, and again whenever the cryptex turns, a group decodes
- * into a word, holds for a moment, and scrambles back. Then it rests.
+ * the page opens or comes back into view, and again whenever the cryptex
+ * turns, a group decodes into a word, holds for a moment, and scrambles
+ * back. Then it rests.
  */
 (function () {
   'use strict';

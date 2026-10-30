@@ -37,6 +37,12 @@
   function follow(id, e) {
     const a = e.target.closest('a[href]');
     if (!a || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return false;
+    if (a.target === '_blank' || a.hasAttribute('download')) return false;
+    // A second tap while the first is still stepping back.
+    if (following) {
+      e.preventDefault();
+      return true;
+    }
     if (open.delete(id) && history.state && history.state.sheet === id) {
       e.preventDefault();
       following = a.href;

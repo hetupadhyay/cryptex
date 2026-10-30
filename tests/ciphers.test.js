@@ -51,6 +51,8 @@ test('number keys must be plain whole numbers in range', () => {
   const affine = C.byId('affine');
   for (const b of ['', ' ', '0x3', '1e1', '2.5', '26', '-1']) assert.ok(affine.check({ a: 5, b }), JSON.stringify(b));
   for (const b of [0, '8', ' 8 ', 25]) assert.equal(affine.check({ a: 5, b }), '', JSON.stringify(b));
+  assert.ok(C.byId('columnar').check({ key: 'ABCDEFGHIJK' }), 'a keyword longer than ten letters');
+  assert.equal(C.byId('columnar').check({ key: 'ABCDEFGHIJ' }), '');
   assert.ok(affine.check({ a: 13, b: 0 }), 'a must have an inverse');
   assert.ok(C.byId('vigenere').check({ key: '123' }), 'a keyword needs letters');
 });

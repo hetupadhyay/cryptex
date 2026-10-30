@@ -13,7 +13,7 @@
 'use strict';
 
 // stamp:start (written by tools/stamp.py)
-const VERSION = '1512a44f1a';
+const VERSION = 'b6c8b7d8af';
 const PRECACHE = [
   '/',
   '/learn',
@@ -24,41 +24,41 @@ const PRECACHE = [
   '/css/codebreaking.css?v=747a85efb5',
   '/css/daily.css?v=875309f422',
   '/css/desk.css?v=89df0a7983',
-  '/css/home.css?v=6e815e2cd5',
+  '/css/home.css?v=e5d449e446',
   '/css/lab.css?v=c5c6805ed5',
   '/css/learn.css?v=4011634be2',
   '/css/pages.css?v=e75b1a6ac5',
-  '/css/scenes.css?v=ffe2a3c3c7',
+  '/css/scenes.css?v=80f816938d',
   '/css/shell.css?v=341482449c',
   '/css/site.css?v=cf842b4605',
   '/css/story.css?v=343044d36e',
   '/js/analysis.js?v=64f37747e0',
-  '/js/background.js?v=3443079fe1',
+  '/js/background.js?v=d6dcf426f7',
   '/js/breaker.js?v=4c906b26b7',
-  '/js/ciphers.js?v=1bfec5b0c6',
-  '/js/codebreaking.js?v=0bb867115c',
-  '/js/cryptex.js?v=360dd66c8e',
-  '/js/daily.js?v=56d0fb8391',
+  '/js/ciphers.js?v=517fef3150',
+  '/js/codebreaking.js?v=33958d9e93',
+  '/js/cryptex.js?v=3db7e3361d',
+  '/js/daily.js?v=95d419e4d9',
   '/js/enigma.js?v=631d0b6f71',
   '/js/handoff.js?v=ad58c84027',
   '/js/history.js?v=849256fe01',
-  '/js/home.js?v=72bd02db73',
+  '/js/home.js?v=a53d7e9b27',
   '/js/intercepts.js?v=b8d6123d15',
-  '/js/lab.js?v=e2d2bfaa90',
+  '/js/lab.js?v=952c36fcad',
   '/js/pwa.js?v=5b673ad196',
-  '/js/scenes/columnar.js?v=254f17563a',
+  '/js/scenes/columnar.js?v=5f551bc86e',
   '/js/scenes/playfair.js?v=23084a281e',
   '/js/scenes/polybius.js?v=e974e61d35',
-  '/js/scenes/railfence.js?v=dd94fb627d',
-  '/js/scenes/substitution.js?v=13c21a9e2e',
-  '/js/scenes/tabula.js?v=61001aa52a',
+  '/js/scenes/railfence.js?v=b4d0d7f692',
+  '/js/scenes/substitution.js?v=581c58d35f',
+  '/js/scenes/tabula.js?v=c3cacba365',
   '/js/share.js?v=ae6496ea0f',
-  '/js/sheet.js?v=4151f3c65e',
-  '/js/site.js?v=baf0d9e177',
+  '/js/sheet.js?v=f4d1354ad7',
+  '/js/site.js?v=c274758143',
   '/js/spring.js?v=8c5f9b1865',
-  '/js/stage.js?v=288531ba18',
+  '/js/stage.js?v=b1dc342ce9',
   '/js/story.js?v=965d3d9299',
-  '/js/strength.js?v=5c6db1e9d6',
+  '/js/strength.js?v=eeb194b85b',
   '/js/theme.js?v=8626267322',
   '/fonts/courier-prime-400.woff2',
   '/fonts/courier-prime-700.woff2',
@@ -75,10 +75,12 @@ const START = '/';
 // How long a page waits for the network before falling back to the cache.
 const PATIENCE = 4000;
 
+// Straight from the network, past the browser's own cache, so a font or
+// icon replaced under the same name is fetched afresh.
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE)
-      .then(cache => cache.addAll(PRECACHE))
+      .then(cache => cache.addAll(PRECACHE.map(url => new Request(url, { cache: 'reload' }))))
       .then(() => self.skipWaiting())
   );
 });
@@ -97,15 +99,12 @@ function plain(response) {
   return new Response(response.body, { status: response.status, statusText: response.statusText, headers: response.headers });
 }
 
-const keep = response => response.ok && response.type === 'basic';
-
+// The cache only ever holds the release the worker was installed with: a
+// newer page from the network is shown but not kept, since its files
+// belong to a release this cache doesn't have.
 async function page(event) {
   const cache = await caches.open(CACHE);
-  const network = fetch(event.request).then(response => {
-    if (keep(response)) cache.put(event.request.url.split(/[?#]/)[0], response.clone()).catch(() => {});
-    return response;
-  });
-  event.waitUntil(network.then(() => {}, () => {}));
+  const network = fetch(event.request);
   const late = new Promise(resolve => setTimeout(resolve, PATIENCE));
   try {
     const response = await Promise.race([network, late]);
@@ -118,12 +117,8 @@ async function page(event) {
 }
 
 async function file(event) {
-  const cache = await caches.open(CACHE);
-  const cached = await cache.match(event.request);
-  if (cached) return cached;
-  const response = await fetch(event.request);
-  if (keep(response)) cache.put(event.request, response.clone()).catch(() => {});
-  return response;
+  const cached = await caches.match(event.request, { cacheName: CACHE });
+  return cached || fetch(event.request);
 }
 
 self.addEventListener('fetch', event => {

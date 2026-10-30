@@ -41,11 +41,12 @@
     });
   });
 
-  // Only a folder's own name opens it: #top, from the skip link, isn't one.
+  // A folder's own name opens it, and no name at all (Back to the bare
+  // address) opens the first. #top, from the skip link, is neither.
   window.addEventListener('hashchange', () => {
     const file = location.hash.slice(1);
-    if (!files.includes(file)) return;
-    show(file, { push: false });
+    if (file && !files.includes(file)) return;
+    show(file || files[0], { push: false });
     reveal();
   });
 

@@ -2,7 +2,7 @@
 
 Usage: python3 tools/serve.py <folder> <port>   (or npm start)
 """
-import http.server, json, os, re, sys
+import http.server, json, os, re, sys, urllib.parse
 
 ROOT = os.path.abspath(sys.argv[1])
 PORT = int(sys.argv[2])
@@ -27,7 +27,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().__init__(*a, directory=ROOT, **k)
 
     def translate_path(self, path):
-        parts = [part for part in re.split(r'[?#]', path)[0].split('/') if part]
+        parts = [part for part in urllib.parse.unquote(re.split(r'[?#]', path)[0]).split('/') if part]
         # Only what Vercel would serve: no dot-files like .git, nothing
         # .vercelignore leaves out.
         if any(part.startswith('.') for part in parts) or (parts and parts[0] in IGNORED):

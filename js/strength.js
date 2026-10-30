@@ -19,7 +19,7 @@
     { name: 'Autokey', note: '5-letter keyword', keys: 26 ** 5, how: 'Guessing likely words' },
     { name: 'Polybius', note: 'keyed square', keys: factorial(25), how: 'Letter counts' },
     { name: 'Playfair', note: 'keyed square', keys: factorial(25), how: 'Counting letter pairs' },
-    { name: 'AES-128', note: 'what your browser uses', keys: 2 ** 128, how: 'No known shortcut', modern: true },
+    { name: 'AES-128', note: 'the kind your browser uses', keys: 2 ** 128, how: 'No known shortcut', modern: true },
   ];
 
   const maxLog = Math.log10(2 ** 128);
