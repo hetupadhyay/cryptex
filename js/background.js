@@ -213,8 +213,9 @@
   });
   document.addEventListener('visibilitychange', start);
   still.addEventListener('change', start);
-  document.addEventListener('themechange', () => {
+  // On the next frame, so reading the new colours doesn't hold up the lamp.
+  document.addEventListener('themechange', () => requestAnimationFrame(() => {
     readInk();
     draw();
-  });
+  }));
 })();

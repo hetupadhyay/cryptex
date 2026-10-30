@@ -13,7 +13,7 @@
 'use strict';
 
 // stamp:start (written by tools/stamp.py)
-const VERSION = '18b2f8444c';
+const VERSION = '93aa4b3c13';
 const PRECACHE = [
   '/',
   '/learn',
@@ -29,11 +29,11 @@ const PRECACHE = [
   '/css/learn.css?v=8c0a610d60',
   '/css/pages.css?v=4adfaea274',
   '/css/scenes.css?v=2b53362395',
-  '/css/shell.css?v=82de4d7129',
-  '/css/site.css?v=c0f587c77d',
+  '/css/shell.css?v=86cb6c2055',
+  '/css/site.css?v=46e9c6591b',
   '/css/story.css?v=1e29ccb1a7',
   '/js/analysis.js?v=64f37747e0',
-  '/js/background.js?v=b713bc64b0',
+  '/js/background.js?v=3443079fe1',
   '/js/breaker.js?v=c889a61949',
   '/js/ciphers.js?v=612b2eab7a',
   '/js/codebreaking.js?v=a27435444e',
@@ -53,7 +53,7 @@ const PRECACHE = [
   '/js/scenes/tabula.js?v=2d031b6e37',
   '/js/share.js?v=c6cb68012d',
   '/js/sheet.js?v=4151f3c65e',
-  '/js/site.js?v=98640b7de6',
+  '/js/site.js?v=315fff37f5',
   '/js/spring.js?v=8c5f9b1865',
   '/js/stage.js?v=5b2118beb4',
   '/js/story.js?v=cccddd9e89',

@@ -24,10 +24,12 @@
     document.dispatchEvent(new CustomEvent('themechange'));
   }
 
+  // The whole page cross-fades once, rather than every element easing its
+  // own colours, which is slow on a long page.
   lamps.forEach(lamp => lamp.addEventListener('click', () => {
-    root.classList.add('theme-shift');
-    applyTheme(root.dataset.theme === 'night' ? 'day' : 'night', true);
-    setTimeout(() => root.classList.remove('theme-shift'), 420);
+    const next = root.dataset.theme === 'night' ? 'day' : 'night';
+    if (document.startViewTransition && !reduced()) document.startViewTransition(() => applyTheme(next, true));
+    else applyTheme(next, true);
   }));
   applyTheme(root.dataset.theme === 'night' ? 'night' : 'day', false);
 

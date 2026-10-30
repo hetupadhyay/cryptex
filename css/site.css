@@ -607,11 +607,26 @@ input[type='range']::-moz-range-thumb {
   display: flex;
   align-items: center;
   max-width: 100%;
-  filter: drop-shadow(0 30px 36px rgba(22, 33, 42, 0.28)) drop-shadow(0 4px 6px rgba(22, 33, 42, 0.18));
+  isolation: isolate;
 }
 
-:root[data-theme='night'] .cryptex {
-  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.6)) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
+/* The shadow on the table, drawn once behind the cryptex. A drop-shadow
+   filter would be redrawn on every frame the rings turn. */
+.cryptex::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: calc(var(--r) * 1.7 - 2px);
+  border-radius: 16px;
+  transform: translateY(-50%);
+  box-shadow: 0 30px 36px rgba(22, 33, 42, 0.28), 0 4px 6px rgba(22, 33, 42, 0.18);
+}
+
+:root[data-theme='night'] .cryptex::before {
+  box-shadow: 0 30px 40px rgba(0, 0, 0, 0.6), 0 4px 6px rgba(0, 0, 0, 0.4);
 }
 
 .cap {

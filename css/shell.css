@@ -26,11 +26,6 @@
   --slab-edge: #2e3c46;
 }
 
-.theme-shift,
-.theme-shift * {
-  transition: background-color 320ms ease, color 320ms ease, border-color 320ms ease, fill 320ms ease, stroke 320ms ease !important;
-}
-
 /* ---------------- masthead ---------------- */
 
 .mast {
