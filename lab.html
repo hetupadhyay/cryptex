@@ -6,7 +6,7 @@
   <title>Cipher lab: ten classical ciphers, step by step · Cryptex</title>
   <meta name="description" content="Pick one of ten classical ciphers, type a message and watch every step of it being encrypted or decrypted.">
   <link rel="canonical" href="https://cryptex.vercel.app/lab">
-  <meta name="author" content="Het Nimeshkumar Upadhyay">
+  <meta name="author" content="Het Upadhyay">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#edf0ef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0e1418" media="(prefers-color-scheme: dark)">
@@ -37,10 +37,10 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <script src="js/theme.js?v=8626267322"></script>
-  <link rel="stylesheet" href="css/site.css?v=cf842b4605">
+  <link rel="stylesheet" href="css/site.css?v=663543549d">
   <link rel="stylesheet" href="css/shell.css?v=341482449c">
   <link rel="stylesheet" href="css/scenes.css?v=80f816938d">
-  <link rel="stylesheet" href="css/lab.css?v=c5c6805ed5">
+  <link rel="stylesheet" href="css/lab.css?v=cc3ce4751c">
   <link rel="icon" href="img/mark.svg" type="image/svg+xml">
 </head>
 <body data-page="lab">
@@ -166,11 +166,13 @@
                 </button>
                 <input class="scrub" type="range" min="0" max="0" value="0" aria-label="Step">
                 <span class="step-count">0 / 0</span>
-                <button type="button" class="speed-step" aria-label="Speed 1×, normal">
-                  <span class="speed-word">Speed</span>
-                  <span class="ticks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-                  <span class="speed-value">1×</span>
-                </button>
+                <div class="speed" role="radiogroup" aria-label="Speed">
+                  <span class="speed-key" aria-hidden="true"></span>
+                  <button type="button" role="radio" aria-checked="false" tabindex="-1" data-speed="0">½×</button>
+                  <button type="button" role="radio" aria-checked="true" tabindex="0" data-speed="1">1×</button>
+                  <button type="button" role="radio" aria-checked="false" tabindex="-1" data-speed="2">2×</button>
+                  <button type="button" role="radio" aria-checked="false" tabindex="-1" data-speed="3">4×</button>
+                </div>
               </div>
             </div>
           </section>
@@ -334,7 +336,7 @@
       </nav>
     </div>
     <div class="foot-bar">
-      <p class="foot-who">© 2026 <b>Het Nimeshkumar Upadhyay</b></p>
+      <p class="foot-who">© 2026 <b>Het Upadhyay</b></p>
       <p>Made by <span class="vh">Het Upadhyay</span><span class="signature" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-hidden="true" title="Shift 3. Point at it or tap it to decode.">KHW XSDGKBDB</span></p>
       <p>Runs in your browser. Nothing you type is sent to a server.</p>
       <div class="foot-links">
@@ -353,7 +355,7 @@
   <!-- /shell:footer -->
   <script src="js/sheet.js?v=f4d1354ad7"></script>
   <script src="js/ciphers.js?v=517fef3150"></script>
-  <script src="js/stage.js?v=b1dc342ce9"></script>
+  <script src="js/stage.js?v=afe593e760"></script>
   <script src="js/scenes/substitution.js?v=581c58d35f"></script>
   <script src="js/scenes/tabula.js?v=c3cacba365"></script>
   <script src="js/scenes/playfair.js?v=23084a281e"></script>
@@ -361,7 +363,7 @@
   <script src="js/scenes/railfence.js?v=b4d0d7f692"></script>
   <script src="js/scenes/columnar.js?v=5f551bc86e"></script>
   <script src="js/handoff.js?v=ad58c84027"></script>
-  <script src="js/lab.js?v=952c36fcad"></script>
+  <script src="js/lab.js?v=b07282eb61"></script>
   <script src="js/share.js?v=ae6496ea0f"></script>
   <script src="js/site.js?v=c274758143"></script>
   <script src="js/pwa.js?v=5b673ad196"></script>

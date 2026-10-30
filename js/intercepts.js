@@ -170,7 +170,13 @@
   // Picked from the index. Where the file sits below the index (on a
   // phone), bring it up so the choice visibly did something.
   function open(i) {
+    const changed = i !== index;
     show(i);
+    // A different file settles into place, so the change reads as a new
+    // file and not a flicker.
+    if (changed && !Stage.reduced) {
+      card.animate([{ opacity: 0.4, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+    }
     if (card.getBoundingClientRect().top > innerHeight * 0.7) {
       card.scrollIntoView({ behavior: Stage.reduced ? 'auto' : 'smooth' });
     }

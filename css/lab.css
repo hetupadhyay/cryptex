@@ -2,7 +2,7 @@
    The lab: a codebook down the side, the bench of controls, the stage
    and its player bar, the result and what the cipher costs to break.
    Then Send a secret and the dialog a secret link opens.
-   Sheets for the tools, paper for the reading, glass only on the bar.
+   Sheets for the tools and the player bar, paper for the reading.
 ------------------------------------------------------------------- */
 
 
@@ -107,11 +107,12 @@
   background: none;
   color: var(--ink);
   text-align: left;
-  transition: background-color 160ms ease, border-color 160ms ease, transform 140ms var(--ease-out);
+  transition: background-color 200ms ease, border-color 200ms ease, box-shadow 240ms ease, transform 260ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .cb-entry:active {
-  transform: scale(0.98);
+  transform: scale(0.985);
+  transition-duration: 90ms;
 }
 
 .cb-name {
@@ -157,6 +158,7 @@
 @media (hover: hover) and (pointer: fine) {
   .cb-entry[aria-checked='false']:hover {
     background: var(--well);
+    transform: translateX(2px);
   }
 }
 
@@ -355,8 +357,8 @@
   border-radius: 6px;
 }
 
-/* The player bar: the caption on top, the transport under it. It is glass,
-   and it only sticks to the bottom of the window once lab.js marks the
+/* The player bar: the caption on top, the transport under it. It only
+   sticks to the bottom of the window once lab.js marks the
    stage as docked. */
 .dock {
   position: relative;
@@ -394,61 +396,76 @@
   min-width: 64px;
 }
 
-/* One button steps through the speeds; the ticks fill as it goes faster. */
-.speed-step {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  height: 38px;
+/* Speed: four keys set in a groove, with one pressed in. The pressed key
+   is a single piece of paper that slides to the speed picked, critically
+   damped, so it settles without a bounce and can be redirected mid-way. */
+.speed {
+  --seg: 38px;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, var(--seg));
+  height: 36px;
   margin-left: 4px;
-  padding: 0 10px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 4px;
-  background: transparent;
-  color: var(--ink-2);
-  font-size: 13px;
-  font-weight: 650;
-  transition: border-color 160ms ease, transform 140ms var(--ease-out);
+  padding: 2px;
+  border: 1px solid var(--rule);
+  border-radius: 7px;
+  background: var(--well);
 }
 
-.speed-step:active {
-  transform: scale(0.96);
+.speed-key {
+  position: absolute;
+  top: 2px;
+  bottom: 4px;
+  left: 2px;
+  width: var(--seg);
+  border: 1px solid var(--rule-strong);
+  border-radius: 5px;
+  background: var(--key-face);
+  box-shadow: inset 0 1px 0 var(--key-light), 0 2px 0 var(--key-side);
+  transform: translateX(calc(var(--at, 1) * var(--seg)));
+  transition: transform 340ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.speed button {
+  position: relative;
+  padding: 0 0 2px;
+  border: 0;
+  background: none;
+  color: var(--ink-3);
+  font: 700 13.5px/1 var(--sans);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: color 160ms ease, transform 100ms ease-out;
+}
+
+.speed button[aria-checked='true'] {
+  color: var(--ink);
+}
+
+/* Feedback on the press itself, before the key has moved. */
+.speed button:active {
+  transform: translateY(1px);
+}
+
+.speed button:focus-visible {
+  outline-offset: -2px;
+  border-radius: 5px;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .speed-step:hover {
-    border-color: var(--ink);
+  .speed button[aria-checked='false']:hover {
+    color: var(--ink);
   }
 }
 
-.ticks {
-  display: inline-flex;
-  align-items: flex-end;
-  gap: 2px;
-  height: 12px;
-}
+@media (prefers-reduced-motion: reduce) {
+  .speed-key {
+    transition: none;
+  }
 
-.ticks i {
-  width: 2.5px;
-  border-radius: 1px;
-  background: var(--rule-strong);
-  transition: background-color 160ms ease;
-}
-
-.ticks i:nth-child(1) { height: 5px; }
-.ticks i:nth-child(2) { height: 7px; }
-.ticks i:nth-child(3) { height: 9.5px; }
-.ticks i:nth-child(4) { height: 12px; }
-
-.ticks i.on {
-  background: var(--ink);
-}
-
-.speed-value {
-  min-width: 2.4ch;
-  color: var(--ink);
-  font: 700 13px var(--type);
-  text-align: left;
+  .cb-entry {
+    transition: background-color 200ms ease, border-color 200ms ease;
+  }
 }
 
 /* ---------------- result and notes ---------------- */
@@ -623,8 +640,9 @@
     border-radius: 10px;
   }
 
-  /* One compact bar: the scrubber across the top, then every button in a
-     single row. It reaches into the stage's padding to make the room. */
+  /* One compact bar: the scrubber and the step count across the top, then
+     the transport and the speed keys in a single row. It reaches into the
+     stage's padding to make the room. */
   .dock {
     width: calc(100% + 16px);
     margin-inline: -8px;
@@ -641,14 +659,22 @@
 
   .dock .scrub {
     order: 1;
-    flex-basis: 100%;
+    flex: 1 0 calc(100% - 88px);
     height: 36px;
     margin: 0 8px;
   }
 
+  .step-count {
+    order: 1;
+    min-width: 0;
+    width: 72px;
+    padding: 0 6px;
+    text-align: right;
+    white-space: nowrap;
+  }
+
   .tb,
-  .step-count,
-  .speed-step {
+  .speed {
     order: 2;
   }
 
@@ -656,24 +682,10 @@
     width: 40px;
   }
 
-  .step-count {
-    min-width: 0;
+  .speed {
+    --seg: 32px;
+    height: 38px;
     margin-left: auto;
-    padding: 0 6px;
-  }
-
-  .speed-step {
-    height: 40px;
-    margin-left: 0;
-    padding: 0 8px;
-  }
-}
-
-/* On the narrowest phones the word Speed gives way so the bar stays one
-   row; the ticks and the value still show it, and its name still says it. */
-@media (max-width: 400px) {
-  .speed-word {
-    display: none;
   }
 }
 
@@ -689,6 +701,10 @@
 
   .step-count {
     padding: 0 4px;
+  }
+
+  .speed {
+    --seg: 28px;
   }
 }
 

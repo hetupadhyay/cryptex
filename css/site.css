@@ -1,7 +1,7 @@
 /* ------------------------------------------------------------------
    Cryptex: what every page shares. The look is a codebreaker's room:
    paper, sheets for anything read closely, manila folders for case
-   files, and glass only where something floats over moving content.
+   files, and glass only on the masthead, where the page slides under it.
    Slate ink, carbon-copy blue, red pencil for ciphertext and findings,
    brass for keys and the cryptex itself.
 ------------------------------------------------------------------- */
@@ -69,11 +69,6 @@
   --brass-wash: rgba(138, 106, 34, 0.14);
   --on-solid: #fbfcfb;
 
-  --glass: rgba(251, 252, 251, 0.6);
-  --glass-strong: rgba(251, 252, 251, 0.78);
-  --glass-line: rgba(255, 255, 255, 0.75);
-  --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  --frost: blur(22px) saturate(170%);
   --shadow-s: 0 1px 2px rgba(22, 33, 42, 0.05), 0 6px 16px -8px rgba(22, 33, 42, 0.18);
   --shadow-l: 0 2px 4px rgba(22, 33, 42, 0.04), 0 24px 48px -20px rgba(22, 33, 42, 0.28);
 
@@ -110,10 +105,6 @@
   --brass-wash: rgba(214, 179, 107, 0.16);
   --on-solid: #0e1418;
 
-  --glass: rgba(24, 33, 41, 0.55);
-  --glass-strong: rgba(24, 33, 41, 0.78);
-  --glass-line: rgba(255, 255, 255, 0.08);
-  --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   --shadow-s: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 18px -8px rgba(0, 0, 0, 0.5);
   --shadow-l: 0 2px 4px rgba(0, 0, 0, 0.25), 0 28px 56px -20px rgba(0, 0, 0, 0.7);
 
@@ -215,22 +206,13 @@ main {
 
 /* ---------------- surfaces ---------------- */
 
-/* Glass only where content scrolls underneath it: the lab's player bar
-   here, and the masthead in shell.css. Everything else is a sheet. */
+/* The lab's player bar floats over the scene as a solid sheet: a frosted
+   bar would smear the letters it passes over. Glass is kept for the
+   masthead alone (shell.css). */
 .dock {
-  background: var(--glass);
-  -webkit-backdrop-filter: var(--frost);
-  backdrop-filter: var(--frost);
-  border: 1px solid var(--glass-line);
-  box-shadow: var(--glass-edge), var(--shadow-s);
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .dock {
-    background: var(--sheet);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  box-shadow: inset 0 1px 0 var(--key-light), var(--shadow-l);
 }
 
 .toolbar,
@@ -646,7 +628,9 @@ input[type='range']::-moz-range-thumb {
   padding: 0 4px;
   overflow: hidden;
   background: #221b0c;
-  perspective: 900px;
+  /* No perspective: the faces still curve away like a cylinder, and
+     without it browsers draw the letters sharp instead of from a
+     magnified, softer copy. */
   cursor: grab;
   touch-action: none;
   user-select: none;
@@ -681,7 +665,6 @@ input[type='range']::-moz-range-thumb {
   height: var(--face);
   margin-top: calc(var(--face) / -2);
   transform-style: preserve-3d;
-  will-change: transform;
 }
 
 .ring-face {
@@ -1825,8 +1808,6 @@ input[type='range']::-moz-range-thumb {
 
 .secret-dialog::backdrop {
   background: rgba(10, 15, 20, 0.35);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
 }
 
 .secret-dialog[open] {
@@ -1834,16 +1815,16 @@ input[type='range']::-moz-range-thumb {
 }
 
 @keyframes sheet-in {
-  from { opacity: 0; transform: translateY(16px) scale(0.97); filter: blur(4px); }
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
 }
 
 .secret-card {
   display: grid;
   gap: 16px;
   padding: 26px 26px 22px;
-  border-radius: 28px;
-  background: var(--glass-strong);
-  box-shadow: var(--glass-edge), var(--shadow-l);
+  border-radius: 10px;
+  background: var(--sheet);
+  box-shadow: var(--shadow-l);
 }
 
 .secret-card h2 {
@@ -1944,13 +1925,6 @@ input[type='range']::-moz-range-thumb {
 }
 
 @media (max-width: 640px) {
-  /* The blur under the sticky nav and dock is redrawn on every scroll.
-     A smaller radius costs a phone far less and, on panels this size,
-     looks much the same. */
-  :root {
-    --frost: blur(14px) saturate(170%);
-  }
-
   .section {
     padding-top: 64px;
   }

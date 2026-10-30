@@ -55,7 +55,8 @@
   const resultTitle = $('#result-title');
   const cipherBtn = $('.cipher-btn', form);
   const sheet = $('.codebook-sheet');
-  const speedBtn = $('.speed-step', stageEl);
+  const speedGroup = $('.speed', stageEl);
+  const speedKeys = $$('[data-speed]', speedGroup);
 
   const state = {
     cipher: Ciphers.list[0],
@@ -381,7 +382,7 @@
 
     // Fade the old scene out quickly before the new one is built.
     if (mount.children.length && !Stage.reduced) {
-      mount.animate([{ opacity: 1 }, { opacity: 0, filter: 'blur(2px)' }], { duration: 160, easing: 'ease-out' }).finished.then(build);
+      mount.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: 'ease-out' }).finished.then(build);
     } else {
       build();
     }
@@ -419,17 +420,30 @@
 
   // ---- the player bar ---------------------------------------------------------
 
-  // One button steps through the speeds; the ticks fill up as it goes faster.
+  // Four speed keys in a row, one pressed in. The pressed key slides across
+  // to the one picked; the arrows move it too, as in any radio group.
   function showSpeed() {
-    const s = SPEEDS[state.speed];
-    Stage.speed = s.value;
-    $('.speed-value', speedBtn).textContent = s.text;
-    $$('.ticks i', speedBtn).forEach((t, i) => t.classList.toggle('on', i <= state.speed));
-    speedBtn.setAttribute('aria-label', `Speed ${s.text}, ${s.say}`);
+    Stage.speed = SPEEDS[state.speed].value;
+    speedGroup.style.setProperty('--at', state.speed);
+    speedKeys.forEach((k, i) => {
+      k.setAttribute('aria-checked', i === state.speed);
+      k.tabIndex = i === state.speed ? 0 : -1;
+    });
   }
-  speedBtn.addEventListener('click', () => {
-    state.speed = (state.speed + 1) % SPEEDS.length;
-    showSpeed();
+  speedKeys.forEach((k, i) => {
+    k.setAttribute('aria-label', `${SPEEDS[i].text}, ${SPEEDS[i].say} speed`);
+    k.addEventListener('click', () => {
+      state.speed = i;
+      showSpeed();
+    });
+    k.addEventListener('keydown', e => {
+      const to = { ArrowRight: i + 1, ArrowUp: i + 1, ArrowLeft: i - 1, ArrowDown: i - 1, Home: 0, End: SPEEDS.length - 1 }[e.key];
+      if (to === undefined) return;
+      e.preventDefault();
+      state.speed = Math.max(0, Math.min(SPEEDS.length - 1, to));
+      showSpeed();
+      speedKeys[state.speed].focus();
+    });
   });
   showSpeed();
 
