@@ -1332,6 +1332,15 @@ input[type='range']::-moz-range-thumb {
   font-weight: 700;
 }
 
+/* The winning row is the answer, so on a phone it wraps rather than
+   being cut off. */
+@media (max-width: 640px) {
+  .shift-row.best .shift-text {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+
 .shift-row.best .fit i {
   background: var(--pencil);
 }

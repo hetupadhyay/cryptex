@@ -37,13 +37,18 @@
   let vigLength = null;
   let vigMode = 'vigenere';
 
+  // The start of a long decryption, as much as a row shows. A substitution
+  // decrypts letter by letter, so the rows only need the start of the text.
+  const preview = text => (text.length > 90 ? text.slice(0, 90) + '…' : text);
+  const head = text => text.slice(0, 120) + (text.length > 120 ? '…' : '');
+
   // One row of a ranked list: the text a key gives, and how well that fits
   // English compared with the best row (0 to 1). The caller fills in the key.
   function candidateRow(text, fit, best, i, entrance) {
     const li = document.createElement('li');
     li.className = 'shift-row' + (best ? ' best' : '');
     li.innerHTML = '<span class="shift-n"></span><span class="shift-text"></span><span class="fit"><i></i></span>';
-    $('.shift-text', li).textContent = text.length > 90 ? text.slice(0, 90) + '…' : text;
+    $('.shift-text', li).textContent = preview(text);
     $('.fit i', li).style.transform = `scaleX(${Math.max(0.02, Math.min(1, fit))})`;
     if (entrance && !reduced()) {
       li.style.animationDelay = `${i * 28}ms`;
@@ -73,10 +78,11 @@
     const ordered = byScore ? rows.slice().sort((a, b) => a.chi - b.chi) : rows;
 
     shiftList.replaceChildren(...ordered.map((r, i) => {
-      const li = candidateRow(r.text, bestChi / r.chi, r === best, i, entrance);
+      const shown = Analysis.shiftBack(head(text), r.shift);
+      const li = candidateRow(shown, bestChi / r.chi, r === best, i, entrance);
       li.dataset.shift = r.shift;
       $('.shift-n', li).textContent = r.shift;
-      if (r === best) li.setAttribute('aria-label', `Shift ${r.shift}, most likely: ${r.text}`);
+      if (r === best) li.setAttribute('aria-label', `Shift ${r.shift}, most likely: ${preview(shown)}`);
       return li;
     }));
   }
@@ -109,14 +115,15 @@
     verdict.textContent = `The key a = ${best.a}, b = ${best.b} reads most like English. 312 keys tried, and these are the best 10.`;
 
     affineList.replaceChildren(...rows.slice(0, 10).map((r, i) => {
-      const li = candidateRow(r.text, best.chi / r.chi, r === best, i, entrance);
+      const shown = Ciphers.byId('affine').decrypt(head(text), { a: r.a, b: r.b });
+      const li = candidateRow(shown, best.chi / r.chi, r === best, i, entrance);
       const key = $('.shift-n', li);
       key.className = 'shift-n affine-key';
       key.innerHTML = '<small>a</small><span></span><small>b</small><span></span>';
       const [a, b] = $$('span', key);
       a.textContent = r.a;
       b.textContent = r.b;
-      li.setAttribute('aria-label', `a ${r.a}, b ${r.b}${r === best ? ', most likely' : ''}: ${r.text}`);
+      li.setAttribute('aria-label', `a ${r.a}, b ${r.b}${r === best ? ', most likely' : ''}: ${preview(shown)}`);
       return li;
     }));
   }
@@ -142,7 +149,7 @@
     railList.replaceChildren(...rows.map((r, i) => {
       const li = candidateRow(r.text, 10 ** ((r.score - best.score) * 2), r === best, i, entrance);
       $('.shift-n', li).textContent = r.rails;
-      li.setAttribute('aria-label', `${r.rails} rails${r === best ? ', most likely' : ''}: ${r.text}`);
+      li.setAttribute('aria-label', `${r.rails} rails${r === best ? ', most likely' : ''}: ${preview(r.text)}`);
       return li;
     }));
   }
