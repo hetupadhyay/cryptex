@@ -92,6 +92,7 @@
     try {
       localStorage.setItem(STORE, JSON.stringify([...cracked]));
     } catch {}
+    document.dispatchEvent(new Event('cryptex:progress'));
   }
 
   // ---- layout -----------------------------------------------------------------

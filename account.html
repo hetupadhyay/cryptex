@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Your account · Cryptex</title>
+  <meta name="description" content="Your Cryptex account: progress, sign-in methods, password and deleting it.">
+  <meta name="robots" content="noindex">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#edf0ef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e1418" media="(prefers-color-scheme: dark)">
+  <script src="js/theme.js?v=8626267322"></script>
+  <link rel="stylesheet" href="css/site.css?v=54f47ed6a5">
+  <link rel="stylesheet" href="css/shell.css?v=4cba7da85e">
+  <link rel="stylesheet" href="css/pages.css?v=e75b1a6ac5">
+  <link rel="stylesheet" href="css/account.css?v=0a0935efee">
+  <link rel="icon" href="img/mark.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+</head>
+<body class="doc-page auth-page" data-page="account">
+
+  <!-- shell:header -->
+  <a class="skip" href="#top">Skip to content</a>
+  <header class="mast">
+    <div class="mast-bar">
+      <a class="brand" href="/" aria-label="Cryptex home">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+          <path class="mark-bow" d="M14.6 10.6A7.4 7.4 0 1 0 14.6 21.4" />
+          <path class="mark-blade" d="M10.5 13.9h20.2a1.3 1.3 0 0 1 1.3 1.3v1.6a1.3 1.3 0 0 1-1.3 1.3h-1.4v4.5h-3.6v-4.5h-1.6v3.1h-3.6v-3.1h-10z" />
+        </svg>
+        <span class="wordmark">Cryptex</span>
+      </a>
+      <nav class="mast-links" aria-label="Main">
+        <a href="/learn" data-page="learn">Learn</a>
+        <a href="/lab" data-page="lab">Lab</a>
+        <a href="/codebreaking" data-page="codebreaking">Codebreaking</a>
+      </nav>
+      <div class="mast-right">
+        <a class="today-link" href="/codebreaking#today">
+          <span>Today’s intercept</span>
+          <b class="today-no"></b>
+          <time class="today-left" aria-hidden="true"></time>
+        </a>
+        <a class="account-link" href="/signin" data-account>Sign in</a>
+        <button class="lamp" type="button" aria-pressed="false" aria-label="Night lamp">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path class="lamp-beam" d="M17.6 7.6 L13.4 11.8 L12 21 H23 Z" />
+            <rect class="lamp-solid" x="3" y="19.2" width="9" height="2" rx="1" />
+            <path class="lamp-arm" d="M7.5 19.4 5 12.5l6-5.6" />
+            <path class="lamp-solid" d="M10.2 3.6l7.6 3.8-4.6 4.6z" />
+          </svg>
+        </button>
+        <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+      </div>
+    </div>
+    <nav class="menu-sheet" id="menu" aria-label="Main" hidden>
+      <a href="/learn" data-page="learn"><span>Learn</span> <small>600 BC to today</small></a>
+      <a href="/lab" data-page="lab"><span>Lab</span> <small>Ten ciphers, step by step</small></a>
+      <a href="/codebreaking" data-page="codebreaking"><span>Codebreaking</span> <small class="today-no"></small></a>
+      <a href="/signin" data-account-menu><span>Sign in</span> <small>Keep your progress on every device</small></a>
+      <div class="sheet-grip" aria-hidden="true"><i></i></div>
+    </nav>
+  </header>
+  <!-- /shell:header -->
+
+  <main class="doc auth" id="top">
+    <article class="doc-sheet auth-sheet" aria-labelledby="account-title">
+      <header class="doc-head">
+        <h1 id="account-title">Your account</h1>
+        <p class="doc-summary account-who" id="account-who">Loading…</p>
+      </header>
+
+      <p class="auth-notice" id="auth-notice" role="status" hidden></p>
+
+      <div class="account-body" hidden>
+        <section aria-labelledby="progress-title">
+          <h2 id="progress-title">Progress</h2>
+          <p class="account-progress" id="account-progress"></p>
+        </section>
+
+        <section aria-labelledby="email-title">
+          <h2 id="email-title">Email</h2>
+          <p class="account-email"><span id="account-email"></span> <b class="badge" id="account-verified"></b></p>
+          <p class="account-line" id="verify-line" hidden>
+            <button type="button" class="link" data-act="resend">Send the confirmation link again</button>
+            <span class="hint" id="resend-said" role="status"></span>
+          </p>
+        </section>
+
+        <section aria-labelledby="name-title">
+          <h2 id="name-title">Name</h2>
+          <form class="inline-form" id="name-form" novalidate>
+            <label class="vh" for="account-name">Your name</label>
+            <input id="account-name" type="text" autocomplete="name" maxlength="60">
+            <button class="btn small" type="submit">Save</button>
+            <span class="hint" id="name-said" role="status"></span>
+          </form>
+        </section>
+
+        <section aria-labelledby="methods-title">
+          <h2 id="methods-title">Ways to sign in</h2>
+          <ul class="methods" id="methods">
+            <li data-method="password"><span class="method-name">Email and password</span> <span class="method-state"></span></li>
+            <li data-method="google" hidden><span class="method-name">Google</span> <span class="method-state"></span> <a class="link" data-link href="/api/auth/google?link=1">Link</a> <button type="button" class="link" data-unlink="google">Unlink</button></li>
+            <li data-method="github" hidden><span class="method-name">GitHub</span> <span class="method-state"></span> <a class="link" data-link href="/api/auth/github?link=1">Link</a> <button type="button" class="link" data-unlink="github">Unlink</button></li>
+            <li data-method="apple" hidden><span class="method-name">Apple</span> <span class="method-state"></span> <a class="link" data-link href="/api/auth/apple?link=1">Link</a> <button type="button" class="link" data-unlink="apple">Unlink</button></li>
+          </ul>
+          <p class="error" id="methods-error" role="alert"></p>
+        </section>
+
+        <section aria-labelledby="password-title">
+          <h2 id="password-title">Password</h2>
+          <form class="auth-form" id="password-form" novalidate>
+            <div class="field" id="current-field">
+              <label for="current-password">Current password</label>
+              <input id="current-password" type="password" autocomplete="current-password" maxlength="128" aria-describedby="password-error">
+            </div>
+            <div class="field">
+              <label for="new-password">New password</label>
+              <input id="new-password" type="password" autocomplete="new-password" maxlength="128" aria-describedby="new-password-hint password-error">
+              <p class="hint" id="new-password-hint">At least 8 characters. Changing it signs you out on your other devices.</p>
+            </div>
+            <p class="error" id="password-error" role="alert"></p>
+            <div class="auth-actions">
+              <button class="btn" type="submit">Save password</button>
+              <span class="hint" id="password-said" role="status"></span>
+            </div>
+          </form>
+        </section>
+
+        <section aria-labelledby="sessions-title">
+          <h2 id="sessions-title">Signing out</h2>
+          <div class="auth-actions">
+            <button class="btn" type="button" data-act="logout">Sign out</button>
+            <button class="btn" type="button" data-act="logout-everywhere">Sign out on every device</button>
+          </div>
+        </section>
+
+        <section class="danger" aria-labelledby="delete-title">
+          <h2 id="delete-title">Delete your account</h2>
+          <p>This removes your account, your saved progress and every way of signing in to it, straight away. What’s saved in this browser stays here.</p>
+          <form class="inline-form" id="delete-form" novalidate>
+            <label for="delete-confirm">Type <b>delete</b> to confirm</label>
+            <input id="delete-confirm" type="text" autocomplete="off" spellcheck="false" maxlength="10" aria-describedby="delete-error">
+            <button class="btn danger-btn" type="submit">Delete my account</button>
+          </form>
+          <p class="error" id="delete-error" role="alert"></p>
+        </section>
+      </div>
+    </article>
+  </main>
+
+
+  <!-- shell:footer -->
+  <footer class="foot">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a class="brand" href="/" aria-label="Cryptex home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path class="mark-bow" d="M14.6 10.6A7.4 7.4 0 1 0 14.6 21.4" />
+            <path class="mark-blade" d="M10.5 13.9h20.2a1.3 1.3 0 0 1 1.3 1.3v1.6a1.3 1.3 0 0 1-1.3 1.3h-1.4v4.5h-3.6v-4.5h-1.6v3.1h-3.6v-3.1h-10z" />
+          </svg>
+          <span class="wordmark">Cryptex</span>
+        </a>
+        <p>Every secret has a weakness. Learn how classical ciphers work, then break them.</p>
+        <p class="foot-note">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M4.5 7V5a3.5 3.5 0 0 1 7 0v2h.5a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 12 15H4a1.5 1.5 0 0 1-1.5-1.5v-5A1.5 1.5 0 0 1 4 7Zm1.5 0h4V5a2 2 0 0 0-4 0Z" /></svg>
+          <span>Runs in your browser. The messages you type never leave it.</span>
+        </p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer">
+        <div>
+          <p class="foot-title">Learn</p>
+          <ul>
+            <li><a href="/learn">The story</a></li>
+            <li><a href="/learn#enigma">Enigma</a></li>
+            <li><a href="/learn#one-time-pad">One-time pad</a></li>
+            <li><a href="/learn#strength">Key strength</a></li>
+            <li><a href="/learn#why-it-matters">Why it matters</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="foot-title">Lab</p>
+          <ul>
+            <li><a href="/lab">All ten ciphers</a></li>
+            <li><a href="/lab#share">Send a secret</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="foot-title">Codebreaking</p>
+          <ul>
+            <li><a href="/codebreaking#today">Today’s intercept</a></li>
+            <li><a href="/codebreaking#missions">Missions</a></li>
+            <li><a href="/codebreaking#desk">The desk</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="foot-title">Project</p>
+          <ul>
+            <li><a href="https://github.com/hetupadhyay/Cryptex">Source on GitHub</a></li>
+            <li><a href="https://github.com/hetupadhyay/Cryptex/issues">Report a problem</a></li>
+            <li><a href="https://github.com/hetupadhyay/Cryptex/security/policy">Security</a></li>
+            <li><a href="https://www.linkedin.com/in/hetupadhyay/">LinkedIn</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div class="foot-bar">
+      <p class="foot-who">© 2026 Cryptex™<span class="foot-sep" aria-hidden="true">·</span>Made by <span class="vh">Het Upadhyay</span><span class="signature" data-plain="HET UPADHYAY" data-coded="KHW XSDGKBDB" aria-hidden="true" title="Shift 3. Point at it or tap it to decode.">KHW XSDGKBDB</span></p>
+      <div class="foot-links">
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+        <a class="foot-icon" href="https://github.com/hetupadhyay" aria-label="GitHub">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.33c-2.23.49-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.23 1.88.87 2.34.67.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0 0 8 0Z" /></svg>
+        </a>
+        <a class="foot-icon" href="https://www.linkedin.com/in/hetupadhyay/" aria-label="LinkedIn">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.6 0H2.4A2.4 2.4 0 0 0 0 2.4v11.2A2.4 2.4 0 0 0 2.4 16h11.2a2.4 2.4 0 0 0 2.4-2.4V2.4A2.4 2.4 0 0 0 13.6 0ZM4.9 13.4H2.6V6h2.3v7.4ZM3.8 5a1.3 1.3 0 1 1 0-2.7 1.3 1.3 0 0 1 0 2.7Zm9.7 8.4h-2.3V9.8c0-.9 0-2-1.2-2s-1.4.9-1.4 1.9v3.7H6.3V6h2.2v1h.1c.3-.6 1.1-1.2 2.2-1.2 2.4 0 2.8 1.6 2.8 3.6v4Z" /></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+  <!-- /shell:footer -->
+
+  <script src="js/sheet.js?v=f4d1354ad7"></script>
+
+  <script src="js/site.js?v=7443140c2c"></script>
+  <script src="js/account.js?v=42b5ee1c6d"></script>
+  <script src="js/auth.js?v=7617b13823"></script>
+  <script src="js/pwa.js?v=5b673ad196"></script>
+</body>
+</html>

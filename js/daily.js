@@ -465,6 +465,7 @@
       try {
         localStorage.setItem(STORE, JSON.stringify(state));
       } catch {}
+      document.dispatchEvent(new Event('cryptex:progress'));
     }
 
     let puzzle = null;

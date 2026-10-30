@@ -10,8 +10,8 @@
   <meta name="theme-color" content="#edf0ef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0e1418" media="(prefers-color-scheme: dark)">
   <script src="js/theme.js?v=8626267322"></script>
-  <link rel="stylesheet" href="css/site.css?v=9a850c75b9">
-  <link rel="stylesheet" href="css/shell.css?v=73fe35c823">
+  <link rel="stylesheet" href="css/site.css?v=54f47ed6a5">
+  <link rel="stylesheet" href="css/shell.css?v=4cba7da85e">
   <link rel="stylesheet" href="css/pages.css?v=e75b1a6ac5">
   <link rel="icon" href="img/mark.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
@@ -41,6 +41,7 @@
           <b class="today-no"></b>
           <time class="today-left" aria-hidden="true"></time>
         </a>
+        <a class="account-link" href="/signin" data-account>Sign in</a>
         <button class="lamp" type="button" aria-pressed="false" aria-label="Night lamp">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path class="lamp-beam" d="M17.6 7.6 L13.4 11.8 L12 21 H23 Z" />
@@ -56,6 +57,7 @@
       <a href="/learn" data-page="learn"><span>Learn</span> <small>600 BC to today</small></a>
       <a href="/lab" data-page="lab"><span>Lab</span> <small>Ten ciphers, step by step</small></a>
       <a href="/codebreaking" data-page="codebreaking"><span>Codebreaking</span> <small class="today-no"></small></a>
+      <a href="/signin" data-account-menu><span>Sign in</span> <small>Keep your progress on every device</small></a>
       <div class="sheet-grip" aria-hidden="true"><i></i></div>
     </nav>
   </header>
@@ -94,6 +96,10 @@
         <p>You’re responsible for the messages you put into secret links. Anyone with a link can see the ciphertext, and because the ciphers are weak, anyone determined can read the message too.</p>
       </section>
 
+      <section>
+        <h2>Accounts</h2>
+        <p>An account is optional. If you create one, keep your password to yourself and use a real email address you can receive mail at. You can delete your account at any time from its page. Accounts used to break these terms, or to attack the site, may be removed.</p>
+      </section>
       <section>
         <h2>Intellectual property</h2>
         <p>The source code is released under the <a href="https://github.com/hetupadhyay/Cryptex/blob/main/LICENSE">MIT License</a>, so you can use, copy, change and share it under that licence’s terms. The fonts, Courier Prime and Hanken Grotesk, are used under the SIL Open Font License.</p>
@@ -135,7 +141,7 @@
         <p>Every secret has a weakness. Learn how classical ciphers work, then break them.</p>
         <p class="foot-note">
           <svg viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M4.5 7V5a3.5 3.5 0 0 1 7 0v2h.5a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 12 15H4a1.5 1.5 0 0 1-1.5-1.5v-5A1.5 1.5 0 0 1 4 7Zm1.5 0h4V5a2 2 0 0 0-4 0Z" /></svg>
-          <span>Runs in your browser. Nothing you type is sent to a server.</span>
+          <span>Runs in your browser. The messages you type never leave it.</span>
         </p>
       </div>
       <nav class="foot-cols" aria-label="Footer">
@@ -194,6 +200,7 @@
   <script src="js/sheet.js?v=f4d1354ad7"></script>
 
   <script src="js/site.js?v=7443140c2c"></script>
+  <script src="js/account.js?v=42b5ee1c6d"></script>
   <script src="js/pwa.js?v=5b673ad196"></script>
 </body>
 </html>
