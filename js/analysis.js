@@ -1,11 +1,11 @@
 /*
- * Letter statistics used by the "Break it" tab.
+ * Letter statistics used by the codebreaker's desk.
  */
 (function (root) {
   'use strict';
 
   const Ciphers = root.Ciphers || require('./ciphers.js');
-  const { lettersOnly, toIndex, toLetter, modInverse } = Ciphers;
+  const { lettersOnly, toIndex, toLetter, modInverse, mod } = Ciphers;
 
   // Percent of letters in typical English text.
   const ENGLISH = [
@@ -29,15 +29,25 @@
   }
 
   // How far a letter distribution is from English. Lower means more English.
-  function chiSquared(letters) {
-    if (!letters.length) return Infinity;
-    const c = counts(letters);
+  function chiOfCounts(c, n) {
+    if (!n) return Infinity;
     let sum = 0;
     for (let i = 0; i < 26; i++) {
-      const expected = (ENGLISH[i] / 100) * letters.length;
+      const expected = (ENGLISH[i] / 100) * n;
       sum += (c[i] - expected) ** 2 / expected;
     }
     return sum;
+  }
+
+  const chiSquared = letters => chiOfCounts(counts(letters), letters.length);
+
+  // A substitution key only moves counts from one letter to another, so a
+  // key can be scored from the ciphertext's counts without decrypting
+  // anything. undo(i) is the plain letter the key turns letter i into.
+  function chiUnder(c, n, undo) {
+    const plain = new Array(26).fill(0);
+    for (let i = 0; i < 26; i++) plain[mod(undo(i), 26)] += c[i];
+    return chiOfCounts(plain, n);
   }
 
   function shiftBack(text, shift) {
@@ -47,13 +57,14 @@
     });
   }
 
-  // All 25 Caesar decryptions, each with its score.
+  // All 25 Caesar decryptions, each with its score. A row's text is only
+  // worked out if something reads it: the desk shows ten at most.
   function caesarCandidates(text) {
     const letters = lettersOnly(text);
+    const c = counts(letters);
     const rows = [];
     for (let shift = 1; shift < 26; shift++) {
-      const shifted = [...letters].map(ch => toLetter(toIndex(ch) - shift)).join('');
-      rows.push({ shift, text: shiftBack(text, shift), chi: chiSquared(shifted) });
+      rows.push({ shift, chi: chiUnder(c, letters.length, i => i - shift), get text() { return shiftBack(text, shift); } });
     }
     return rows;
   }
@@ -101,10 +112,11 @@
     const letters = lettersOnly(text);
     const cols = columns(letters, length);
     const shifts = cols.map(col => {
+      const c = counts(col);
       let bestShift = 0;
       let bestChi = Infinity;
       for (let s = 0; s < 26; s++) {
-        const chi = chiSquared([...col].map(ch => toLetter(undo(toIndex(ch), s))).join(''));
+        const chi = chiUnder(c, col.length, i => undo(i, s));
         if (chi < bestChi) {
           bestChi = chi;
           bestShift = s;
@@ -165,17 +177,17 @@
     return rows;
   }
 
-  // All 312 affine keys, most English first.
+  // All 312 affine keys, most English first, scored from the letter counts.
   function affineCandidates(text) {
     const affine = Ciphers.byId('affine');
     const letters = lettersOnly(text);
+    const c = counts(letters);
     const rows = [];
     for (let a = 1; a < 26; a += 2) {
       if (a === 13) continue;
       const inverse = modInverse(a, 26);
       for (let b = 0; b < 26; b++) {
-        const plain = [...letters].map(ch => toLetter(inverse * (toIndex(ch) - b))).join('');
-        rows.push({ a, b, text: affine.decrypt(text, { a, b }), chi: chiSquared(plain) });
+        rows.push({ a, b, chi: chiUnder(c, letters.length, i => inverse * (i - b)), get text() { return affine.decrypt(text, { a, b }); } });
       }
     }
     return rows.sort((x, y) => x.chi - y.chi);
