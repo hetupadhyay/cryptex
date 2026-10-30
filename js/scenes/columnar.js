@@ -34,7 +34,7 @@
       grid.append(col);
       columns.push({ col, num, cells });
     }
-    const gridWrap = el('div', 'columns-wrap');
+    const gridWrap = el('div', 'columns-wrap follow');
     gridWrap.append(grid);
     mount.replaceChildren(inTape.root, gridWrap, outTape.root);
 
@@ -124,7 +124,12 @@
         cell.classList.toggle('used', enc ? settled.filled.has(k) : k < settled.filled.size);
       });
 
-      if (step.col !== undefined) columns[step.col].col.classList.add('now');
+      // A long keyword's grid can be wider than a phone: keep the column
+      // being worked on in view.
+      if (step.col !== undefined) {
+        columns[step.col].col.classList.add('now');
+        Stage.follow(columns[step.col].col, animate);
+      }
       if (!animate) return;
 
       const slotOf = (c, r) => columns[c].cells[r];

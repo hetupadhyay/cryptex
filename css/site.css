@@ -1056,6 +1056,14 @@ input[type='range']::-moz-range-thumb {
   white-space: pre-wrap;
 }
 
+.result[data-out='cipher'] .result-text {
+  color: var(--pencil);
+}
+
+.result[data-out='plain'] .result-text {
+  color: var(--carbon);
+}
+
 .result-text:empty::before {
   content: 'The result appears here when the animation finishes, or when you skip to the end.';
   color: var(--ink-3);

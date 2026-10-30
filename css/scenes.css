@@ -67,6 +67,21 @@
   color: var(--carbon);
 }
 
+/* Ciphertext is always red pencil and a message read back is carbon, so
+   when decrypting the two highlights on the board swap colours too. */
+.stage[data-out='cipher'] .tape-out .cell.filled {
+  border-bottom-color: var(--pencil);
+  color: var(--pencil);
+}
+
+.stage[data-out='plain'] .tile.src {
+  background: var(--pencil);
+}
+
+.stage[data-out='plain'] .tile.dst {
+  background: var(--carbon);
+}
+
 .cell.landed {
   animation: land 320ms var(--ease-out);
 }
@@ -186,9 +201,14 @@
 /* ---------------- substitution board ---------------- */
 
 .alpha-board {
-  --cell: min(30px, calc((100cqw - 2px) / 26));
+  /* Never smaller than 22px a letter: on a phone the board scrolls
+     sideways instead, following the letter being worked on. */
+  --cell: max(22px, min(30px, calc((100cqw - 2px) / 26)));
   display: grid;
-  justify-content: center;
+  justify-content: safe center;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
 .alpha-row {
@@ -405,47 +425,49 @@
   box-shadow: 0 0 0 3px var(--sheet);
 }
 
-/* On a narrow stage the whole table is too small to read, so it is shown
-   magnified through a window that pans to each lookup (--px and --py come
-   from tabula.js). The header row and column move against the pan, so the
-   labels always stay along the top and left edges. */
-@container (max-width: 560px) {
-  .tabula-wrap {
-    --tz: 24px;
-    display: block;
-    height: calc(var(--tz) * 11 + 2px);
-    overflow: hidden;
-    border: 1px solid var(--rule);
-    border-radius: 10px;
-  }
+/* On a narrow stage the whole table is too small to read, and on a short
+   window it's taller than the screen, so it is shown magnified through a
+   window that pans to each lookup (tabula.js sets .zoom, --rows, --px and
+   --py). The header row and column move against the pan, so the labels
+   always stay along the top and left edges. */
+.tabula-wrap.zoom {
+  --tz: 24px;
+  display: block;
+  width: 100%;
+  max-width: calc(var(--tz) * 27 + 2px);
+  margin-inline: auto;
+  height: calc(var(--tz) * var(--rows, 11) + 2px);
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+}
 
-  .tabula {
-    --tt: var(--tz);
-    width: max-content;
-    transform: translate(calc(var(--px, 0px) * -1), calc(var(--py, 0px) * -1));
-    transition: transform var(--pan, 0ms) var(--ease-move);
-    will-change: transform;
-  }
+.zoom .tabula {
+  --tt: var(--tz);
+  width: max-content;
+  transform: translate(calc(var(--px, 0px) * -1), calc(var(--py, 0px) * -1));
+  transition: transform var(--pan, 0ms) var(--ease-move);
+  will-change: transform;
+}
 
-  .tt.head,
-  .tt.corner {
-    z-index: 2;
-    transition: transform var(--pan, 0ms) var(--ease-move), background-color 150ms ease, color 150ms ease;
-  }
+.zoom .tt.head,
+.zoom .tt.corner {
+  z-index: 2;
+  transition: transform var(--pan, 0ms) var(--ease-move), background-color 150ms ease, color 150ms ease;
+}
 
-  .tt.head.col {
-    transform: translateY(var(--py, 0px));
-  }
+.zoom .tt.head.col {
+  transform: translateY(var(--py, 0px));
+}
 
-  .tt.head.row {
-    transform: translateX(var(--px, 0px));
-  }
+.zoom .tt.head.row {
+  transform: translateX(var(--px, 0px));
+}
 
-  .tt.corner {
-    z-index: 3;
-    background: var(--well);
-    transform: translate(var(--px, 0px), var(--py, 0px));
-  }
+.zoom .tt.corner {
+  z-index: 3;
+  background: var(--well);
+  transform: translate(var(--px, 0px), var(--py, 0px));
 }
 
 /* ---------------- 5×5 squares ---------------- */
@@ -543,15 +565,17 @@
 /* ---------------- rail fence ---------------- */
 
 .fence-wrap {
+  --fc: max(22px, min(26px, calc((100cqw - 32px) / var(--n))));
+  --fh: calc(var(--fc) * 1.35);
   display: flex;
-  justify-content: center;
+  justify-content: safe center;
   gap: 8px;
+  max-width: 100%;
   overflow-x: auto;
+  scrollbar-width: none;
 }
 
 .fence {
-  --fc: min(26px, calc((100cqw - 32px) / var(--n)));
-  --fh: calc(var(--fc) * 1.35);
   position: relative;
   display: grid;
   grid-template-columns: repeat(var(--n), var(--fc));
@@ -561,8 +585,13 @@
 }
 
 .rail-labels {
+  position: sticky;
+  left: 0;
+  z-index: 2;
   display: grid;
-  grid-template-rows: repeat(var(--rails), calc(min(26px, calc((100cqw - 32px) / var(--n, 20))) * 1.35));
+  grid-template-rows: repeat(var(--rails), var(--fh));
+  padding-right: 4px;
+  background: var(--sheet);
 }
 
 .rail-label {
@@ -641,11 +670,16 @@
 
 .columns-wrap {
   display: grid;
-  justify-content: center;
+  justify-content: safe center;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
+/* A long keyword makes more columns than fit a phone; they keep a
+   readable width and the grid scrolls sideways. */
 .columns {
-  --cw: min(42px, calc((100cqw - 4px) / var(--cols)));
+  --cw: max(26px, min(42px, calc((100cqw - 4px) / var(--cols))));
   position: relative;
   width: calc(var(--cw) * var(--cols));
   height: calc(var(--cw) * 1.4 + 22px + var(--rows) * (var(--cw) - 4px + 4px));

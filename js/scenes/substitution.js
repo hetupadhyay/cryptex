@@ -66,7 +66,7 @@
     const inTape = tape([...source], { label: enc ? 'Message' : 'Ciphertext', cls: 'tape-in' });
     const outTape = tape(result.map(ch => (isLetter(ch) ? '' : ch)), { label: enc ? 'Ciphertext' : 'Message', cls: 'tape-out' });
 
-    const board = el('div', 'alpha-board intro-' + cipher.intro);
+    const board = el('div', 'alpha-board follow intro-' + cipher.intro);
     const top = el('div', 'alpha-row plain');
     const topCells = [...ALPHABET].map(ch => top.appendChild(el('span', 'tile', ch)));
 
@@ -173,6 +173,7 @@
       const outCell = outTape.cells[l.pos];
       const first = enc ? topCells[l.p] : bottomCell(l.p);
       const second = enc ? bottomCell(l.p) : topCells[l.p];
+      Stage.follow(topCells[l.p], animate);
 
       inCell.classList.add('now');
       if (!animate) {
